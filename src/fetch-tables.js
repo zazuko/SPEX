@@ -6,7 +6,7 @@ Object.keys(config.prefixes).forEach((prefix) => {
   prefixes[prefix] = config.prefixes[prefix]
 })
 
-async function fetchStructure (endpoint, user, password, graph) {
+async function fetchStructure ({ endpoint, user, password, graph }) {
   const graphURI = graph ? `<${graph}>` : '?graph'
   const query = `
     SELECT DISTINCT ?cls ?property ?linktype ?datatype {
@@ -42,8 +42,8 @@ async function fetchStructure (endpoint, user, password, graph) {
   })
 }
 
-export async function fetchTables (endpoint, user, password, graph) {
-  const structure = await fetchStructure(endpoint, user, password, graph)
+export async function fetchTables (options) {
+  const structure = await fetchStructure(options)
   const tables = structure.reduce((tables, { cls, property, linktype, datatype }) => {
     const table = tables.get(cls.value) || { id: cls.value, name: shrinkURI(cls.value), columns: [] }
 
