@@ -45,13 +45,13 @@ async function fetchStructure (endpoint, user, password, graph) {
 export async function fetchTables (endpoint, user, password, graph) {
   const structure = await fetchStructure(endpoint, user, password, graph)
   const tables = structure.reduce((tables, { cls, property, linktype, datatype }) => {
-    const table = tables.get(cls.value) || { id: cls.value, name: shrink(cls.value), columns: [] }
+    const table = tables.get(cls.value) || { id: cls.value, name: shrinkURI(cls.value), columns: [] }
 
     const type = (linktype && linktype.value) || (datatype && datatype.value) || ''
     table.columns.push({
       id: property.value,
-      name: shrink(property.value),
-      type: { id: type, name: shrink(type) }
+      name: shrinkURI(property.value),
+      type: { id: type, name: shrinkURI(type) }
     })
 
     tables.set(cls.value, table)
@@ -60,4 +60,8 @@ export async function fetchTables (endpoint, user, password, graph) {
   }, new Map())
 
   return [...tables.values()]
+}
+
+function shrinkURI (uri) {
+  return shrink(uri) || uri
 }
