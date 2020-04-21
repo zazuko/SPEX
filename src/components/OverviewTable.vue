@@ -9,7 +9,7 @@
       </h3>
     </header>
     <table class="card-content table">
-      <tr v-for="column in table.columns" :key="column.id">
+      <tr v-for="column in table.columns" :key="table.id + column.id">
         <th>
           <b-tooltip :label="column.id">
             {{ column.name }}
