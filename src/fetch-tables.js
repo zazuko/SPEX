@@ -1,7 +1,12 @@
 import SparqlClient from 'sparql-http-client'
+import { shrink, prefixes } from '@zazuko/rdf-vocabularies'
 import config from '@/config'
 
 const { endpoint, user, password, graph } = config
+
+Object.keys(config.prefixes).forEach((prefix) => {
+  prefixes[prefix] = config.prefixes[prefix]
+})
 
 const query = `
   SELECT DISTINCT ?cls ?property ?linktype ?datatype {
@@ -42,11 +47,11 @@ async function fetchStructure () {
 export async function fetchTables () {
   const structure = await fetchStructure()
   const tables = structure.reduce((tables, { cls, property, linktype, datatype }) => {
-    const table = tables.get(cls.value) || { id: cls.value, name: cls.value, columns: [] }
+    const table = tables.get(cls.value) || { id: cls.value, name: shrink(cls.value), columns: [] }
 
     table.columns.push({
       id: property.value,
-      name: property.value,
+      name: shrink(property.value),
       datatype: (linktype && linktype.value) || (datatype && datatype.value)
     })
 
