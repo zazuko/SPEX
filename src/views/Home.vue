@@ -1,5 +1,6 @@
 <template>
-  <div class="home">
+  <div class="section">
+    <h1 class="title">Hi.</h1>
   </div>
 </template>
 
