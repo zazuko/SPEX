@@ -1,8 +1,13 @@
 <template>
   <div class="section">
-    <h1 class="title">Overview</h1>
+    <h1 class="title is-4">
+      Endpoint: {{ settings.endpoint }}
+      <button class="button is-white" title="Options" @click="showSettings">
+        <b-icon icon="settings" />
+      </button>
+    </h1>
 
-    <SettingsPane :settings=settings @change="loadData" />
+    <SettingsPane :settings="settings" :open="settingsShown" @change="loadData" @close="hideSettings" />
 
     <div class="OverviewTables">
       <OverviewTable v-for="table in tables" :key="table.id" :table="table" />
@@ -42,12 +47,15 @@ export default {
         password: config.password,
         graph: config.graph
       },
+      settingsShown: false,
       tables: [],
     }
   },
 
   methods: {
     async loadData (settings) {
+      this.settingsShown = false
+
       const loader = this.$buefy.loading.open({})
       this.tables = []
       // TODO: Handle error
@@ -56,6 +64,12 @@ export default {
       } finally {
         loader.close()
       }
+    },
+    showSettings () {
+      this.settingsShown = true
+    },
+    hideSettings () {
+      this.settingsShown = false
     }
   },
 
