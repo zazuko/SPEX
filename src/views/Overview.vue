@@ -11,12 +11,14 @@
 <style scoped>
 .OverviewTables {
   display: flex;
+  flex-wrap: wrap;
 }
 </style>
 
 <script>
 import { jsPlumb } from 'jsplumb'
 import OverviewTable from '@/components/OverviewTable.vue'
+import { fetchTables } from '@/fetch-tables'
 
 export default {
   components: {
@@ -25,48 +27,39 @@ export default {
 
   data () {
     return {
-      tables: [
-        {
-          id: 'tiger',
-          name: 'Tiger',
-          columns: [
-            { id: 'name', name: 'Name', datatype: 'string' },
-            { id: 'friend', name: 'Friend', datatype: 'cat' }
-          ]
-        },
-        {
-          id: 'cat',
-          name: 'Cat',
-          columns: [
-            { id: 'name', name: 'Name', datatype: 'string' }
-          ]
-        }
-      ]
+      tables: []
     }
   },
 
-  mounted () {
-    const relations = this.tables
-      .flatMap(table => table.columns)
-      .reduce((acc, column) => {
-        const source = document.querySelector(`[data-id="${column.id}"]`)
-        const target = document.querySelector(`[data-id="${column.datatype}"]`)
+  async mounted () {
+    this.tables = await fetchTables()
+  },
 
-        if (source && target) {
-          acc.push({ source, target })
-        }
+  watch: {
+    tables (tables) {
+      setTimeout(() => {
+        const relations = tables
+          .flatMap(table => table.columns)
+          .reduce((acc, column) => {
+            const source = document.querySelector(`[data-id="${column.id}"]`)
+            const target = document.querySelector(`[data-id="${column.datatype}"]`)
 
-        return acc
-      }, [])
-    console.log(relations)
+            if (source && target) {
+              acc.push({ source, target })
+            }
 
-    const plumb = jsPlumb.getInstance({
-      Container: this.$el
-    })
+            return acc
+          }, [])
 
-    plumb.ready(() => {
-      relations.forEach(plumb.connect)
-    })
+        const plumb = jsPlumb.getInstance({
+          Container: this.$el
+        })
+
+        plumb.ready(() => {
+          relations.forEach(plumb.connect)
+        })
+      }, 0)
+    }
   }
 }
 </script>
