@@ -11,6 +11,7 @@
   "dependencies": {
     "buefy": "0.8.15",
     "core-js": "^3.6.4",
+    "jsplumb": "2.13.1",
     "vue": "^2.6.11",
     "vue-router": "^3.1.6"
   },
