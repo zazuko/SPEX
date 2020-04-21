@@ -7,9 +7,10 @@ Object.keys(config.prefixes).forEach((prefix) => {
 })
 
 async function fetchStructure (endpoint, user, password, graph) {
+  const graphURI = graph ? `<${graph}>` : '?graph'
   const query = `
     SELECT DISTINCT ?cls ?property ?linktype ?datatype {
-      GRAPH <${graph}> {
+      GRAPH ${graphURI} {
         ?subject a ?cls .
         ?subject ?property ?object .
 
