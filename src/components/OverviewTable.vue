@@ -1,5 +1,5 @@
 <template>
-  <div class="OverviewTable card">
+  <div class="OverviewTable card is-size-7">
     <header class="card-header has-background-light">
       <h3 class="card-header-title">
         <span class="connector" :data-id="table.id"></span>
