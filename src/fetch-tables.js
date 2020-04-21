@@ -2,28 +2,25 @@ import SparqlClient from 'sparql-http-client'
 import { shrink, prefixes } from '@zazuko/rdf-vocabularies'
 import config from '@/config'
 
-const { endpoint, user, password, graph } = config
-
 Object.keys(config.prefixes).forEach((prefix) => {
   prefixes[prefix] = config.prefixes[prefix]
 })
 
-const query = `
-  SELECT DISTINCT ?cls ?property ?linktype ?datatype {
-    GRAPH <${graph}> {
-      ?subject a ?cls .
-      ?subject ?property ?object .
+async function fetchStructure (endpoint, user, password, graph) {
+  const query = `
+    SELECT DISTINCT ?cls ?property ?linktype ?datatype {
+      GRAPH <${graph}> {
+        ?subject a ?cls .
+        ?subject ?property ?object .
 
-      OPTIONAL {
-        ?object a ?linktype .
+        OPTIONAL {
+          ?object a ?linktype .
+        }
+
+        BIND(DATATYPE(?object) AS ?datatype)
       }
-
-      BIND(DATATYPE(?object) AS ?datatype)
     }
-  }
-`
-
-async function fetchStructure () {
+  `
   const client = new SparqlClient({ endpointUrl: endpoint, user, password })
   const stream = await client.query.select(query.toString())
 
@@ -44,8 +41,8 @@ async function fetchStructure () {
   })
 }
 
-export async function fetchTables () {
-  const structure = await fetchStructure()
+export async function fetchTables (endpoint, user, password, graph) {
+  const structure = await fetchStructure(endpoint, user, password, graph)
   const tables = structure.reduce((tables, { cls, property, linktype, datatype }) => {
     const table = tables.get(cls.value) || { id: cls.value, name: shrink(cls.value), columns: [] }
 
