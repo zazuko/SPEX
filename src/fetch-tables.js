@@ -47,10 +47,11 @@ export async function fetchTables (endpoint, user, password, graph) {
   const tables = structure.reduce((tables, { cls, property, linktype, datatype }) => {
     const table = tables.get(cls.value) || { id: cls.value, name: shrink(cls.value), columns: [] }
 
+    const type = (linktype && linktype.value) || (datatype && datatype.value) || ''
     table.columns.push({
       id: property.value,
       name: shrink(property.value),
-      datatype: (linktype && linktype.value) || (datatype && datatype.value)
+      type: { id: type, name: shrink(type) }
     })
 
     tables.set(cls.value, table)

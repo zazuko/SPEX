@@ -15,7 +15,11 @@
             {{ column.name }}
           </b-tooltip>
         </th>
-        <td>{{ column.datatype }}</td>
+        <td>
+          <b-tooltip :label="column.type.id">
+            {{ column.type.name }}
+          </b-tooltip>
+        </td>
         <td><span class="connector" :data-id="column.id"></span></td>
       </tr>
     </table>

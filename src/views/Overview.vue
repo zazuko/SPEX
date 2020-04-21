@@ -80,7 +80,7 @@ export default {
           .flatMap(table => table.columns)
           .reduce((acc, column) => {
             const source = document.querySelector(`[data-id="${column.id}"]`)
-            const target = document.querySelector(`[data-id="${column.datatype}"]`)
+            const target = document.querySelector(`[data-id="${column.type.id}"]`)
 
             if (source && target) {
               acc.push({ source, target })
