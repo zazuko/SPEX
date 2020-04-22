@@ -1,5 +1,5 @@
 <template>
-  <div class="card SettingsPane" :class="{ open: open }">
+  <div class="card">
     <div class="card-header">
       <p class="card-header-title">
         <b-button icon-left="chevron-right" @click="onClose" class="button is-white" title="Close">
@@ -7,7 +7,7 @@
         </b-button>
       </p>
     </div>
-    <form class="card-content" @submit.prevent="onSubmit" v-show="open">
+    <form class="card-content" @submit.prevent="onSubmit">
       <b-field label="Endpoint">
         <b-input v-model="settings.endpoint" />
       </b-field>
@@ -26,25 +26,14 @@
 </template>
 
 <style scoped>
-.SettingsPane {
-  position: fixed;
-  right: 0;
-  width: 20em;
-  height: 100%;
-  z-index: 100;
-
-  transform: translateX(21em);
-  transition: 200ms ease-in-out;
-}
-
-.SettingsPane.open {
-  transform: translateX(0);
+.card {
+  min-height: 100%;
 }
 </style>
 
 <script>
 export default {
-  props: ['settings', 'open', 'change', 'close'],
+  props: ['settings'],
 
   methods: {
     onSubmit () {

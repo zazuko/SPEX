@@ -1,34 +1,53 @@
 <template>
-  <div class="Overview section">
-    <b-button type="is-white" icon-right="cog" title="Options" @click="showSettings">
-      <h2 class="title is-6">
-        {{ settings.endpoint }}
-      </h2>
-    </b-button>
+  <div class="Overview">
+    <Splitpanes class="default-theme">
+      <Pane>
+        <Splitpanes horizontal>
+          <Pane>
+            <b-button type="is-white" icon-right="cog" title="Options" @click="showSettings">
+              <h2 class="title is-6">
+                {{ settings.endpoint }}
+              </h2>
+            </b-button>
 
-    <SettingsPane :settings="settings" :open="settingsShown" @change="loadData" @close="hideSettings" />
+            <div class="OverviewTables">
+              <OverviewTable v-for="table in tables" :key="table.id" :table="table" @explore="exploreTable" />
+            </div>
+          </Pane>
 
-    <div class="OverviewTables">
-      <OverviewTable v-for="table in tables" :key="table.id" :table="table" @explore="exploreTable" />
-    </div>
-
-    <TableExplorer :table="exploredTable" :open="explorerShown" :settings="settings" @close="hideExplorer" />
+          <Pane v-if="explorerShown">
+            <TableExplorer :table="exploredTable" :settings="settings" @close="hideExplorer" />
+          </Pane>
+        </Splitpanes>
+      </Pane>
+      <Pane v-if="settingsShown" size="20">
+        <SettingsPane :settings="settings" @change="loadData" @close="hideSettings" />
+      </Pane>
+    </Splitpanes>
   </div>
 </template>
 
 <style scoped>
 .Overview {
-  padding-top: 1em;
+  flex-grow: 1;
+  overflow-y: hidden;
 }
 
 .OverviewTables {
   display: flex;
   flex-wrap: wrap;
 }
+
+.splitpanes .splitpanes__pane {
+  background-color: white;
+  overflow: auto;
+}
 </style>
 
 <script>
 import { jsPlumb } from 'jsplumb'
+import { Splitpanes, Pane } from 'splitpanes'
+import 'splitpanes/dist/splitpanes.css'
 import OverviewTable from '@/components/OverviewTable.vue'
 import SettingsPane from '@/components/SettingsPane.vue'
 import TableExplorer from '@/components/TableExplorer.vue'
@@ -39,7 +58,9 @@ export default {
   components: {
     OverviewTable,
     SettingsPane,
-    TableExplorer
+    TableExplorer,
+    Splitpanes,
+    Pane
   },
 
   async mounted () {

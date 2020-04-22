@@ -1,5 +1,5 @@
 <template>
-  <div class="card TableExplorer is-size-7" :class="{ open: open }" :style="{ height }">
+  <div class="card is-size-7">
     <div class="card-header has-background-light">
       <p class="card-header-title">
         <span v-if="table">{{ table.name }}</span>
@@ -34,30 +34,13 @@
 </template>
 
 <style scoped>
-.TableExplorer {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  min-height: 20em;
-  width: 100%;
-  z-index: 120;
-
-  transform: translateY(100%);
-  transition: 100ms ease-in-out;
-}
-
-.TableExplorer.open {
-  transform: translateY(0);
+.card {
+  min-height: 100%;
 }
 
 .card-header-title,
 .card-header-icon {
   padding: 0.5rem;
-}
-
-.card-content {
-  overflow-y: scroll;
 }
 
 .term-values {
@@ -72,7 +55,7 @@ import { fetchTableData } from '@/fetch-tables'
 import Term from './Term.vue'
 
 export default {
-  props: ['table', 'settings', 'open'],
+  props: ['table', 'tables', 'settings'],
 
   components: {
     Term
@@ -80,7 +63,6 @@ export default {
 
   data () {
     return {
-      height: '50%',
       data: []
     }
   },
@@ -93,8 +75,10 @@ export default {
 
   watch: {
     async table (table) {
+      this.data = []
+
       if (!table) {
-        this.data = []
+        return
       }
 
       const loader = this.$buefy.loading.open({})
