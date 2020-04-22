@@ -30,6 +30,11 @@
         </tr>
       </tbody>
     </table>
+    <div class="message is-danger" v-if="error">
+      <div class="message-body">
+        Error loading data: {{ error }}
+      </div>
+    </div>
   </div>
 </template>
 
@@ -63,7 +68,8 @@ export default {
 
   data () {
     return {
-      data: []
+      data: [],
+      error: null
     }
   },
 
@@ -76,15 +82,18 @@ export default {
   watch: {
     async table (table) {
       this.data = []
+      this.error = null
 
       if (!table) {
         return
       }
 
       const loader = this.$buefy.loading.open({})
-      // TODO: Handle errors
       try {
         this.data = await fetchTableData(table, this.settings)
+      } catch (e) {
+        this.error = e
+        console.error(e)
       } finally {
         loader.close()
       }

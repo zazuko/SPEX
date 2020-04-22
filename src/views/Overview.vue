@@ -13,6 +13,13 @@
             <div class="OverviewTables">
               <OverviewTable v-for="table in tables" :key="table.id" :table="table" @explore="exploreTable" />
             </div>
+            <div class="section" v-if="error">
+              <div class="message is-danger">
+                <div class="message-body">
+                  Error loading data: {{ error }}
+                </div>
+              </div>
+            </div>
           </Pane>
 
           <Pane v-if="explorerShown">
@@ -79,6 +86,7 @@ export default {
       explorerShown: false,
       exploredTable: null,
       tables: [],
+      error: null,
       plumb: jsPlumb.getInstance({ Container: this.$el })
     }
   },
@@ -87,11 +95,14 @@ export default {
     async loadData (settings) {
       this.resetView()
 
-      const loader = this.$buefy.loading.open({})
       this.tables = []
-      // TODO: Handle error
+      this.error = null
+      const loader = this.$buefy.loading.open({})
       try {
         this.tables = await fetchTables(settings)
+      } catch (e) {
+        this.error = e
+        console.error(e)
       } finally {
         loader.close()
       }
