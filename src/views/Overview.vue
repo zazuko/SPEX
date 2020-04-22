@@ -52,6 +52,7 @@ export default {
       },
       settingsShown: false,
       tables: [],
+      plumb: jsPlumb.getInstance({ Container: this.$el })
     }
   },
 
@@ -78,6 +79,12 @@ export default {
 
   watch: {
     tables (tables) {
+      this.plumb.reset()
+
+      if (tables.length === 0) {
+        return
+      }
+
       setTimeout(() => {
         const relations = tables
           .flatMap(table => table.columns)
@@ -92,12 +99,8 @@ export default {
             return acc
           }, [])
 
-        const plumb = jsPlumb.getInstance({
-          Container: this.$el
-        })
-
-        plumb.ready(() => {
-          relations.forEach(plumb.connect)
+        this.plumb.ready(() => {
+          relations.forEach(this.plumb.connect)
         })
       }, 0)
     }
