@@ -12,6 +12,7 @@
     "@fortawesome/fontawesome-svg-core": "1.2.28",
     "@fortawesome/free-solid-svg-icons": "5.13.0",
     "@fortawesome/vue-fontawesome": "0.1.9",
+    "@rdfjs/term-set": "1.0.1",
     "@tpluscode/rdf-string": "0.2.11",
     "@zazuko/rdf-vocabularies": "2020.3.23",
     "buefy": "0.8.15",

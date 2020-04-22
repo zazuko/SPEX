@@ -9,8 +9,10 @@
     <SettingsPane :settings="settings" :open="settingsShown" @change="loadData" @close="hideSettings" />
 
     <div class="OverviewTables">
-      <OverviewTable v-for="table in tables" :key="table.id" :table="table" />
+      <OverviewTable v-for="table in tables" :key="table.id" :table="table" @explore="exploreTable" />
     </div>
+
+    <TableExplorer :table="exploredTable" :open="explorerShown" :settings="settings" @close="hideExplorer" />
   </div>
 </template>
 
@@ -29,13 +31,15 @@
 import { jsPlumb } from 'jsplumb'
 import OverviewTable from '@/components/OverviewTable.vue'
 import SettingsPane from '@/components/SettingsPane.vue'
+import TableExplorer from '@/components/TableExplorer.vue'
 import { fetchTables } from '@/fetch-tables'
 import config from '@/config'
 
 export default {
   components: {
     OverviewTable,
-    SettingsPane
+    SettingsPane,
+    TableExplorer
   },
 
   async mounted () {
@@ -51,6 +55,8 @@ export default {
         graph: config.graph
       },
       settingsShown: false,
+      explorerShown: false,
+      exploredTable: null,
       tables: [],
       plumb: jsPlumb.getInstance({ Container: this.$el })
     }
@@ -74,6 +80,13 @@ export default {
     },
     hideSettings () {
       this.settingsShown = false
+    },
+    exploreTable (table) {
+      this.explorerShown = true
+      this.exploredTable = table
+    },
+    hideExplorer () {
+      this.explorerShown = false
     }
   },
 

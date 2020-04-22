@@ -7,9 +7,12 @@
           {{ table.name }}
         </b-tooltip>
       </h3>
+      <span class="card-header-icon">
+        <b-button type="is-light" size="is-small" icon-left="table" title="Explore" @click="explore" />
+      </span>
     </header>
     <table class="card-content table">
-      <tr v-for="column in table.columns" :key="table.id + column.id">
+      <tr v-for="(column, index) in table.columns" :key="index">
         <th>
           <b-tooltip :label="column.id">
             {{ column.name }}
@@ -30,14 +33,25 @@
 .OverviewTable {
   margin: 1em;
 }
+
+.card-header-title,
+.card-header-icon {
+  padding: 0.5rem;
+}
 </style>
 
 <script>
-
 export default {
   props: ['table', 'overview'],
+
   data () {
     return {}
+  },
+
+  methods: {
+    explore () {
+      this.$emit('explore', this.table)
+    }
   }
 }
 </script>

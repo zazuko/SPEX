@@ -1,5 +1,5 @@
 <template>
-  <div class="card SettingsPane" :class="{ open: open }" animation="slide">
+  <div class="card SettingsPane" :class="{ open: open }">
     <div class="card-header">
       <p class="card-header-title">
         <b-button icon-left="chevron-right" @click="onClose" class="button is-white" title="Close">
