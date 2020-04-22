@@ -2,8 +2,9 @@
   <div class="card SettingsPane" :class="{ open: open }" animation="slide">
     <div class="card-header">
       <p class="card-header-title">
-        <b-button icon-left="chevron-right" @click="onClose" class="button is-white" title="Close" />
-        Options
+        <b-button icon-left="chevron-right" @click="onClose" class="button is-white" title="Close">
+          Options
+        </b-button>
       </p>
     </div>
     <form class="card-content" @submit.prevent="onSubmit" v-show="open">

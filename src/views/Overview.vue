@@ -1,11 +1,10 @@
 <template>
-  <div class="section">
-    <h1 class="title is-4">
-      Endpoint: {{ settings.endpoint }}
-      <button class="button is-white" title="Options" @click="showSettings">
-        <b-icon icon="settings" />
-      </button>
-    </h1>
+  <div class="Overview section">
+    <b-button type="is-white" icon-right="cog" title="Options" @click="showSettings">
+      <h2 class="title is-6">
+        {{ settings.endpoint }}
+      </h2>
+    </b-button>
 
     <SettingsPane :settings="settings" :open="settingsShown" @change="loadData" @close="hideSettings" />
 
@@ -16,6 +15,10 @@
 </template>
 
 <style scoped>
+.Overview {
+  padding-top: 1em;
+}
+
 .OverviewTables {
   display: flex;
   flex-wrap: wrap;
