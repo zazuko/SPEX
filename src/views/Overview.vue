@@ -85,7 +85,7 @@ export default {
 
   methods: {
     async loadData (settings) {
-      this.settingsShown = false
+      this.resetView()
 
       const loader = this.$buefy.loading.open({})
       this.tables = []
@@ -107,6 +107,11 @@ export default {
       this.exploredTable = table
     },
     hideExplorer () {
+      this.explorerShown = false
+    },
+    resetView () {
+      this.settingsShown = false
+      this.exploredTable = null
       this.explorerShown = false
     }
   },
