@@ -1,6 +1,6 @@
 <template>
   <span :title="term.value">
-    {{ displayValue }}
+    {{ displayValue }}<small v-if="language" class="has-text-grey">@{{ language }}</small>
   </span>
 </template>
 
@@ -12,7 +12,8 @@ export default {
 
   data () {
     return {
-      displayValue: termValue(this.term)
+      displayValue: termValue(this.term),
+      language: this.term && this.term.language
     }
   }
 }
