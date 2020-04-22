@@ -76,12 +76,13 @@ export async function fetchTableData (table, options) {
   const predicates = table.columns.map(({ id }) => id)
   const graphURI = options.graph ? `<${options.graph}>` : '?graph'
   const variables = predicates.map((pred, index) => `v${index}`)
-  const predicatesMapping = predicates.map((predicate, index) => `<${predicate}> ?${variables[index]}`).join(' ;\n')
+  const predicatesMapping = predicates.map((predicate, index) => `OPTIONAL { ?subject <${predicate}> ?${variables[index]} }`).join('\n')
   const query = `
-    SELECT ?subject ${variables.map(v => `?${v}`).join(' ')} {
+    SELECT ?subject ${variables.map(v => `?${v}`).join(' ')}
+    WHERE {
       GRAPH ${graphURI} {
-        ?subject a <${table.id}> ;
-          ${predicatesMapping} .
+        ?subject a <${table.id}> .
+        ${predicatesMapping}
       }
     } LIMIT ${limit}
   `
@@ -97,7 +98,9 @@ export async function fetchTableData (table, options) {
       }
 
       const term = result[variables[index]]
-      row[predicate].add(term)
+      if (term) {
+        row[predicate].add(term)
+      }
     })
 
     acc.set(subject, row)
