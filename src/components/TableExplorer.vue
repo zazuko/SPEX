@@ -66,6 +66,10 @@ export default {
     Term
   },
 
+  async mounted () {
+    await this.loadData()
+  },
+
   data () {
     return {
       data: [],
@@ -76,27 +80,30 @@ export default {
   methods: {
     onClose () {
       this.$emit('close')
-    }
-  },
-
-  watch: {
-    async table (table) {
+    },
+    async loadData () {
       this.data = []
       this.error = null
 
-      if (!table) {
+      if (!this.table) {
         return
       }
 
       const loader = this.$buefy.loading.open({})
       try {
-        this.data = await fetchTableData(table, this.settings)
+        this.data = await fetchTableData(this.table, this.settings)
       } catch (e) {
         this.error = e
         console.error(e)
       } finally {
         loader.close()
       }
+    }
+  },
+
+  watch: {
+    async table () {
+      await this.loadData()
     }
   }
 }
