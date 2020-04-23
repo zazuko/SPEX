@@ -57,7 +57,7 @@ import 'splitpanes/dist/splitpanes.css'
 import OverviewTables from '@/components/OverviewTables.vue'
 import SettingsPane from '@/components/SettingsPane.vue'
 import TableExplorer from '@/components/TableExplorer.vue'
-import { Endpoint } from '@/fetch-tables'
+import { Endpoint } from '@/endpoint'
 import config from '@/config'
 
 export default {
