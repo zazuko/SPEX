@@ -2,9 +2,9 @@
   <div class="OverviewTable card is-size-7" :data-id="table.id">
     <header class="card-header has-background-light">
       <h3 class="card-header-title">
-        <b-tooltip :label="table.id">
+        <TermTooltip :label="table.id">
           {{ table.name }}
-        </b-tooltip>
+        </TermTooltip>
       </h3>
       <span class="card-header-icon">
         <b-button type="is-light" size="is-small" icon-left="table" title="Explore" @click="explore" />
@@ -13,14 +13,14 @@
     <table class="card-content table">
       <tr v-for="(column, index) in table.columns" :key="index">
         <th>
-          <b-tooltip :label="column.id">
+          <TermTooltip :label="column.id">
             {{ column.name }}
-          </b-tooltip>
+          </TermTooltip>
         </th>
         <td>
-          <b-tooltip :label="column.type.id">
+          <TermTooltip :label="column.type.id">
             {{ column.type.name }}
-          </b-tooltip>
+          </TermTooltip>
         </td>
       </tr>
     </table>
@@ -40,8 +40,12 @@
 </style>
 
 <script>
+import TermTooltip from './TermTooltip.vue'
+
 export default {
   props: ['table', 'overview'],
+
+  components: { TermTooltip },
 
   data () {
     return {}

@@ -1,12 +1,16 @@
 <template>
-  <span :title="term.value">
+  <TermTooltip :label="tooltip">
     {{ displayValue }}<small v-if="language" class="has-text-grey">@{{ language }}</small>
-  </span>
+  </TermTooltip>
 </template>
 
 <script>
+import TermTooltip from './TermTooltip.vue'
+
 export default {
   props: ['term', 'endpoint'],
+
+  components: { TermTooltip },
 
   data () {
     const displayValue = termValue(this.endpoint, this.term)
@@ -14,6 +18,7 @@ export default {
     return {
       displayValue,
       language: this.term && this.term.language,
+      tooltip: this.term.value !== displayValue ? this.term.value : ''
     }
   }
 }
