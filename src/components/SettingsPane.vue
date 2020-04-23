@@ -8,8 +8,8 @@
       </p>
     </div>
     <form class="card-content" @submit.prevent="onSubmit">
-      <b-field label="Endpoint">
-        <b-input v-model="settings.endpoint" />
+      <b-field label="Endpoint URL">
+        <b-input v-model="settings.url" />
       </b-field>
       <b-field label="Username">
         <b-input v-model="settings.user" />
