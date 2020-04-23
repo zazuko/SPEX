@@ -10,9 +10,8 @@
               </h2>
             </b-button>
 
-            <div class="OverviewTables">
-              <OverviewTable v-for="table in tables" :key="table.id" :table="table" @explore="exploreTable" />
-            </div>
+            <OverviewTables :tables="tables" @explore="exploreTable" />
+
             <div class="section" v-if="error">
               <div class="message is-danger">
                 <div class="message-body">
@@ -52,10 +51,9 @@
 </style>
 
 <script>
-import { jsPlumb } from 'jsplumb'
 import { Splitpanes, Pane } from 'splitpanes'
 import 'splitpanes/dist/splitpanes.css'
-import OverviewTable from '@/components/OverviewTable.vue'
+import OverviewTables from '@/components/OverviewTables.vue'
 import SettingsPane from '@/components/SettingsPane.vue'
 import TableExplorer from '@/components/TableExplorer.vue'
 import { fetchTables } from '@/fetch-tables'
@@ -63,7 +61,7 @@ import config from '@/config'
 
 export default {
   components: {
-    OverviewTable,
+    OverviewTables,
     SettingsPane,
     TableExplorer,
     Splitpanes,
@@ -86,8 +84,7 @@ export default {
       explorerShown: false,
       exploredTable: null,
       tables: [],
-      error: null,
-      plumb: jsPlumb.getInstance({ Container: this.$el })
+      error: null
     }
   },
 
@@ -124,35 +121,6 @@ export default {
       this.settingsShown = false
       this.exploredTable = null
       this.explorerShown = false
-    }
-  },
-
-  watch: {
-    tables (tables) {
-      this.plumb.reset()
-
-      if (tables.length === 0) {
-        return
-      }
-
-      setTimeout(() => {
-        const relations = tables
-          .flatMap(table => table.columns)
-          .reduce((acc, column) => {
-            const source = document.querySelector(`[data-id="${column.id}"]`)
-            const target = document.querySelector(`[data-id="${column.type.id}"]`)
-
-            if (source && target) {
-              acc.push({ source, target })
-            }
-
-            return acc
-          }, [])
-
-        this.plumb.ready(() => {
-          relations.forEach(this.plumb.connect)
-        })
-      }, 0)
     }
   }
 }
