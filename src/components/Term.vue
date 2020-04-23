@@ -5,26 +5,26 @@
 </template>
 
 <script>
-import { shrinkURI } from '@/fetch-tables'
-
 export default {
-  props: ['term'],
+  props: ['term', 'endpoint'],
 
   data () {
+    const displayValue = termValue(this.endpoint, this.term)
+
     return {
-      displayValue: termValue(this.term),
-      language: this.term && this.term.language
+      displayValue,
+      language: this.term && this.term.language,
     }
   }
 }
 
-function termValue (term) {
+function termValue (endpoint, term) {
   if (!term) {
     return term
   }
 
   if (term.termType === 'NamedNode') {
-    return shrinkURI(term.value)
+    return endpoint.shrink(term.value)
   }
 
   return term.value

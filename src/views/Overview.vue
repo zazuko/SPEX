@@ -6,7 +6,8 @@
           <Pane>
             <b-button type="is-white" icon-right="cog" title="Options" @click="showSettings">
               <h2 class="title is-6">
-                {{ settings.endpoint }}
+                <span v-if="endpoint">{{ endpoint.url }}</span>
+                <span v-else>No endpoint configured yet</span>
               </h2>
             </b-button>
 
@@ -22,12 +23,12 @@
           </Pane>
 
           <Pane v-if="explorerShown">
-            <TableExplorer :table="exploredTable" :settings="settings" @close="hideExplorer" />
+            <TableExplorer :table="exploredTable" :endpoint="endpoint" @close="hideExplorer" />
           </Pane>
         </Splitpanes>
       </Pane>
-      <Pane v-if="settingsShown" size="20">
-        <SettingsPane :settings="settings" @change="loadData" @close="hideSettings" />
+      <Pane v-if="settingsShown" size="30">
+        <SettingsPane :settings="settings" @change="loadEndpoint" @close="hideSettings" />
       </Pane>
     </Splitpanes>
   </div>
@@ -56,7 +57,7 @@ import 'splitpanes/dist/splitpanes.css'
 import OverviewTables from '@/components/OverviewTables.vue'
 import SettingsPane from '@/components/SettingsPane.vue'
 import TableExplorer from '@/components/TableExplorer.vue'
-import { fetchTables } from '@/fetch-tables'
+import { Endpoint } from '@/fetch-tables'
 import config from '@/config'
 
 export default {
@@ -69,17 +70,13 @@ export default {
   },
 
   async mounted () {
-    await this.loadData(this.settings)
+    await this.loadEndpoint(this.settings)
   },
 
   data () {
     return {
-      settings: {
-        endpoint: config.endpoint,
-        user: config.user,
-        password: config.password,
-        graph: config.graph
-      },
+      settings: config,
+      endpoint: null,
       settingsShown: false,
       explorerShown: false,
       exploredTable: null,
@@ -89,20 +86,28 @@ export default {
   },
 
   methods: {
-    async loadData (settings) {
+    async loadData () {
+      if (!this.endpoint) {
+        throw new Error('No endpoint defined')
+      }
+
       this.resetView()
 
       this.tables = []
       this.error = null
       const loader = this.$buefy.loading.open({})
       try {
-        this.tables = await fetchTables(settings)
+        this.tables = await this.endpoint.fetchTables()
       } catch (e) {
         this.error = e
         console.error(e)
       } finally {
         loader.close()
       }
+    },
+    async loadEndpoint (settings) {
+      this.endpoint = new Endpoint(settings)
+      await this.loadData()
     },
     showSettings () {
       this.settingsShown = true

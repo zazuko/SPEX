@@ -23,7 +23,7 @@
           <td>{{ row.id }}</td>
           <td v-for="(column, index) in table.columns" :key="index">
             <p class="term-values" v-for="(value, index) in row[column.id]" :key="index">
-              <Term :term="value" />
+              <Term :term="value" :endpoint="endpoint" />
               <b-button v-if="value.termType === 'NamedNode'" type="is-white" size="is-small" icon-left="table" />
             </p>
           </td>
@@ -56,11 +56,10 @@
 </style>
 
 <script>
-import { fetchTableData } from '@/fetch-tables'
 import Term from './Term.vue'
 
 export default {
-  props: ['table', 'tables', 'settings'],
+  props: ['table', 'tables', 'endpoint'],
 
   components: {
     Term
@@ -91,7 +90,7 @@ export default {
 
       const loader = this.$buefy.loading.open({})
       try {
-        this.data = await fetchTableData(this.table, this.settings)
+        this.data = await this.endpoint.fetchTableData(this.table)
       } catch (e) {
         this.error = e
         console.error(e)
