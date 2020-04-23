@@ -1,8 +1,7 @@
 <template>
-  <div class="OverviewTable card is-size-7">
+  <div class="OverviewTable card is-size-7" :data-id="table.id">
     <header class="card-header has-background-light">
       <h3 class="card-header-title">
-        <span class="connector" :data-id="table.id"></span>
         <b-tooltip :label="table.id">
           {{ table.name }}
         </b-tooltip>
@@ -23,7 +22,6 @@
             {{ column.type.name }}
           </b-tooltip>
         </td>
-        <td><span class="connector" :data-id="column.id"></span></td>
       </tr>
     </table>
   </div>
@@ -31,7 +29,8 @@
 
 <style scoped>
 .OverviewTable {
-  margin: 1em;
+  margin: 2rem;
+  z-index: 1;
 }
 
 .card-header-title,
