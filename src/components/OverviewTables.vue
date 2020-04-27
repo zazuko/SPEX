@@ -14,6 +14,31 @@
 /* These are not scoped because they are not controlled by vue */
 .connection-label {
   font-size: 0.75rem;
+  font-weight: bold;
+  background-color: white;
+  border: 1px solid gray;
+  padding: 0 0.2rem;
+
+  display: none;
+}
+
+.connection:hover + .connection-label {
+  display: block;
+  z-index: 2;
+}
+
+.connection:hover {
+  z-index: 1;
+  cursor: grab;
+}
+
+.connection > path {
+  stroke-width: 1px;
+}
+
+.connection > path:hover {
+  stroke: red;
+  stroke-width: 3px;
 }
 </style>
 
@@ -36,7 +61,7 @@ export default {
     }
   },
 
-  updated () {
+  mounted () {
     this.$nextTick(this.renderConnections)
   },
 
@@ -66,13 +91,14 @@ export default {
             acc.push({
               source,
               target,
-              connector: ['Bezier'],
+              connector: ['Straight'],
               endpoint: ['Blank', {}],
               anchor: ['Perimeter', { shape: 'Rectangle' }],
               overlays: [
                 ['Arrow', { width: 10, length: 10, location: 1, id: 'arrow' }],
-                ['Label', { label: column.name, location: 0.1, id: 'label', cssClass: 'connection-label' }]
-              ]
+                ['Label', { label: column.name, location: 0.5, id: 'label', cssClass: 'connection-label' }]
+              ],
+              cssClass: 'connection'
             })
           }
 
