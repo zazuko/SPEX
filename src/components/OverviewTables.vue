@@ -46,6 +46,10 @@
   stroke: red;
   stroke-width: 3px;
 }
+
+.connection-endpoint {
+  z-index: 1;
+}
 </style>
 
 <script>
@@ -100,7 +104,7 @@ export default {
       const relations = this.tables
         .flatMap(table => table.columns.map((column) => ({ ...column, table })))
         .reduce((acc, column) => {
-          const source = document.querySelector(`[data-id="${column.table.id}"]`)
+          const source = document.querySelector(`[data-id="${column.table.id}${column.id}"]`)
           const target = document.querySelector(`[data-id="${column.type.id}"]`)
 
           if (source && target) {
@@ -108,8 +112,14 @@ export default {
               source,
               target,
               connector: ['Straight'],
-              endpoint: ['Blank', {}],
-              anchor: ['Perimeter', { shape: 'Rectangle' }],
+              endpoints: [
+                ['Dot', { radius: 3, cssClass: 'connection-endpoint' }],
+                ['Blank', {}]
+              ],
+              anchors: [
+                ['Left', 'Right'],
+                ['Perimeter', { shape: 'Rectangle' }]
+              ],
               overlays: [
                 ['Arrow', { width: 10, length: 10, location: 1, id: 'arrow' }],
                 ['Label', { label: column.name, location: 0.5, id: 'label', cssClass: 'connection-label' }]

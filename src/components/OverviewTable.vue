@@ -11,7 +11,7 @@
       </span>
     </header>
     <table class="card-content table">
-      <tr v-for="(column, index) in table.columns" :key="index">
+      <tr v-for="(column, index) in table.columns" :key="index" :data-id="table.id + column.id">
         <th>
           <TermTooltip :label="column.id">
             {{ column.name }}
