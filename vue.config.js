@@ -1,5 +1,7 @@
 module.exports = {
-  publicPath: '/endpoint-explorer/',
+  publicPath: process.env.NODE_ENV === 'production'
+    ? '/endpoint-explorer/'
+    : '/',
 
   chainWebpack: config => {
     config.module
@@ -33,5 +35,5 @@ module.exports = {
         }]
       })
     }
-  },
+  }
 }
