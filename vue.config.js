@@ -1,4 +1,6 @@
 module.exports = {
+  publicPath: '/endpoint-explorer/',
+
   chainWebpack: config => {
     config.module
       .rule('nq')
