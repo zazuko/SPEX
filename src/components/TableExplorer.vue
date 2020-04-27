@@ -9,27 +9,29 @@
         <b-button type="is-light" icon-left="times" @click="onClose" title="Close" />
       </p>
     </div>
-    <table class="card-content table is-fullwidth" v-if="table">
-      <thead>
-        <tr>
-          <th>URI</th>
-          <th v-for="(column, index) in table.columns" :key="index">
-            {{ column.name }}
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(row, index) in data" :key="index">
-          <td>{{ row.id }}</td>
-          <td v-for="(column, index) in table.columns" :key="index">
-            <p class="term-values" v-for="(value, index) in row[column.id]" :key="index">
-              <Term :term="value" :endpoint="endpoint" />
-              <b-button v-if="value.termType === 'NamedNode'" type="is-white" size="is-small" icon-left="table" />
-            </p>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="card-content">
+      <table class="table is-fullwidth" v-if="table">
+        <thead>
+          <tr>
+            <th>URI</th>
+            <th v-for="(column, index) in table.columns" :key="index">
+              {{ column.name }}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(row, index) in data" :key="index">
+            <td>{{ row.id }}</td>
+            <td v-for="(column, index) in table.columns" :key="index">
+              <p class="term-values" v-for="(value, index) in row[column.id]" :key="index">
+                <Term :term="value" :endpoint="endpoint" />
+                <b-button v-if="value.termType === 'NamedNode'" type="is-white" size="is-small" icon-left="table" />
+              </p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
     <div class="message is-danger" v-if="error">
       <div class="message-body">
         Error loading data: {{ error }}
@@ -41,11 +43,18 @@
 <style scoped>
 .card {
   min-height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .card-header-title,
 .card-header-icon {
   padding: 0.5rem;
+}
+
+.card-content {
+  padding: 0;
+  overflow: auto;
 }
 
 .term-values {

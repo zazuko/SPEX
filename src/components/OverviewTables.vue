@@ -6,7 +6,13 @@
 
 <style scoped>
 .OverviewTables {
+  flex-grow: 1;
+
   position: relative;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  overflow: auto;
 }
 </style>
 

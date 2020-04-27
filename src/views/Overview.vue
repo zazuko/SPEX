@@ -4,19 +4,21 @@
       <Pane>
         <Splitpanes horizontal>
           <Pane>
-            <b-button type="is-white" icon-right="cog" title="Options" @click="showSettings">
-              <h2 class="title is-6">
-                <span v-if="endpoint">{{ endpoint.url }}</span>
-                <span v-else>No endpoint configured yet</span>
-              </h2>
-            </b-button>
+            <div class="OverviewPane">
+              <b-button type="is-white" icon-right="cog" title="Options" @click="showSettings">
+                <h2 class="title is-6">
+                  <span v-if="endpoint">{{ endpoint.url }}</span>
+                  <span v-else>No endpoint configured yet</span>
+                </h2>
+              </b-button>
 
-            <OverviewTables :tables="tables" @explore="exploreTable" />
+              <OverviewTables :tables="tables" @explore="exploreTable" />
 
-            <div class="section" v-if="error">
-              <div class="message is-danger">
-                <div class="message-body">
-                  Error loading data: {{ error }}
+              <div class="section" v-if="error">
+                <div class="message is-danger">
+                  <div class="message-body">
+                    Error loading data: {{ error }}
+                  </div>
                 </div>
               </div>
             </div>
@@ -40,14 +42,20 @@
   overflow-y: hidden;
 }
 
-.OverviewTables {
+.OverviewPane {
+  flex-grow: 1;
+
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: flex-start;
+  overflow: hidden;
 }
 
 .splitpanes .splitpanes__pane {
   background-color: white;
-  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 </style>
 
