@@ -1,6 +1,9 @@
 <template>
   <div class="OverviewTables">
     <OverviewTable v-for="table in tables" :key="table.id" :table="table" @explore="explore" />
+    <div v-if="tables.length === 0" class="section">
+      <p>Nothing to show</p>
+    </div>
   </div>
 </template>
 

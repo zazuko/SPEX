@@ -108,6 +108,7 @@ export default {
         this.tables = await this.endpoint.fetchTables()
       } catch (e) {
         this.error = e
+        this.showSettings()
         console.error(e)
       } finally {
         loader.close()
