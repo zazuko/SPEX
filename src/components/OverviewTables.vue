@@ -63,6 +63,16 @@ export default {
 
   mounted () {
     this.$nextTick(this.renderConnections)
+
+    window.addEventListener('resize', () => {
+      this.renderConnections()
+    })
+  },
+
+  watch: {
+    tables () {
+      this.$nextTick(this.renderConnections)
+    }
   },
 
   methods: {
