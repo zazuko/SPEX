@@ -1,4 +1,4 @@
-import SparqlClient from 'sparql-http-client'
+import ParsingClient from 'sparql-http-client/ParsingClient'
 import TermSet from '@rdfjs/term-set'
 import { shrink, prefixes as _prefixes } from '@zazuko/rdf-vocabularies'
 
@@ -9,7 +9,7 @@ export class Endpoint {
     this.password = password
     this.prefixes = prefixes
     this.graph = graph
-    this.client = new SparqlClient({ endpointUrl: url, user, password })
+    this.client = new ParsingClient({ endpointUrl: url, user, password })
 
     prefixes.forEach(({ prefix, url }) => {
       _prefixes[prefix] = url
@@ -56,7 +56,7 @@ export class Endpoint {
         }
       }
     `
-    return fetchQuery(this.client, query)
+    return this.client.query.select(query)
   }
 
   async fetchTableData (table) {
@@ -74,7 +74,7 @@ export class Endpoint {
         }
       } LIMIT ${limit}
     `
-    const results = await fetchQuery(this.client, query)
+    const results = await this.client.query.select(query)
 
     const rows = results.reduce((acc, result) => {
       const subject = result.subject.value
@@ -97,24 +97,4 @@ export class Endpoint {
 
     return [...rows.values()]
   }
-}
-
-async function fetchQuery (client, query) {
-  const stream = await client.query.select(query)
-
-  return new Promise((resolve, reject) => {
-    const results = []
-
-    stream.on('data', (result) => {
-      results.push(result)
-    })
-
-    stream.on('error', (error) => {
-      reject(error)
-    })
-
-    stream.on('end', () => {
-      resolve(results)
-    })
-  })
 }
