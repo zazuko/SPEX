@@ -93,6 +93,13 @@ export default {
   },
 
   async mounted () {
+    this.$buefy.notification.open({
+      type: 'is-warning',
+      message: 'This is a prototype and probably contains some bugs. Don\'t rely on it for anything important',
+      hasIcon: true,
+      duration: 20000
+    })
+
     await this.loadEndpoint(this.settings)
   },
 
