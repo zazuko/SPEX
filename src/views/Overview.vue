@@ -77,13 +77,12 @@ export default {
     Pane
   },
 
-  async mounted () {
-    await this.loadEndpoint(this.settings)
-  },
-
   data () {
+    const urlSettings = settingsFromURL(this.$route.query)
+    const settings = { ...config, ...urlSettings }
+
     return {
-      settings: config,
+      settings,
       endpoint: null,
       settingsShown: false,
       explorerShown: false,
@@ -91,6 +90,10 @@ export default {
       tables: [],
       error: null
     }
+  },
+
+  async mounted () {
+    await this.loadEndpoint(this.settings)
   },
 
   methods: {
@@ -115,6 +118,7 @@ export default {
       }
     },
     async loadEndpoint (settings) {
+      await this.updateURL(settings)
       this.endpoint = new Endpoint(settings)
       await this.loadData()
     },
@@ -135,7 +139,55 @@ export default {
       this.settingsShown = false
       this.exploredTable = null
       this.explorerShown = false
+    },
+    async updateURL (settings) {
+      const query = urlQueryFromSettings(settings)
+      try {
+        await this.$router.push({ query })
+      } catch (e) {
+        // Ignore "navigation duplicated" errors
+        if (e.name !== 'NavigationDuplicated') {
+          throw e
+        }
+      }
     }
   }
+}
+
+const validURLOptions = ['url', 'graph', 'prefixes']
+
+function settingsFromURL (params) {
+  return validURLOptions.reduce((settings, option) => {
+    if (option in params) {
+      settings[option] = deserializeURLParam(option, params[option])
+    }
+    return settings
+  }, {})
+}
+
+function urlQueryFromSettings (settings) {
+  return validURLOptions.reduce((params, option) => {
+    return { ...params, [option]: serializeURLParam(option, settings[option]) }
+  }, {})
+}
+
+function serializeURLParam (param, value) {
+  if (param === 'prefixes') {
+    return value.map(({ prefix, url }) => `${prefix}:${url}`)
+  }
+
+  return value
+}
+
+function deserializeURLParam (param, value) {
+  if (param === 'prefixes') {
+    return value.map((prefixValue) => {
+      const prefix = prefixValue.split(':')[0]
+      const url = prefixValue.split(':').slice(1).join(':')
+      return { prefix, url }
+    })
+  }
+
+  return value
 }
 </script>
