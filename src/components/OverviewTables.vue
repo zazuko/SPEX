@@ -4,6 +4,7 @@
     <div v-if="tables.length === 0" class="section">
       <p>Nothing to show</p>
     </div>
+    <resize-observer @notify="onResize" />
   </div>
 </template>
 
@@ -57,6 +58,7 @@
 
 <script>
 import { jsPlumb } from 'jsplumb'
+import debounce from 'lodash.debounce'
 import OverviewTable from './OverviewTable.vue'
 
 export default {
@@ -75,16 +77,12 @@ export default {
   },
 
   mounted () {
-    this.$nextTick(this.renderConnections)
-
-    window.addEventListener('resize', () => {
-      this.renderConnections()
-    })
+    this.renderConnections()
   },
 
   watch: {
     tables () {
-      this.$nextTick(this.renderConnections)
+      this.renderConnections()
     }
   },
 
@@ -92,7 +90,10 @@ export default {
     explore (table) {
       this.$emit('explore', table)
     },
-    renderConnections () {
+    onResize () {
+      this.renderConnections()
+    },
+    renderConnections: debounce(function () {
       if (this.plumb) {
         this.plumb.reset()
         this.plumb = null
@@ -101,6 +102,10 @@ export default {
       if (this.tables.length === 0) {
         return
       }
+
+      // Scroll to top because jsPlumb fails to properly render the
+      // connections otherwise
+      this.$el.scrollTop = 0
 
       this.plumb = jsPlumb.getInstance({ Container: this.$el })
 
@@ -135,7 +140,7 @@ export default {
         }, [])
 
       relations.forEach(this.plumb.connect)
-    }
+    }, 100)
   }
 }
 </script>
