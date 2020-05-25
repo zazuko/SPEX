@@ -6,6 +6,8 @@ import 'buefy/dist/buefy.css'
 import { library as iconsLibrary } from '@fortawesome/fontawesome-svg-core'
 import { fas } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import 'vue-resize/dist/vue-resize.css'
+import VueResize from 'vue-resize'
 
 Vue.config.productionTip = false
 
@@ -16,6 +18,8 @@ Vue.use(Buefy, {
   defaultIconPack: 'fas',
   defaultIconComponent: 'FontAwesomeIcon'
 })
+
+Vue.use(VueResize)
 
 new Vue({
   router,

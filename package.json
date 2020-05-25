@@ -19,9 +19,11 @@
     "buefy": "0.8.19",
     "core-js": "^3.6.4",
     "jsplumb": "2.13.2",
+    "lodash.debounce": "4.0.8",
     "sparql-http-client": "2.2.2",
     "splitpanes": "2.2.1",
     "vue": "^2.6.11",
+    "vue-resize": "0.5.0",
     "vue-router": "^3.2.0"
   },
   "devDependencies": {
