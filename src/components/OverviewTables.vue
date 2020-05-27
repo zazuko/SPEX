@@ -72,12 +72,9 @@ export default {
 
   data () {
     return {
+      containerSize: null,
       plumb: null
     }
-  },
-
-  mounted () {
-    this.renderConnections()
   },
 
   watch: {
@@ -90,8 +87,13 @@ export default {
     explore (table) {
       this.$emit('explore', table)
     },
-    onResize () {
-      this.renderConnections()
+    onResize (newSize) {
+      const oldSize = this.containerSize
+      this.containerSize = newSize
+
+      if (!oldSize || oldSize.width !== newSize.width) {
+        this.renderConnections()
+      }
     },
     renderConnections: debounce(function () {
       if (this.plumb) {
