@@ -23,21 +23,25 @@ export class Endpoint {
   async fetchTables () {
     const structure = await this._fetchStructure()
     const tables = structure.reduce((tables, { cls, property, linktype, datatype }) => {
-      const table = tables.get(cls.value) || { id: cls.value, name: this.shrink(cls.value), columns: [] }
+      const table = tables.get(cls.value) || { id: cls.value, name: this.shrink(cls.value), columns: new Map() }
 
       const type = (linktype && linktype.value) || (datatype && datatype.value) || ''
-      table.columns.push({
-        id: property.value,
-        name: this.shrink(property.value),
-        type: { id: type, name: this.shrink(type) }
-      })
+      if (table.columns.has(property.value)) {
+        table.columns.get(property.value).types.push({ id: type, name: this.shrink(type) })
+      } else {
+        table.columns.set(property.value, {
+          id: property.value,
+          name: this.shrink(property.value),
+          types: [{ id: type, name: this.shrink(type) }]
+        })
+      }
 
       tables.set(cls.value, table)
 
       return tables
     }, new Map())
 
-    return [...tables.values()]
+    return [...tables.values()].map((table) => ({ ...table, columns: [...table.columns.values()] }))
   }
 
   async _fetchStructure () {

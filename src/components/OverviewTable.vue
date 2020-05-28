@@ -10,7 +10,7 @@
         <b-button type="is-light" size="is-small" icon-left="table" title="Explore" @click="explore" />
       </span>
     </header>
-    <table class="card-content table">
+    <table class="card-content table is-fullwidth">
       <tr v-for="(column, index) in table.columns" :key="index" :data-id="table.id + column.id">
         <th>
           <TermTooltip :label="column.id">
@@ -18,9 +18,11 @@
           </TermTooltip>
         </th>
         <td>
-          <TermTooltip :label="column.type.id">
-            {{ column.type.name }}
-          </TermTooltip>
+          <div v-for="type in column.types" :key="type.id">
+            <TermTooltip :label="type.id">
+              {{ type.name }}
+            </TermTooltip>
+          </div>
         </td>
       </tr>
     </table>

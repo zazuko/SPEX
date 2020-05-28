@@ -114,29 +114,31 @@ export default {
       const relations = this.tables
         .flatMap(table => table.columns.map((column) => ({ ...column, table })))
         .reduce((acc, column) => {
-          const source = document.querySelector(`[data-id="${column.table.id}${column.id}"]`)
-          const target = document.querySelector(`[data-id="${column.type.id}"]`)
+          column.types.forEach((type) => {
+            const source = document.querySelector(`[data-id="${column.table.id}${column.id}"]`)
+            const target = document.querySelector(`[data-id="${type.id}"]`)
 
-          if (source && target) {
-            acc.push({
-              source,
-              target,
-              connector: ['Straight'],
-              endpoints: [
-                ['Dot', { radius: 3, cssClass: 'connection-endpoint' }],
-                ['Blank', {}]
-              ],
-              anchors: [
-                ['Left', 'Right'],
-                ['Perimeter', { shape: 'Rectangle' }]
-              ],
-              overlays: [
-                ['Arrow', { width: 10, length: 10, location: 1, id: 'arrow' }],
-                ['Label', { label: column.name, location: 0.5, id: 'label', cssClass: 'connection-label' }]
-              ],
-              cssClass: 'connection'
-            })
-          }
+            if (source && target) {
+              acc.push({
+                source,
+                target,
+                connector: ['Straight'],
+                endpoints: [
+                  ['Dot', { radius: 3, cssClass: 'connection-endpoint' }],
+                  ['Blank', {}]
+                ],
+                anchors: [
+                  ['Left', 'Right'],
+                  ['Perimeter', { shape: 'Rectangle' }]
+                ],
+                overlays: [
+                  ['Arrow', { width: 10, length: 10, location: 1, id: 'arrow' }],
+                  ['Label', { label: column.name, location: 0.5, id: 'label', cssClass: 'connection-label' }]
+                ],
+                cssClass: 'connection'
+              })
+            }
+          })
 
           return acc
         }, [])
