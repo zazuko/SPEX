@@ -61,35 +61,27 @@ export class Endpoint {
 
   async fetchTableData (table) {
     const limit = 100
-    const predicates = table.columns.map(({ id }) => id)
     const graphURI = this.graph ? `<${this.graph}>` : '?graph'
-    const variables = predicates.map((pred, index) => `v${index}`)
-    const predicatesMapping = predicates.map((predicate, index) => `OPTIONAL { ?subject <${predicate}> ?${variables[index]} }`).join('\n')
     const query = `
-      SELECT ?subject ${variables.map(v => `?${v}`).join(' ')}
-      WHERE {
-        GRAPH ${graphURI} {
-          ?subject a <${table.id}> .
-          ${predicatesMapping}
+      DESCRIBE ?subject {
+        {
+          SELECT ?subject {
+            GRAPH ${graphURI} { ?subject a <${table.id}> }
+          }
+          LIMIT ${limit}
         }
-      } LIMIT ${limit}
+      }
     `
-    const results = await this.client.query.select(query)
+    const results = await this.client.query.construct(query)
 
-    const rows = results.reduce((acc, result) => {
-      const subject = result.subject.value
+    const rows = results.reduce((acc, { subject: { value: subject }, predicate: { value: predicate }, object }) => {
       const row = acc.get(subject) || { id: subject }
 
-      predicates.forEach((predicate, index) => {
-        if (!row[predicate]) {
-          row[predicate] = new TermSet()
-        }
+      if (!row[predicate]) {
+        row[predicate] = new TermSet()
+      }
 
-        const term = result[variables[index]]
-        if (term) {
-          row[predicate].add(term)
-        }
-      })
+      row[predicate].add(object)
 
       acc.set(subject, row)
       return acc

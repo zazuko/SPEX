@@ -23,7 +23,7 @@
           <tr v-for="(row, index) in data" :key="index">
             <td>{{ row.id }}</td>
             <td v-for="(column, index) in table.columns" :key="index">
-              <p class="term-values" v-for="(value, index) in row[column.id]" :key="index">
+              <p class="term-values" v-for="(value, index) in (row[column.id] || [])" :key="index">
                 <Term :term="value" :endpoint="endpoint" />
                 <!-- <b-button v-if="value.termType === 'NamedNode'" type="is-white" size="is-small" icon-left="table" /> -->
               </p>
