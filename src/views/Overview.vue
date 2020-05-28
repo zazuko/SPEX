@@ -188,6 +188,10 @@ function serializeURLParam (param, value) {
 
 function deserializeURLParam (param, value) {
   if (param === 'prefixes') {
+    if (typeof value === 'string') {
+      value = [value]
+    }
+
     return value.map((prefixValue) => {
       const prefix = prefixValue.split(':')[0]
       const url = prefixValue.split(':').slice(1).join(':')
