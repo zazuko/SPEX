@@ -10,33 +10,34 @@
     "deploy": "./scripts/deploy.sh"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "1.2.28",
-    "@fortawesome/free-solid-svg-icons": "5.13.0",
-    "@fortawesome/vue-fontawesome": "0.1.9",
+    "@fortawesome/fontawesome-svg-core": "1.2.29",
+    "@fortawesome/free-solid-svg-icons": "5.13.1",
+    "@fortawesome/vue-fontawesome": "0.1.10",
     "@rdfjs/term-set": "1.0.1",
-    "@tpluscode/rdf-string": "0.2.11",
+    "@tpluscode/rdf-string": "0.2.15",
     "@zazuko/rdf-vocabularies": "2020.3.23",
-    "buefy": "0.8.19",
+    "buefy": "0.8.20",
     "core-js": "^3.6.4",
-    "jsplumb": "2.13.2",
+    "d3": "5.16.0",
+    "jsplumb": "2.13.3",
     "lodash.debounce": "4.0.8",
     "sparql-http-client": "2.2.2",
     "splitpanes": "2.2.1",
     "vue": "^2.6.11",
     "vue-resize": "0.5.0",
-    "vue-router": "^3.2.0"
+    "vue-router": "^3.3.4"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "~4.3.0",
-    "@vue/cli-plugin-eslint": "~4.3.0",
-    "@vue/cli-plugin-router": "~4.3.0",
-    "@vue/cli-plugin-unit-jest": "~4.3.0",
-    "@vue/cli-service": "~4.3.0",
+    "@vue/cli-plugin-babel": "~4.4.5",
+    "@vue/cli-plugin-eslint": "~4.4.5",
+    "@vue/cli-plugin-router": "~4.4.5",
+    "@vue/cli-plugin-unit-jest": "~4.4.5",
+    "@vue/cli-service": "~4.4.5",
     "@vue/eslint-config-standard": "^5.1.2",
     "@vue/test-utils": "1.0.3",
     "babel-eslint": "^10.1.0",
     "eslint": "^6.7.2",
-    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-import": "^2.21.2",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.0",
@@ -56,7 +57,10 @@
     "parserOptions": {
       "parser": "babel-eslint"
     },
-    "rules": {},
+    "rules": {
+      "no-unused-vars": "warn",
+      "padded-blocks": "warn"
+    },
     "overrides": [
       {
         "files": [
