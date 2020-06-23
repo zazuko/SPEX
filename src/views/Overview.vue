@@ -149,13 +149,9 @@ export default {
     },
     async updateURL (settings) {
       const query = urlQueryFromSettings(settings)
-      try {
+      const currentQuery = this.$router.currentRoute.query
+      if (JSON.stringify(query) !== JSON.stringify(currentQuery)) {
         await this.$router.push({ query })
-      } catch (e) {
-        // Ignore "navigation duplicated" errors
-        if (e.name !== 'NavigationDuplicated') {
-          throw e
-        }
       }
     }
   }
