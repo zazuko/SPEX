@@ -62,6 +62,7 @@
 <script>
 import { Splitpanes, Pane } from 'splitpanes'
 import 'splitpanes/dist/splitpanes.css'
+import { NavigationFailureType } from 'vue-router/src/history/errors'
 import OverviewTables from '@/components/OverviewTables.vue'
 import SettingsPane from '@/components/SettingsPane.vue'
 import TableExplorer from '@/components/TableExplorer.vue'
@@ -149,9 +150,13 @@ export default {
     },
     async updateURL (settings) {
       const query = urlQueryFromSettings(settings)
-      const currentQuery = this.$router.currentRoute.query
-      if (JSON.stringify(query) !== JSON.stringify(currentQuery)) {
+      try {
         await this.$router.push({ query })
+      } catch (err) {
+        // Ignore duplicated navigation error
+        if (err.type !== NavigationFailureType.duplicated) {
+          throw err
+        }
       }
     }
   }
