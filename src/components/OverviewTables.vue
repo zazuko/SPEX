@@ -1,10 +1,14 @@
 <template>
   <div class="OverviewTables">
-    <OverviewTable v-for="table in tables" :key="table.id" :table="table" @explore="explore" />
+    <OverviewTable v-for="table in tables" :key="table.id" :table="table" :id="table.id" @explore="explore" />
     <div v-if="tables.length === 0" class="section">
       <p>Nothing to show</p>
     </div>
-    <resize-observer @notify="onResize" />
+    <svg class="links">
+      <line v-for="(link, index) in links" :key="index" class="link">
+        <title>{{ link.label }}</title>
+      </line>
+    </svg>
   </div>
 </template>
 
@@ -13,73 +17,86 @@
   flex-grow: 1;
 
   position: relative;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
   overflow: auto;
+
+  display: flex;
+  flex-direction: column;
+  /* align-items: stretch; */
 }
 </style>
 
 <style>
-/* These are not scoped because they are not controlled by vue */
-.connection-label {
-  font-size: 0.75rem;
-  font-weight: bold;
-  background-color: white;
-  border: 1px solid gray;
-  padding: 0 0.2rem;
-
-  display: none;
+.links {
+  flex-grow: 1;
+  flex-basis: 100%;
+  /* Hack because I can't figure out how to make the SVG take the full parent width/height */
+  overflow: visible;
 }
 
-.connection:hover + .connection-label {
-  display: block;
-  z-index: 2;
+.link {
+  stroke-width: 1;
+  stroke: #333;
 }
 
-.connection:hover {
-  z-index: 1;
-  cursor: grab;
-}
-
-.connection > path {
-  stroke-width: 1px;
-}
-
-.connection > path:hover {
-  stroke: red;
-  stroke-width: 3px;
-}
-
-.connection-endpoint {
-  z-index: 1;
+.link:hover {
+  stroke-width: 2;
+  z-index: 10;
 }
 </style>
 
 <script>
-import { jsPlumb } from 'jsplumb'
-import debounce from 'lodash.debounce'
-import OverviewTable from './OverviewTable.vue'
+import * as d3 from 'd3'
+import OverviewTable from './OverviewTable'
 
 export default {
   name: 'OverviewTables',
-
-  components: {
-    OverviewTable
-  },
-
+  components: { OverviewTable },
   props: ['tables'],
 
   data () {
-    return {
-      containerSize: null,
-      plumb: null
+    return {}
+  },
+
+  mounted () {
+    this.$nextTick(() => {
+      this.renderGraph()
+    })
+  },
+
+  computed: {
+    nodes () {
+      return this.tables.map((table) => ({
+        ...table
+      }))
+    },
+
+    links () {
+      const tableIds = new Set(this.tables.map(({ id }) => id))
+      return this.tables
+        .flatMap(table => table.columns.map((column) => ({ ...column, table })))
+        .reduce((acc, column) => {
+          column.types.forEach((type) => {
+            const source = column.table.id
+            const target = type.id
+            if (tableIds.has(target)) {
+              acc.push({ source, target, sourceColumn: column.id, label: column.name })
+            }
+          })
+
+          return acc
+        }, [])
     }
   },
 
   watch: {
-    tables () {
-      this.renderConnections()
+    nodes () {
+      if (this.nodes.length === 0) {
+        return
+      }
+
+      this.$nextTick(() => {
+        this.renderGraph()
+      })
     }
   },
 
@@ -87,64 +104,117 @@ export default {
     explore (table) {
       this.$emit('explore', table)
     },
-    onResize (newSize) {
-      const oldSize = this.containerSize
-      this.containerSize = newSize
 
-      if (!oldSize || oldSize.width !== newSize.width) {
-        this.renderConnections()
+    renderGraph () {
+      const root = d3.select('.OverviewTables')
+      const nodes = this.nodes
+      const links = this.links
+      const width = this.$el.clientWidth
+      const height = this.$el.clientHeight
+      const margin = 5
+
+      const simulation = d3.forceSimulation().nodes(nodes)
+
+      simulation
+        .force('center', d3.forceCenter(width / 2, height / 2))
+        .force('links', d3.forceLink(links).id(({ id }) => id))
+        .force('collision', d3
+          .forceCollide()
+          .radius(({ id }) => {
+            const elt = root.select(`[data-id="${id}"]`)
+            const width = elt.style('width').replace('px', '')
+            const height = elt.style('height').replace('px', '')
+            return (Math.max(width, height) / 2) + 20
+          })
+          .strength(1)
+        )
+        .force('charge', d3.forceManyBody().strength(-200))
+        .stop()
+
+      // simulation.on('tick', tickActions)
+
+      // draw lines for the links
+      const link = root
+        .select('.links')
+        .selectAll('line')
+        .data(links)
+
+      // draw circles for the nodes
+      const node = root.selectAll('.OverviewTable')
+        .data(nodes)
+        .call(drag(simulation))
+
+      // Run simulation for a defined number of steps
+      // See https://github.com/d3/d3-force/blob/master/README.md#simulation_tick
+      for (var i = 0, n = Math.ceil(Math.log(simulation.alphaMin()) / Math.log(1 - simulation.alphaDecay())); i < n; ++i) {
+        simulation.tick()
       }
-    },
-    renderConnections: debounce(function () {
-      if (this.plumb) {
-        this.plumb.reset()
-        this.plumb = null
-      }
+      renderSimulation()
 
-      if (this.tables.length === 0) {
-        return
-      }
+      // Remove all forces after simulation is finished to allow dragging nodes around without affecting the other nodes
+      simulation
+        .force('center', null)
+        .force('collision', null)
+        .force('links', null)
+        .force('charge', null)
 
-      // Scroll to top because jsPlumb fails to properly render the
-      // connections otherwise
-      this.$el.scrollTop = 0
+      function renderSimulation () {
+        // Update positions each tick of the simulation
+        node
+          .join()
+          .attr('style', (d) => {
+            // Prevent nodes from going off-screen
+            d.x = d.x < margin ? margin : d.x
+            d.y = d.y < margin ? margin : d.y
 
-      this.plumb = jsPlumb.getInstance({ Container: this.$el })
-
-      const relations = this.tables
-        .flatMap(table => table.columns.map((column) => ({ ...column, table })))
-        .reduce((acc, column) => {
-          column.types.forEach((type) => {
-            const source = document.querySelector(`[data-id="${column.table.id}${column.id}"]`)
-            const target = document.querySelector(`[data-id="${type.id}"]`)
-
-            if (source && target) {
-              acc.push({
-                source,
-                target,
-                connector: ['Straight'],
-                endpoints: [
-                  ['Dot', { radius: 3, cssClass: 'connection-endpoint' }],
-                  ['Blank', {}]
-                ],
-                anchors: [
-                  ['Left', 'Right'],
-                  ['Perimeter', { shape: 'Rectangle' }]
-                ],
-                overlays: [
-                  ['Arrow', { width: 10, length: 10, location: 1, id: 'arrow' }],
-                  ['Label', { label: column.name, location: 0.5, id: 'label', cssClass: 'connection-label' }]
-                ],
-                cssClass: 'connection'
-              })
-            }
+            return `left: ${d.x}px; top: ${d.y}px`
           })
 
-          return acc
-        }, [])
+        // update link positions
+        link
+          .attr('x1', (d) => {
+            const propertyElt = document.querySelector(`[data-id="${d.source.id}${d.sourceColumn}"]`)
+            const offsetX = d.target.x > d.source.x ? propertyElt.clientWidth : 0
+            return d.source.x + offsetX
+          })
+          .attr('y1', (d) => {
+            const propertyElt = document.querySelector(`[data-id="${d.source.id}${d.sourceColumn}"]`)
+            const magic = 60 // TODO: Don't know where this difference is coming from...
+            return d.source.y + propertyElt.offsetTop + magic
+          })
+          .attr('x2', (d) => {
+            const tableElt = document.querySelector(`[data-id="${d.target.id}"]`)
+            return d.target.x + (tableElt.clientWidth / 2)
+          })
+          .attr('y2', (d) => d.target.y)
+      }
 
-      relations.forEach(this.plumb.connect)
-    }, 100)
+      function drag (simulation) {
+        function dragstarted (d) {
+          if (!d3.event.active) simulation.alphaTarget(0.3).restart()
+          d.fx = d.x
+          d.fy = d.y
+        }
+
+        function dragged (d) {
+          d.fx = d3.event.x
+          d.fy = d3.event.y
+          renderSimulation()
+        }
+
+        function dragended (d) {
+          if (!d3.event.active) simulation.alphaTarget(0)
+          d.fx = null
+          d.fy = null
+          renderSimulation()
+        }
+
+        return d3.drag()
+          .on('start', dragstarted)
+          .on('drag', dragged)
+          .on('end', dragended)
+      }
+    }
   }
 }
 </script>

@@ -47,7 +47,7 @@
 
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: stretch;
   overflow: hidden;
 }
 
