@@ -45,19 +45,19 @@ export class Endpoint {
   }
 
   async _fetchStructure () {
-    const graphURI = this.graph ? `<${this.graph}>` : '?graph'
+    const fromClause = this.graph ? `FROM <${this.graph}>` : ''
     const query = `
-      SELECT DISTINCT ?cls ?property ?linktype ?datatype {
-        GRAPH ${graphURI} {
-          ?subject a ?cls .
-          ?subject ?property ?object .
+      SELECT DISTINCT ?cls ?property ?linktype ?datatype
+      ${fromClause}
+      WHERE {
+        ?subject a ?cls .
+        ?subject ?property ?object .
 
-          OPTIONAL {
-            ?object a ?linktype .
-          }
-
-          BIND(DATATYPE(?object) AS ?datatype)
+        OPTIONAL {
+          ?object a ?linktype .
         }
+
+        BIND(DATATYPE(?object) AS ?datatype)
       }
     `
     return this.client.query.select(query)
@@ -65,12 +65,14 @@ export class Endpoint {
 
   async fetchTableData (table) {
     const limit = 100
-    const graphURI = this.graph ? `<${this.graph}>` : '?graph'
+    const fromClause = this.graph ? `FROM <${this.graph}>` : ''
     const query = `
       DESCRIBE ?subject {
         {
-          SELECT ?subject {
-            GRAPH ${graphURI} { ?subject a <${table.id}> }
+          SELECT ?subject
+          ${fromClause}
+          WHERE {
+            ?subject a <${table.id}>
           }
           LIMIT ${limit}
         }
