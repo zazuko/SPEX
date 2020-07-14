@@ -65,12 +65,10 @@
 }
 
 .link-arrow {
-  stroke: #456;
   fill: #456;
 }
 
 .link-start {
-  stroke: #456;
   fill: #456;
 }
 </style>
