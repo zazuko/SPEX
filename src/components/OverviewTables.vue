@@ -50,6 +50,7 @@
   flex-basis: 100%;
   /* Hack because I can't figure out how to make the SVG take the full parent width/height */
   overflow: visible;
+  pointer-events: none;
 }
 
 .link {
@@ -57,6 +58,7 @@
   stroke: #333;
   marker-end: url(#arrow);
   marker-start: url(#dot);
+  pointer-events: all;
 }
 
 .link:hover {
