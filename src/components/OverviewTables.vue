@@ -5,6 +5,18 @@
       <p>Nothing to show</p>
     </div>
     <svg class="links">
+      <defs>
+        <marker
+          id="arrow"
+          viewBox="0 0 10 10"
+          refX="10" refY="5"
+          markerUnits="strokeWidth"
+          markerWidth="10"
+          markerHeight="10"
+          orient="auto">
+          <path d="M 0 0 L 10 5 L 0 10 z" class="link-arrow" />
+        </marker>
+      </defs>
       <line v-for="(link, index) in links" :key="index" class="link">
         <title>{{ link.label }}</title>
       </line>
@@ -36,11 +48,17 @@
 .link {
   stroke-width: 1;
   stroke: #333;
+  marker-end: url(#arrow);
 }
 
 .link:hover {
   stroke-width: 2;
   z-index: 10;
+}
+
+.link-arrow {
+  stroke: #456;
+  fill: #456;
 }
 </style>
 
@@ -136,7 +154,7 @@ export default {
       // draw lines for the links
       const link = root
         .select('.links')
-        .selectAll('line')
+        .selectAll('.link')
         .data(links)
 
       // draw circles for the nodes
