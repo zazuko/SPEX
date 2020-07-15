@@ -25,9 +25,10 @@
         </marker>
       </defs>
       <line v-for="(link, index) in links" :key="index" class="link">
-        <title>{{ link.label }}</title>
+        <!-- <title>{{ link.label }}</title> -->
       </line>
     </svg>
+    <div class="link-tooltip"></div>
   </div>
 </template>
 
@@ -72,6 +73,17 @@
 
 .link-start {
   fill: #456;
+}
+
+.link-tooltip {
+  position: absolute;
+  z-index: 10;
+  visibility: hidden;
+
+  padding: 0.2rem 0.4rem;
+  background: #eee;
+  color: #000;
+  font-size: 0.75rem;
 }
 </style>
 
@@ -164,11 +176,25 @@ export default {
 
       // simulation.on('tick', tickActions)
 
+      const linkTooltip = root.select('.link-tooltip')
+
       // draw lines for the links
       const link = root
         .select('.links')
         .selectAll('.link')
         .data(links)
+        .on('mouseover', (d) => {
+          linkTooltip.text(`${d.source.name} / ${d.label} -> ${d.target.name}`)
+          linkTooltip.style('visibility', 'visible')
+        })
+        .on('mousemove', () => {
+          linkTooltip
+            .style('top', (d3.event.pageY - 10) + 'px')
+            .style('left', (d3.event.pageX + 10) + 'px')
+        })
+        .on('mouseout', () => {
+          linkTooltip.style('visibility', 'hidden')
+        })
 
       // draw circles for the nodes
       const node = root.selectAll('.OverviewTable')
