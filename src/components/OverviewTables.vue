@@ -171,10 +171,8 @@ export default {
           })
           .strength(1)
         )
-        .force('charge', d3.forceManyBody().strength(-200))
+        .force('bounds', keepInBounds)
         .stop()
-
-      // simulation.on('tick', tickActions)
 
       const linkTooltip = root.select('.link-tooltip')
 
@@ -215,19 +213,23 @@ export default {
         .force('links', null)
         .force('charge', null)
 
-      function renderSimulation () {
-        // Update positions each tick of the simulation
-        node
-          .join()
-          .attr('style', (d) => {
-            // Prevent nodes from going off-screen
+      // Force that prevents nodes from going off screen
+      function keepInBounds () {
+        simulation
+          .nodes()
+          .forEach((d) => {
             d.x = d.x < margin ? margin : d.x
             d.y = d.y < margin ? margin : d.y
-
-            return `left: ${d.x}px; top: ${d.y}px`
           })
+      }
 
-        // update link positions
+      function renderSimulation () {
+        // Update node positions
+        node
+          .join()
+          .attr('style', (d) => `left: ${d.x}px; top: ${d.y}px`)
+
+        // Update link positions
         link
           .attr('x1', (d) => {
             const propertyElt = document.querySelector(`[data-id="${d.source.id}${d.sourceColumn}"]`)
