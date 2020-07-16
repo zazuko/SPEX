@@ -284,7 +284,6 @@ function sourcePoint (d) {
  */
 function targetClosestAnchor (d) {
   const targetElt = document.querySelector(`[data-id="${d.target.id}"]`)
-  const sourceElt = document.querySelector(`[data-id="${d.source.id}${d.sourceColumn}"]`)
   const source = sourcePoint(d)
   return nearestPointOnPerimeter(source, d.target, targetElt.clientWidth, targetElt.clientHeight)
 }
