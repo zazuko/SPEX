@@ -59,7 +59,8 @@
     },
     "rules": {
       "no-unused-vars": "warn",
-      "padded-blocks": "warn"
+      "padded-blocks": "warn",
+      "comma-dangle": "off"
     },
     "overrides": [
       {
