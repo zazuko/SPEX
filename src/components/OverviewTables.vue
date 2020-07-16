@@ -231,21 +231,10 @@ export default {
 
         // Update link positions
         link
-          .attr('x1', (d) => {
-            const propertyElt = document.querySelector(`[data-id="${d.source.id}${d.sourceColumn}"]`)
-            const offsetX = d.target.x > d.source.x ? propertyElt.clientWidth : 0
-            return d.source.x + offsetX
-          })
-          .attr('y1', (d) => {
-            const propertyElt = document.querySelector(`[data-id="${d.source.id}${d.sourceColumn}"]`)
-            const magic = 60 // TODO: Don't know where this difference is coming from...
-            return d.source.y + propertyElt.offsetTop + magic
-          })
-          .attr('x2', (d) => {
-            const tableElt = document.querySelector(`[data-id="${d.target.id}"]`)
-            return d.target.x + (tableElt.clientWidth / 2)
-          })
-          .attr('y2', (d) => d.target.y)
+          .attr('x1', (d) => sourcePoint(d).x)
+          .attr('y1', (d) => sourcePoint(d).y)
+          .attr('x2', (d) => targetClosestAnchor(d).x)
+          .attr('y2', (d) => targetClosestAnchor(d).y)
       }
 
       function drag (simulation) {
@@ -276,4 +265,58 @@ export default {
     }
   }
 }
+
+/**
+ * Property link source point
+ */
+function sourcePoint (d) {
+  const sourceElt = document.querySelector(`[data-id="${d.source.id}${d.sourceColumn}"]`)
+  const offsetX = d.target.x > d.source.x ? sourceElt.clientWidth : 0
+  const magic = 60 // TODO: Don't know where this difference is coming from...
+  return {
+    x: d.source.x + offsetX,
+    y: d.source.y + sourceElt.offsetTop + magic,
+  }
+}
+
+/**
+ * Find closest point to link to target table
+ */
+function targetClosestAnchor (d) {
+  const targetElt = document.querySelector(`[data-id="${d.target.id}"]`)
+  const sourceElt = document.querySelector(`[data-id="${d.source.id}${d.sourceColumn}"]`)
+  const source = sourcePoint(d)
+  return nearestPointOnPerimeter(source, d.target, targetElt.clientWidth, targetElt.clientHeight)
+}
+
+function clamp (x, lower, upper) {
+  return Math.max(lower, Math.min(upper, x))
+}
+
+function nearestPointOnPerimeter (point, rectTopLeft, rectWidth, rectHeight) {
+  const rectBottomRight = {
+    x: rectTopLeft.x + rectWidth,
+    y: rectTopLeft.y + rectHeight,
+  }
+
+  const x = clamp(point.x, rectTopLeft.x, rectBottomRight.x)
+  const y = clamp(point.y, rectTopLeft.y, rectBottomRight.y)
+
+  const dl = Math.abs(x - rectTopLeft.x)
+  const dr = Math.abs(x - rectBottomRight.x)
+  const dt = Math.abs(y - rectTopLeft.y)
+  const db = Math.abs(y - rectBottomRight.y)
+  const m = Math.min(dl, dr, dt, db)
+
+  if (m === dt) {
+    return { x, y: rectTopLeft.y }
+  } else if (m === db) {
+    return { x, y: rectBottomRight.y }
+  } else if (m === dl) {
+    return { x: rectTopLeft.x, y }
+  } else {
+    return { x: rectBottomRight.x, y }
+  }
+}
+
 </script>
