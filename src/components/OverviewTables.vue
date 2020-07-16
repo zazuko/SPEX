@@ -187,8 +187,8 @@ export default {
         })
         .on('mousemove', () => {
           linkTooltip
-            .style('top', (d3.event.pageY - 10) + 'px')
-            .style('left', (d3.event.pageX + 10) + 'px')
+            .style('top', (d3.event.offsetY - 10) + 'px')
+            .style('left', (d3.event.offsetX + 10) + 'px')
         })
         .on('mouseout', () => {
           linkTooltip.style('visibility', 'hidden')
