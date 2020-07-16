@@ -270,8 +270,9 @@ export default {
  * Property link source point
  */
 function sourcePoint (d) {
+  const radius = 3
   const sourceElt = document.querySelector(`[data-id="${d.source.id}${d.sourceColumn}"]`)
-  const offsetX = d.target.x > d.source.x ? sourceElt.clientWidth : 0
+  const offsetX = d.target.x > d.source.x ? (sourceElt.clientWidth + radius) : -radius
   const magic = 60 // TODO: Don't know where this difference is coming from...
   return {
     x: d.source.x + offsetX,
