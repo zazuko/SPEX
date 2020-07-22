@@ -19,7 +19,6 @@
     "buefy": "0.8.20",
     "core-js": "^3.6.4",
     "d3": "5.16.0",
-    "jsplumb": "2.13.3",
     "lodash.debounce": "4.0.8",
     "sparql-http-client": "2.2.2",
     "splitpanes": "2.2.1",
@@ -59,7 +58,8 @@
     },
     "rules": {
       "no-unused-vars": "warn",
-      "padded-blocks": "warn"
+      "padded-blocks": "warn",
+      "comma-dangle": "off"
     },
     "overrides": [
       {

@@ -31,8 +31,10 @@
 
 <style scoped>
 .OverviewTable {
-  margin: 2rem;
+  /* margin: 2rem; */
   z-index: 1;
+  position: absolute;
+  opacity: 0.9;
 }
 
 .card-header-title,
