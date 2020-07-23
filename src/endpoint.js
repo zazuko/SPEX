@@ -25,14 +25,19 @@ export class Endpoint {
     const tables = structure.reduce((tables, { cls, property, linktype, datatype }) => {
       const table = tables.get(cls.value) || { id: cls.value, name: this.shrink(cls.value), columns: new Map() }
 
-      const type = (linktype && linktype.value) || (datatype && datatype.value) || ''
+      const typeURI = (linktype && linktype.value) || (datatype && datatype.value) || null
+      const typeTermType = linktype ? 'NamedNode' : (datatype ? 'Literal' : null)
+      const type = typeURI && { id: typeURI, name: this.shrink(typeURI), termType: typeTermType }
+
       if (table.columns.has(property.value)) {
-        table.columns.get(property.value).types.push({ id: type, name: this.shrink(type) })
+        if (type) {
+          table.columns.get(property.value).types.push(type)
+        }
       } else {
         table.columns.set(property.value, {
           id: property.value,
           name: this.shrink(property.value),
-          types: [{ id: type, name: this.shrink(type) }]
+          types: type ? [type] : []
         })
       }
 

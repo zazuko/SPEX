@@ -5,12 +5,23 @@
         <Splitpanes horizontal>
           <Pane>
             <div class="OverviewPane">
-              <b-button type="is-white" icon-right="cog" title="Options" @click="showSettings">
-                <h2 class="title is-6">
-                  <span v-if="endpoint">{{ endpoint.url }}</span>
-                  <span v-else>No endpoint configured yet</span>
-                </h2>
-              </b-button>
+              <div class="level">
+                <div class="level-item">
+                  <b-button type="is-white" icon-right="cog" title="Options" @click="showSettings">
+                    <h2 class="title is-6">
+                      <span v-if="endpoint">{{ endpoint.url }}</span>
+                      <span v-else>No endpoint configured yet</span>
+                    </h2>
+                  </b-button>
+                </div>
+                <div class="level-right">
+                  <div class="level-item">
+                    <b-button v-if="endpoint && !error" type="is-white" size="is-small" @click="showShacl">
+                      SHACL
+                    </b-button>
+                  </div>
+                </div>
+              </div>
 
               <OverviewTables :tables="tables" @explore="exploreTable" />
 
@@ -66,8 +77,10 @@ import { NavigationFailureType } from 'vue-router/src/history/errors'
 import OverviewTables from '@/components/OverviewTables.vue'
 import SettingsPane from '@/components/SettingsPane.vue'
 import TableExplorer from '@/components/TableExplorer.vue'
+import ModalShacl from '@/components/ModalShacl.vue'
 import { Endpoint } from '@/endpoint'
 import config from '@/config'
+import { tablesToSHACL } from '@/shacl'
 
 export default {
   components: {
@@ -158,6 +171,17 @@ export default {
           throw err
         }
       }
+    },
+
+    showShacl () {
+      const shacl = tablesToSHACL(this.tables)
+      this.$buefy.modal.open({
+        parent: this,
+        component: ModalShacl,
+        props: { shacl },
+        hasModalCard: true,
+        trapFocus: true,
+      })
     }
   }
 }
