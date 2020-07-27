@@ -1,3 +1,5 @@
+import clownface from 'clownface'
+import { rdf, sh } from '@tpluscode/rdf-ns-builders'
 
 export function tablesToSHACL (tables) {
   const context = { sh: 'http://www.w3.org/ns/shacl#' }
@@ -32,4 +34,45 @@ export function tablesToSHACL (tables) {
       }),
     }
   })
+}
+
+export function tablesFromSHACL (dataset, endpoint) {
+  const cf = clownface({ dataset })
+
+  const shapes = cf.has(rdf.type, sh.NodeShape).toArray()
+
+  return shapes.map((shape) => {
+    const id = shape.out(sh.targetClass).term.value
+
+    return {
+      id,
+      name: endpoint.shrink(id),
+      columns: shape.out(sh.property).map((property) => {
+        const id = property.out(sh.path).term.value
+        const types = propertyTypes(property, endpoint)
+
+        return {
+          id,
+          name: endpoint.shrink(id),
+          types,
+        }
+      })
+    }
+  })
+}
+
+function propertyTypes (property, endpoint) {
+  return [
+    ...property.out(sh.datatype).terms.map((datatype) => typeFromTerm(datatype, 'Literal', endpoint)),
+    ...property.out(sh.class).terms.map((cls) => typeFromTerm(cls, 'NamedNode', endpoint)),
+    ...[...property.out(sh.or).list()].flatMap((conditionalProp) => propertyTypes(conditionalProp, endpoint)),
+  ]
+}
+
+function typeFromTerm (term, termType, endpoint) {
+  return {
+    id: term.value,
+    name: endpoint.shrink(term.value),
+    termType,
+  }
 }

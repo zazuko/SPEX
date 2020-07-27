@@ -78,9 +78,10 @@ import OverviewTables from '@/components/OverviewTables.vue'
 import SettingsPane from '@/components/SettingsPane.vue'
 import TableExplorer from '@/components/TableExplorer.vue'
 import ModalShacl from '@/components/ModalShacl.vue'
+import ModalShaclLoad from '@/components/ModalShaclLoad.vue'
 import { Endpoint } from '@/endpoint'
 import config from '@/config'
-import { tablesToSHACL } from '@/shacl'
+import { tablesToSHACL, tablesFromSHACL } from '@/shacl'
 
 export default {
   components: {
@@ -178,7 +179,26 @@ export default {
       this.$buefy.modal.open({
         parent: this,
         component: ModalShacl,
-        props: { shacl },
+        props: { shacl, loadShacl: this.loadShacl },
+        hasModalCard: true,
+        trapFocus: true,
+      })
+    },
+
+    loadShacl () {
+      const modal = this.$buefy.modal.open({
+        parent: this,
+        component: ModalShaclLoad,
+        props: {
+          load: (dataset) => {
+            modal.close()
+            try {
+              this.tables = tablesFromSHACL(dataset, this.endpoint)
+            } catch (e) {
+              console.error(e)
+            }
+          }
+        },
         hasModalCard: true,
         trapFocus: true,
       })

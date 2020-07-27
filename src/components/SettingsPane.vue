@@ -79,7 +79,7 @@ export default {
     },
     removePrefix (index) {
       this.settings.prefixes.splice(index, 1)
-    }
+    },
   }
 }
 </script>
