@@ -20,7 +20,7 @@ export function tablesToSHACL (tables) {
         if (column.types.length === 1) {
           type = typeProp(column.types[0])
         } else if (column.types.length > 1) {
-          type['sh:or'] = column.types.map(typeProp)
+          type['sh:or'] = { '@list': column.types.map(typeProp) }
         }
 
         return {
