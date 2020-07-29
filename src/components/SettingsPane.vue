@@ -65,6 +65,7 @@
 
 <script>
 export default {
+  name: 'SettingsPane',
   props: ['settings'],
 
   methods: {

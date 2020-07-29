@@ -47,6 +47,7 @@
 import TermTooltip from './TermTooltip.vue'
 
 export default {
+  name: 'OverviewTable',
   props: ['table', 'overview'],
 
   components: { TermTooltip },

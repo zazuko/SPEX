@@ -8,6 +8,7 @@
 import TermTooltip from './TermTooltip.vue'
 
 export default {
+  name: 'Term',
   props: ['term', 'endpoint'],
 
   components: { TermTooltip },

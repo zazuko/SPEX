@@ -6,6 +6,7 @@
 
 <script>
 export default {
-  props: ['label']
+  name: 'TermTooltip',
+  props: ['label'],
 }
 </script>

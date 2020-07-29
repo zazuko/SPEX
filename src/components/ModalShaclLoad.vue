@@ -27,7 +27,7 @@ import RDF from 'rdf-ext'
 import * as N3 from 'n3'
 
 export default {
-  name: 'ModalShacl',
+  name: 'ModalShaclLoad',
   props: ['load'],
 
   data () {
