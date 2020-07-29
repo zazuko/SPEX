@@ -11,8 +11,14 @@
 
 <style scoped>
 .term-link-icon {
-  font-size: 0.6rem;
+  font-size: 0.6em;
   margin-right: 0.1rem;
+  visibility: hidden;
+}
+
+.term-link:hover .term-link-icon,
+.term-link:focus .term-link-icon {
+  visibility: visible;
 }
 </style>
 

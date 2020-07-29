@@ -21,7 +21,11 @@
         </thead>
         <tbody>
           <tr v-for="(row, index) in data" :key="index">
-            <td>{{ row.id }}</td>
+            <td>
+              <TermLink :uri="row.id">
+                {{ row.id }}
+              </TermLink>
+            </td>
             <td v-for="(column, index) in table.columns" :key="index">
               <p class="term-values" v-for="(value, index) in (row[column.id] || [])" :key="index">
                 <Term :term="value" :endpoint="endpoint" />
@@ -67,6 +71,7 @@
 <script>
 import Term from './Term.vue'
 import TermDescribe from './TermDescribe.vue'
+import TermLink from './TermLink.vue'
 
 export default {
   name: 'TableExplorer',
@@ -75,6 +80,7 @@ export default {
   components: {
     Term,
     TermDescribe,
+    TermLink,
   },
 
   async mounted () {
