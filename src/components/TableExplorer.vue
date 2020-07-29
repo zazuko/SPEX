@@ -21,15 +21,11 @@
         </thead>
         <tbody>
           <tr v-for="(row, index) in data" :key="index">
-            <td>
-              <TermLink :uri="row.id">
-                {{ row.id }}
-              </TermLink>
-            </td>
+            <td>{{ row.id }}</td>
             <td v-for="(column, index) in table.columns" :key="index">
               <p class="term-values" v-for="(value, index) in (row[column.id] || [])" :key="index">
                 <Term :term="value" :endpoint="endpoint" />
-                <!-- <b-button v-if="value.termType === 'NamedNode'" type="is-white" size="is-small" icon-left="table" /> -->
+                <TermDescribe :term="value" :endpoint="endpoint" />
               </p>
             </td>
           </tr>
@@ -70,14 +66,15 @@
 
 <script>
 import Term from './Term.vue'
-import TermLink from './TermLink.vue'
+import TermDescribe from './TermDescribe.vue'
 
 export default {
+  name: 'TableExplorer',
   props: ['table', 'tables', 'endpoint'],
 
   components: {
     Term,
-    TermLink,
+    TermDescribe,
   },
 
   async mounted () {
@@ -112,7 +109,7 @@ export default {
       } finally {
         loader.close()
       }
-    }
+    },
   },
 
   watch: {

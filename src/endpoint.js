@@ -50,10 +50,9 @@ export class Endpoint {
   }
 
   async _fetchStructure () {
-    const fromClause = this.graph ? `FROM <${this.graph}>` : ''
     const query = `
       SELECT DISTINCT ?cls ?property ?linktype ?datatype
-      ${fromClause}
+      ${this.fromClause}
       WHERE {
         ?subject a ?cls .
         ?subject ?property ?object .
@@ -70,12 +69,11 @@ export class Endpoint {
 
   async fetchTableData (table) {
     const limit = 100
-    const fromClause = this.graph ? `FROM <${this.graph}>` : ''
     const query = `
       DESCRIBE ?subject {
         {
           SELECT ?subject
-          ${fromClause}
+          ${this.fromClause}
           WHERE {
             ?subject a <${table.id}>
           }
@@ -99,5 +97,30 @@ export class Endpoint {
     }, new Map())
 
     return [...rows.values()]
+  }
+
+  async fetchResource (uri) {
+    const query = `
+      DESCRIBE <${uri}> {}
+    `
+    const quads = await this.client.query.construct(query)
+
+    const properties = quads.reduce((acc, { predicate, object }) => {
+      if (!acc.has(predicate.value)) {
+        acc.set(predicate.value, { id: predicate.value, term: predicate, values: [] })
+      }
+
+      acc.get(predicate.value).values.push(object)
+
+      return acc
+    }, new Map())
+
+    const term = { value: uri, termType: 'NamedNode' }
+
+    return { id: uri, term, properties: [...properties.values()] }
+  }
+
+  get fromClause () {
+    return this.graph ? `FROM <${this.graph}>` : ''
   }
 }
