@@ -4,13 +4,9 @@ import { rdf, sh } from '@tpluscode/rdf-ns-builders'
 export function tablesToSHACL (tables) {
   const context = { sh: 'http://www.w3.org/ns/shacl#' }
 
-  let id = 1
-  const nextId = () => `_:b${id++}`
-
   return tables.map((table) => {
     return {
       '@context': context,
-      '@id': nextId(),
       '@type': 'sh:NodeShape',
       'sh:targetClass': table.id,
       'sh:property': table.columns.map((column) => {
@@ -26,7 +22,6 @@ export function tablesToSHACL (tables) {
         }
 
         return {
-          '@id': nextId(),
           '@type': 'sh:PropertyShape',
           'sh:path': column.id,
           ...type,
