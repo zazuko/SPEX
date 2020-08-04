@@ -1,4 +1,4 @@
-# discovery
+# SPARQL Endpoint Explorer
 
 ## Project setup
 ```
