@@ -50,9 +50,10 @@ export class Endpoint {
   }
 
   async _fetchStructure () {
+    const fromClause = this.graph ? `FROM <${this.graph}>` : ''
     const query = `
       SELECT DISTINCT ?cls ?property ?linktype ?datatype
-      ${this.fromClause}
+      ${fromClause}
       WHERE {
         ?subject a ?cls .
         ?subject ?property ?object .
@@ -69,13 +70,15 @@ export class Endpoint {
 
   async fetchTableData (table) {
     const limit = 100
+    const graph = this.graph ? `<${this.graph}>` : '?g'
     const query = `
       DESCRIBE ?subject {
         {
           SELECT ?subject
-          ${this.fromClause}
           WHERE {
-            ?subject a <${table.id}>
+            GRAPH ${graph} {
+              ?subject a <${table.id}>
+            }
           }
           LIMIT ${limit}
         }
@@ -118,9 +121,5 @@ export class Endpoint {
     const term = { value: uri, termType: 'NamedNode' }
 
     return { id: uri, term, properties: [...properties.values()] }
-  }
-
-  get fromClause () {
-    return this.graph ? `FROM <${this.graph}>` : ''
   }
 }
