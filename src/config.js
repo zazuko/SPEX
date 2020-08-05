@@ -8,7 +8,8 @@ const defaults = {
   prefixes: [
     { prefix: 'lobbywatch', url: 'https://lod.lobbywatch.ch/' },
     { prefix: 'wdt', url: 'http://www.wikidata.org/prop/direct/' }
-  ]
+  ],
+  forceIntrospection: false
 }
 
 try {

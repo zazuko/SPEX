@@ -199,7 +199,7 @@ export default {
   }
 }
 
-const validURLOptions = ['url', 'graph', 'prefixes']
+const validURLOptions = ['url', 'graph', 'prefixes', 'forceIntrospection']
 
 function settingsFromURL (params) {
   return validURLOptions.reduce((settings, option) => {

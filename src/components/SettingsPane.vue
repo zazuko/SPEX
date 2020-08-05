@@ -29,6 +29,15 @@
         <p v-if="settings.prefixes.length === 0" class="has-text-grey">No custom prefix</p>
         <b-button type="is-white" icon-left="plus" title="Add prefix" @click="addPrefix" />
       </b-field>
+      <b-field :addons="false">
+        <b-switch v-model="settings.forceIntrospection">
+          Force introspection
+        </b-switch>
+        <p class="help">
+          By default, the explorer will use the endpoint schema provided at <code>endpoint/.well-known/schema</code>
+          (if any). Use this option to force an introspection.
+        </p>
+      </b-field>
       <b-field><button class="button is-primary" type="submit">Load</button></b-field>
     </form>
   </div>
