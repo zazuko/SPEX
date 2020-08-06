@@ -1,15 +1,20 @@
+import RDF from 'rdf-ext'
 import ParsingClient from 'sparql-http-client/ParsingClient'
 import TermSet from '@rdfjs/term-set'
 import { shrink, prefixes as _prefixes } from '@zazuko/rdf-vocabularies'
+import { tablesFromSHACL } from '@/shacl'
+
+const SCHEMA_URI = '.well-known/schema'
 
 export class Endpoint {
-  constructor ({ url, user = null, password = null, prefixes = [], graph = '' }) {
+  constructor ({ url, user = null, password = null, prefixes = [], graph = '', forceIntrospection = false }) {
     this.url = url
     this.user = user
     this.password = password
     this.prefixes = prefixes
     this.graph = graph
     this.client = new ParsingClient({ endpointUrl: url, user, password })
+    this.forceIntrospection = forceIntrospection
 
     prefixes.forEach(({ prefix, url }) => {
       _prefixes[prefix] = url
@@ -21,6 +26,35 @@ export class Endpoint {
   }
 
   async fetchTables () {
+    if (this.forceIntrospection) {
+      return this.introspectTables()
+    }
+
+    const tables = await this.fetchSHACL()
+
+    return tables.length > 0
+      ? tables
+      : this.introspectTables()
+  }
+
+  /**
+   * Retrieve table structure from pre-defined SHACL definition.
+   */
+  async fetchSHACL () {
+    const schemaURI = this.url.replace(/query\/?$/, SCHEMA_URI)
+    const fromClause = this.graph ? `FROM <${this.graph}>` : ''
+    const query = `
+      #pragma describe.strategy cbd
+      DESCRIBE <${schemaURI}>
+      ${fromClause}
+    `
+    const quads = await this.client.query.construct(query)
+    const dataset = RDF.dataset(quads)
+
+    return tablesFromSHACL(dataset, this)
+  }
+
+  async introspectTables () {
     const structure = await this._fetchStructure()
     const tables = structure.reduce((tables, { cls, property, linktype, datatype }) => {
       const table = tables.get(cls.value) || { id: cls.value, name: this.shrink(cls.value), columns: new Map() }
@@ -50,9 +84,10 @@ export class Endpoint {
   }
 
   async _fetchStructure () {
+    const fromClause = this.graph ? `FROM <${this.graph}>` : ''
     const query = `
       SELECT DISTINCT ?cls ?property ?linktype ?datatype
-      ${this.fromClause}
+      ${fromClause}
       WHERE {
         ?subject a ?cls .
         ?subject ?property ?object .
@@ -69,13 +104,15 @@ export class Endpoint {
 
   async fetchTableData (table) {
     const limit = 100
+    const graph = this.graph ? `<${this.graph}>` : '?g'
     const query = `
       DESCRIBE ?subject {
         {
           SELECT ?subject
-          ${this.fromClause}
           WHERE {
-            ?subject a <${table.id}>
+            GRAPH ${graph} {
+              ?subject a <${table.id}>
+            }
           }
           LIMIT ${limit}
         }
@@ -118,9 +155,5 @@ export class Endpoint {
     const term = { value: uri, termType: 'NamedNode' }
 
     return { id: uri, term, properties: [...properties.values()] }
-  }
-
-  get fromClause () {
-    return this.graph ? `FROM <${this.graph}>` : ''
   }
 }

@@ -199,7 +199,7 @@ export default {
   }
 }
 
-const validURLOptions = ['url', 'graph', 'prefixes']
+const validURLOptions = ['url', 'graph', 'prefixes', 'forceIntrospection']
 
 function settingsFromURL (params) {
   return validURLOptions.reduce((settings, option) => {
@@ -235,6 +235,10 @@ function deserializeURLParam (param, value) {
       const url = prefixValue.split(':').slice(1).join(':')
       return { prefix, url }
     })
+  }
+
+  if (param === 'forceIntrospection') {
+    return value === 'true'
   }
 
   return value
