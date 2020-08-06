@@ -237,6 +237,10 @@ function deserializeURLParam (param, value) {
     })
   }
 
+  if (param === 'forceIntrospection') {
+    return value === 'true'
+  }
+
   return value
 }
 </script>
