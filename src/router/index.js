@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Overview from '../views/Overview.vue'
+import ShaclEditor from '../views/ShaclEditor.vue'
 
 Vue.use(VueRouter)
 
@@ -9,6 +10,11 @@ const routes = [
     path: '/',
     name: 'Overview',
     component: Overview
+  },
+  {
+    path: '/shacl',
+    name: 'ShaclEditor',
+    component: ShaclEditor
   }
 ]
 
