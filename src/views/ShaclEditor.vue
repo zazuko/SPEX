@@ -3,7 +3,12 @@
     <Splitpanes class="default-theme">
       <Pane size="40">
         <h2 class="title is-6">SHACL editor</h2>
-        <rdf-editor class="shacl-editor" format="text/turtle" :serialized.prop="shacl" ref="shaclEditor" />
+        <rdf-editor class="shacl-editor" :format="format" :serialized.prop="shacl" ref="shaclEditor" />
+        <b-field label="Format">
+          <b-select v-model="format">
+            <option v-for="format in formats" :key="format" :value="format">{{ format }}</option>
+          </b-select>
+        </b-field>
         <b-button type="is-primary" icon-left="sync" @click="loadShacl">Update</b-button>
       </Pane>
       <Pane>
@@ -70,8 +75,11 @@ import { shrink } from '@zazuko/rdf-vocabularies'
 import { Splitpanes, Pane } from 'splitpanes'
 import 'splitpanes/dist/splitpanes.css'
 import '@rdfjs-elements/rdf-editor/rdf-editor'
+import { parsers } from '@rdf-esm/formats-common'
 import OverviewTables from '@/components/OverviewTables.vue'
 import { tablesFromSHACL } from '@/shacl'
+
+const formats = [...parsers.keys()]
 
 const initialEditorContent = `
 @prefix sh: <http://www.w3.org/ns/shacl#> .
@@ -87,6 +95,8 @@ export default {
 
   data () {
     return {
+      format: 'text/turtle',
+      formats,
       shacl: initialEditorContent,
       tables: [],
       error: null
