@@ -73,7 +73,7 @@
 <script>
 import { Splitpanes, Pane } from 'splitpanes'
 import 'splitpanes/dist/splitpanes.css'
-import { NavigationFailureType } from 'vue-router/src/history/errors'
+import { isNavigationFailure, NavigationFailureType } from 'vue-router/src/util/errors'
 import OverviewTables from '@/components/OverviewTables.vue'
 import SettingsPane from '@/components/SettingsPane.vue'
 import TableExplorer from '@/components/TableExplorer.vue'
@@ -161,7 +161,7 @@ export default {
         await this.$router.push({ query })
       } catch (err) {
         // Ignore duplicated navigation error
-        if (err.type !== NavigationFailureType.duplicated) {
+        if (!isNavigationFailure(err, NavigationFailureType.duplicated)) {
           throw err
         }
       }
