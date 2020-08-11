@@ -1,6 +1,13 @@
 <template>
   <div class="OverviewTables">
-    <OverviewTable v-for="table in tables" :key="table.id" :table="table" :id="table.id" @explore="explore" />
+    <OverviewTable
+      v-for="table in tables"
+      :key="table.id"
+      :table="table"
+      :id="table.id"
+      @explore="explore"
+      :ref="table.id"
+    />
     <div v-if="tables.length === 0" class="section">
       <p>Nothing to show</p>
     </div>
@@ -10,7 +17,7 @@
           id="arrow"
           viewBox="0 0 10 10"
           refX="10" refY="5"
-          markerUnits="strokeWidth"
+          markerUnits="userSpaceOnUse"
           markerWidth="10" markerHeight="10"
           orient="auto">
           <path d="M 0 0 L 10 5 L 0 10 z" class="link-arrow" />
@@ -19,16 +26,16 @@
           id="dot"
           viewBox="0 0 100 100"
           refX="50" refY="50"
+          markerUnits="userSpaceOnUse"
           markerWidth="6" markerHeight="6"
           orient="auto">
           <circle cx="50" cy="50" r="50" class="link-start" />
         </marker>
       </defs>
       <line v-for="(link, index) in links" :key="index" class="link">
-        <!-- <title>{{ link.label }}</title> -->
+        <title>{{ link.label }}</title>
       </line>
     </svg>
-    <div class="link-tooltip"></div>
   </div>
 </template>
 
@@ -63,8 +70,9 @@
 }
 
 .link:hover {
-  stroke-width: 2;
   z-index: 10;
+  stroke: #ffb15e;
+  stroke-width: 2;
 }
 
 .link-arrow {
@@ -75,15 +83,8 @@
   fill: #456;
 }
 
-.link-tooltip {
-  position: absolute;
-  z-index: 10;
-  visibility: hidden;
-
-  padding: 0.2rem 0.4rem;
-  background: #eee;
-  color: #000;
-  font-size: 0.75rem;
+.highlighted {
+  border: 2px solid #ffb15e;
 }
 </style>
 
@@ -174,24 +175,16 @@ export default {
         .force('bounds', keepInBounds)
         .stop()
 
-      const linkTooltip = root.select('.link-tooltip')
-
       // draw lines for the links
       const link = root
         .select('.links')
         .selectAll('.link')
         .data(links)
-        .on('mouseover', (d) => {
-          linkTooltip.text(`${d.source.name} / ${d.label} -> ${d.target.name}`)
-          linkTooltip.style('visibility', 'visible')
+        .on('mouseover', (link) => {
+          this.toggleLinkHighlight(link)
         })
-        .on('mousemove', () => {
-          linkTooltip
-            .style('top', (d3.event.offsetY - 10) + 'px')
-            .style('left', (d3.event.offsetX + 10) + 'px')
-        })
-        .on('mouseout', () => {
-          linkTooltip.style('visibility', 'hidden')
+        .on('mouseout', (link) => {
+          this.toggleLinkHighlight(link)
         })
 
       // draw circles for the nodes
@@ -262,7 +255,16 @@ export default {
           .on('drag', dragged)
           .on('end', dragended)
       }
-    }
+    },
+
+    toggleLinkHighlight (link) {
+      const sourceTable = this.$refs[link.source.id][0]
+      const sourceProperty = sourceTable.$refs[link.source.id + link.sourceColumn][0]
+      sourceProperty.classList.toggle('highlighted')
+
+      const targetTable = this.$refs[link.target.id][0]
+      targetTable.$el.classList.toggle('highlighted')
+    },
   }
 }
 
