@@ -1,10 +1,9 @@
 <template>
   <div class="Overview">
     <Splitpanes class="default-theme">
-      <Pane size="30">
+      <Pane size="40">
         <h2 class="title is-6">SHACL editor</h2>
-        <!-- <rdfjs-editor class="shacl-editor" format="text/turtle" :serialized="this.shacl" ref="shaclEditor" /> -->
-        <textarea v-model="shacl" class="shacl-editor" />
+        <rdf-editor class="shacl-editor" format="text/turtle" :serialized.prop="shacl" ref="shaclEditor" />
         <b-button type="is-primary" icon-left="sync" @click="loadShacl">Update</b-button>
       </Pane>
       <Pane>
@@ -67,14 +66,11 @@
 
 <script>
 import RDF from 'rdf-ext'
-import N3Parser from 'n3/lib/N3Parser'
 import { shrink } from '@zazuko/rdf-vocabularies'
 import { Splitpanes, Pane } from 'splitpanes'
 import 'splitpanes/dist/splitpanes.css'
-// import { NavigationFailureType } from 'vue-router/src/history/errors'
+import '@rdfjs-elements/rdf-editor/rdf-editor'
 import OverviewTables from '@/components/OverviewTables.vue'
-// import { Endpoint } from '@/endpoint'
-// import config from '@/config'
 import { tablesFromSHACL } from '@/shacl'
 
 const initialEditorContent = `
@@ -98,7 +94,9 @@ export default {
   },
 
   methods: {
-    loadShacl () {
+    async loadShacl () {
+      const editor = this.$refs.shaclEditor
+
       this.error = null
       this.tables = []
 
@@ -108,13 +106,12 @@ export default {
         }
       }
 
-      const parser = new N3Parser()
       try {
-        const quads = parser.parse(this.shacl)
+        const quads = await editor.quads
         const dataset = RDF.dataset(quads)
         this.tables = tablesFromSHACL(dataset, endpoint)
       } catch (e) {
-        this.error = e
+        this.error = e.toString()
       }
     }
   }

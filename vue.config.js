@@ -3,6 +3,8 @@ module.exports = {
     ? '/endpoint-explorer/'
     : '/',
 
+  transpileDependencies: ['@rdfjs-elements/rdf-editor'],
+
   chainWebpack: config => {
     config.module
       .rule('nq')
