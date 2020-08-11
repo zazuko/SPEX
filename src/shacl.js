@@ -36,24 +36,38 @@ export function tablesFromSHACL (dataset, endpoint) {
 
   const shapes = cf.has(rdf.type, sh.NodeShape).toArray()
 
-  return shapes.map((shape) => {
-    const id = shape.out(sh.targetClass).term.value
+  return shapes
+    .map((shape) => {
+      const targetClass = shape.out(sh.targetClass).term
 
-    return {
-      id,
-      name: endpoint.shrink(id),
-      columns: shape.out(sh.property).map((property) => {
-        const id = property.out(sh.path).term.value
-        const types = propertyTypes(property, endpoint)
+      if (!targetClass) return null
 
-        return {
-          id,
-          name: endpoint.shrink(id),
-          types,
-        }
-      })
-    }
-  })
+      const id = targetClass.value
+      const columns = shape
+        .out(sh.property)
+        .map((property) => {
+          const path = property.out(sh.path).term
+
+          if (!path) return null
+
+          const id = path.value
+          const types = propertyTypes(property, endpoint)
+
+          return {
+            id,
+            name: endpoint.shrink(id),
+            types,
+          }
+        })
+        .filter(Boolean)
+
+      return {
+        id,
+        name: endpoint.shrink(id),
+        columns,
+      }
+    })
+    .filter(Boolean)
 }
 
 function propertyTypes (property, endpoint) {
