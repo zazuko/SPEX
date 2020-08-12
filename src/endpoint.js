@@ -25,6 +25,17 @@ export class Endpoint {
     return shrink(uri) || uri
   }
 
+  async fetchGraphs () {
+    const query = `
+      SELECT DISTINCT ?g
+      WHERE {
+        GRAPH ?g { ?s ?p ?o }
+      }
+    `
+    const graphs = await this.client.query.select(query)
+    return graphs.map(({ g: { value } }) => value)
+  }
+
   async fetchTables () {
     if (this.forceIntrospection) {
       return this.introspectTables()
