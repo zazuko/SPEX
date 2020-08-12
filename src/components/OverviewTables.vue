@@ -32,9 +32,9 @@
           <circle cx="50" cy="50" r="50" class="link-start" />
         </marker>
       </defs>
-      <line v-for="(link, index) in links" :key="index" class="link">
+      <path v-for="(link, index) in links" :key="index" class="link">
         <title>{{ link.label }}</title>
-      </line>
+      </path>
     </svg>
   </div>
 </template>
@@ -62,6 +62,7 @@
 }
 
 .link {
+  fill: transparent;
   stroke-width: 1;
   stroke: #333;
   marker-end: url(#arrow);
@@ -223,11 +224,14 @@ export default {
           .attr('style', (d) => `left: ${d.x}px; top: ${d.y}px`)
 
         // Update link positions
-        link
-          .attr('x1', (d) => sourcePoint(d).x)
-          .attr('y1', (d) => sourcePoint(d).y)
-          .attr('x2', (d) => targetClosestAnchor(d).x)
-          .attr('y2', (d) => targetClosestAnchor(d).y)
+        const computeLinkPath = d3
+          .linkHorizontal()
+          .source((d) => sourcePoint(d))
+          .target((d) => targetClosestAnchor(d))
+          .x(({ x }) => x)
+          .y(({ y }) => y)
+
+        link.attr('d', computeLinkPath)
       }
 
       function drag (simulation) {
