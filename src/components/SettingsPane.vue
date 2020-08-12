@@ -17,8 +17,16 @@
       <b-field label="Password">
         <b-input type="password" v-model="settings.password" password-reveal />
       </b-field>
-      <b-field label="Graph">
-        <b-input v-model="settings.graph" />
+      <b-field label="Graph" :message="fetchError" :type="fetchError ? 'is-danger' : ''">
+        <b-field>
+          <b-select v-model="settings.graph" expanded>
+            <option :value="null">DEFAULT</option>
+            <option v-for="graph in graphs" :key="graph" :value="graph">
+              {{ graph }}
+            </option>
+          </b-select>
+          <b-button icon-left="sync" title="Load graphs" @click="fetchGraphs" :loading="loadingGraphs" />
+        </b-field>
       </b-field>
       <b-field label="Custom prefixes" :addons="false">
         <div v-for="(prefix, index) in settings.prefixes" :key="index" class="prefix-row">
@@ -73,9 +81,23 @@
 </style>
 
 <script>
+import { Endpoint } from '@/endpoint'
+
 export default {
   name: 'SettingsPane',
   props: ['settings'],
+
+  data () {
+    return {
+      graphs: [],
+      loadingGraphs: false,
+      fetchError: null,
+    }
+  },
+
+  async mounted () {
+    await this.fetchGraphs()
+  },
 
   methods: {
     onSubmit () {
@@ -83,6 +105,19 @@ export default {
     },
     onClose () {
       this.$emit('close')
+    },
+    async fetchGraphs () {
+      this.loadingGraphs = true
+      this.fetchError = ''
+      const endpoint = new Endpoint(this.settings)
+
+      try {
+        this.graphs = await endpoint.fetchGraphs()
+      } catch (e) {
+        this.fetchError = e.toString()
+      } finally {
+        this.loadingGraphs = false
+      }
     },
     addPrefix () {
       this.settings.prefixes.push({ prefix: '', url: '' })
