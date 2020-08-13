@@ -25,7 +25,25 @@
           <path d="M 0 0 L 10 5 L 0 10 z" class="link-arrow" />
         </marker>
         <marker
+          id="arrow-active"
+          viewBox="0 0 10 10"
+          refX="10" refY="5"
+          markerUnits="userSpaceOnUse"
+          markerWidth="10" markerHeight="10"
+          orient="auto">
+          <path d="M 0 0 L 10 5 L 0 10 z" class="link-arrow" />
+        </marker>
+        <marker
           id="dot"
+          viewBox="0 0 100 100"
+          refX="50" refY="50"
+          markerUnits="userSpaceOnUse"
+          markerWidth="6" markerHeight="6"
+          orient="auto">
+          <circle cx="50" cy="50" r="50" class="link-start" />
+        </marker>
+        <marker
+          id="dot-active"
           viewBox="0 0 100 100"
           refX="50" refY="50"
           markerUnits="userSpaceOnUse"
@@ -78,10 +96,18 @@
   fill: #456;
 }
 
+/* SVG 1 doesn't provide a way to style markers based on their referencing
+ * element. To circumvent this limitation, I use one marker for the normal
+ * state, and one marker for the active state. */
+#arrow-active > .link-arrow { fill: #ffb15e; }
+#dot-active > .link-start { fill: #ffb15e; }
+
 .link.active {
   z-index: 10;
   stroke: #ffb15e;
   stroke-width: 2;
+  marker-end: url(#arrow-active);
+  marker-start: url(#dot-active);
 }
 </style>
 
