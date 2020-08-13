@@ -52,7 +52,7 @@ import TermTooltip from './TermTooltip.vue'
 
 export default {
   name: 'OverviewTable',
-  props: ['table', 'overview', 'activeLink'],
+  props: ['table', 'overview', 'activeLinks'],
 
   components: { TermTooltip },
 
@@ -62,7 +62,7 @@ export default {
 
   computed: {
     isActive () {
-      return this.activeLink && this.activeLink.target.id === this.table.id
+      return this.activeLinks.some((link) => link.target.id === this.table.id)
     }
   },
 
@@ -72,11 +72,10 @@ export default {
     },
 
     isColumnActive (column) {
-      return (
-        this.activeLink &&
-        this.activeLink.source.id === this.table.id &&
-        this.activeLink.sourceColumn === column.id
-      )
+      return this.activeLinks.some((link) => (
+        link.source.id === this.table.id &&
+        link.sourceColumn === column.id
+      ))
     }
   }
 }

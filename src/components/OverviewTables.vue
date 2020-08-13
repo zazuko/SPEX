@@ -5,7 +5,7 @@
       :key="table.id"
       :table="table"
       :id="table.id"
-      :active-link="activeLink"
+      :active-links="activeLinks"
       @explore="explore"
     />
     <div v-if="tables.length === 0" class="section">
@@ -32,7 +32,7 @@
           <circle cx="50" cy="50" r="50" class="link-start" />
         </marker>
       </defs>
-      <path v-for="(link, index) in links" :key="index" class="link" :class="{ active: link === activeLink }">
+      <path v-for="(link, index) in links" :key="index" class="link" :class="{ active: activeLinks.includes(link) }">
         <title>{{ link.label }}</title>
       </path>
     </svg>
@@ -94,7 +94,7 @@ export default {
 
   data () {
     return {
-      activeLink: null,
+      activeLinks: [],
     }
   },
 
@@ -178,10 +178,10 @@ export default {
         .selectAll('.link')
         .data(links)
         .on('mouseover', (link) => {
-          this.activeLink = link
+          this.activeLinks = [link]
         })
         .on('mouseout', (link) => {
-          this.activeLink = null
+          this.activeLinks = []
         })
 
       // draw circles for the nodes
