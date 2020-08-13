@@ -11,7 +11,14 @@
       </span>
     </header>
     <table class="card-content table is-fullwidth">
-      <tr v-for="(column, index) in table.columns" :key="index" :data-id="table.id + column.id" :class="{ active: isColumnActive(column) }">
+      <tr
+        v-for="(column, index) in table.columns"
+        :key="index"
+        :data-id="table.id + column.id"
+        :class="{ active: isColumnActive(column) }"
+        @mouseenter="$emit('hover-column', table, column)"
+        @mouseleave="$emit('unhover-column', table, column)"
+      >
         <th>
           <TermTooltip :label="column.id">
             {{ column.name }}

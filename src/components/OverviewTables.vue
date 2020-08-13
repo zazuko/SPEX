@@ -7,6 +7,8 @@
       :id="table.id"
       :active-links="activeLinks"
       @explore="explore"
+      @hover-column="onHoverColumn"
+      @unhover-column="onUnhoverColumn"
     />
     <div v-if="tables.length === 0" class="section">
       <p>Nothing to show</p>
@@ -144,6 +146,17 @@ export default {
   methods: {
     explore (table) {
       this.$emit('explore', table)
+    },
+
+    onHoverColumn (table, column) {
+      this.activeLinks = this.links.filter((link) => (
+        link.source.id === table.id &&
+        link.sourceColumn === column.id
+      ))
+    },
+
+    onUnhoverColumn (table, column) {
+      this.activeLinks = []
     },
 
     renderGraph () {
