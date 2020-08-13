@@ -5,8 +5,8 @@
       :key="table.id"
       :table="table"
       :id="table.id"
+      :active-link="activeLink"
       @explore="explore"
-      :ref="table.id"
     />
     <div v-if="tables.length === 0" class="section">
       <p>Nothing to show</p>
@@ -32,7 +32,7 @@
           <circle cx="50" cy="50" r="50" class="link-start" />
         </marker>
       </defs>
-      <path v-for="(link, index) in links" :key="index" class="link">
+      <path v-for="(link, index) in links" :key="index" class="link" :class="{ active: link === activeLink }">
         <title>{{ link.label }}</title>
       </path>
     </svg>
@@ -50,9 +50,7 @@
   flex-direction: column;
   /* align-items: stretch; */
 }
-</style>
 
-<style>
 .links {
   flex-grow: 1;
   flex-basis: 100%;
@@ -70,12 +68,6 @@
   pointer-events: all;
 }
 
-.link:hover {
-  z-index: 10;
-  stroke: #ffb15e;
-  stroke-width: 2;
-}
-
 .link-arrow {
   fill: #456;
 }
@@ -84,8 +76,10 @@
   fill: #456;
 }
 
-.highlighted {
-  border: 2px solid #ffb15e;
+.link.active {
+  z-index: 10;
+  stroke: #ffb15e;
+  stroke-width: 2;
 }
 </style>
 
@@ -99,7 +93,9 @@ export default {
   props: ['tables'],
 
   data () {
-    return {}
+    return {
+      activeLink: null,
+    }
   },
 
   mounted () {
@@ -182,10 +178,10 @@ export default {
         .selectAll('.link')
         .data(links)
         .on('mouseover', (link) => {
-          this.toggleLinkHighlight(link)
+          this.activeLink = link
         })
         .on('mouseout', (link) => {
-          this.toggleLinkHighlight(link)
+          this.activeLink = null
         })
 
       // draw circles for the nodes
@@ -259,15 +255,6 @@ export default {
           .on('drag', dragged)
           .on('end', dragended)
       }
-    },
-
-    toggleLinkHighlight (link) {
-      const sourceTable = this.$refs[link.source.id][0]
-      const sourceProperty = sourceTable.$refs[link.source.id + link.sourceColumn][0]
-      sourceProperty.classList.toggle('highlighted')
-
-      const targetTable = this.$refs[link.target.id][0]
-      targetTable.$el.classList.toggle('highlighted')
     },
   }
 }

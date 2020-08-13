@@ -1,5 +1,5 @@
 <template>
-  <div class="OverviewTable card is-size-7" :data-id="table.id">
+  <div class="OverviewTable card is-size-7" :class="{ active: isActive }" :data-id="table.id">
     <header class="card-header has-background-light">
       <h3 class="card-header-title">
         <TermTooltip :label="table.id">
@@ -11,7 +11,7 @@
       </span>
     </header>
     <table class="card-content table is-fullwidth">
-      <tr v-for="(column, index) in table.columns" :key="index" :data-id="table.id + column.id" :ref="table.id + column.id">
+      <tr v-for="(column, index) in table.columns" :key="index" :data-id="table.id + column.id" :class="{ active: isColumnActive(column) }">
         <th>
           <TermTooltip :label="column.id">
             {{ column.name }}
@@ -41,6 +41,10 @@
 .card-header-icon {
   padding: 0.5rem;
 }
+
+.active {
+  border: 2px solid #ffb15e;
+}
 </style>
 
 <script>
@@ -48,7 +52,7 @@ import TermTooltip from './TermTooltip.vue'
 
 export default {
   name: 'OverviewTable',
-  props: ['table', 'overview'],
+  props: ['table', 'overview', 'activeLink'],
 
   components: { TermTooltip },
 
@@ -56,9 +60,23 @@ export default {
     return {}
   },
 
+  computed: {
+    isActive () {
+      return this.activeLink && this.activeLink.target.id === this.table.id
+    }
+  },
+
   methods: {
     explore () {
       this.$emit('explore', this.table)
+    },
+
+    isColumnActive (column) {
+      return (
+        this.activeLink &&
+        this.activeLink.source.id === this.table.id &&
+        this.activeLink.sourceColumn === column.id
+      )
     }
   }
 }
