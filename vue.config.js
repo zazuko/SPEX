@@ -3,7 +3,10 @@ module.exports = {
     ? '/endpoint-explorer/'
     : '/',
 
-  transpileDependencies: ['@rdfjs-elements/rdf-editor'],
+  transpileDependencies: [
+    '@rdfjs-elements/rdf-editor',
+    '@rdfjs-elements/rdf-snippet',
+  ],
 
   pwa: {
     name: 'SPARQL Endpoint Explorer',

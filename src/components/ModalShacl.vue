@@ -4,13 +4,24 @@
       <p>Generated SHACL shapes</p>
       <div class="modal-card-actions">
         <b-button size="is-small" icon-left="upload" title="Load SHACL shapes" @click="load"></b-button>
-        <b-button size="is-small" icon-left="clipboard" @click="copy">Copy</b-button>
       </div>
     </div>
     <div class="modal-card-body">
-      <pre>
-{{ pretty }}
-      </pre>
+      <div class="snippet-controls">
+        <b-field>
+          <b-radio-button
+            v-for="format in formats"
+            :key="format.value"
+            :native-value="format.value"
+            v-model="selectedFormat"
+            size="is-small"
+          >
+            {{ format.label }}
+          </b-radio-button>
+        </b-field>
+        <b-button size="is-small" icon-left="clipboard" @click="copy">Copy</b-button>
+      </div>
+      <rdf-editor :serialized.prop="shaclStr" :format="selectedFormat" ref="snippet" readonly />
     </div>
   </div>
 </template>
@@ -24,22 +35,36 @@
 .modal-card-actions > * {
   margin-right: 0.2rem;
 }
+
+.snippet-controls {
+  display: flex;
+  justify-content: space-between;
+}
 </style>
 
 <script>
+import '@rdfjs-elements/rdf-snippet'
+
 export default {
   name: 'ModalShacl',
   props: ['shacl', 'loadShacl'],
 
-  computed: {
-    pretty () {
-      return JSON.stringify(this.shacl, null, 2)
+  data () {
+    return {
+      shaclStr: JSON.stringify(this.shacl, null, 2),
+      formats: [
+        { label: 'JSON-LD', value: 'application/ld+json' },
+        { label: 'Turtle', value: 'text/turtle' },
+        { label: 'N-Triples', value: 'application/n-triples' },
+      ],
+      selectedFormat: 'application/ld+json'
     }
   },
 
   methods: {
     async copy () {
-      await navigator.clipboard.writeText(this.pretty)
+      const content = this.$refs.snippet.codeMirror.value
+      await navigator.clipboard.writeText(content)
       this.$buefy.toast.open('Copied 👍')
     },
 
