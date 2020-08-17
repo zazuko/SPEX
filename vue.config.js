@@ -5,6 +5,11 @@ module.exports = {
 
   transpileDependencies: ['@rdfjs-elements/rdf-editor'],
 
+  pwa: {
+    name: 'SPARQL Endpoint Explorer',
+    themeColor: '#ffb15e',
+  },
+
   chainWebpack: config => {
     config.module
       .rule('nq')
