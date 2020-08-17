@@ -8,6 +8,7 @@ import { fas } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import 'vue-resize/dist/vue-resize.css'
 import VueResize from 'vue-resize'
+import './registerServiceWorker'
 
 Vue.config.productionTip = false
 
