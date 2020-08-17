@@ -16,7 +16,8 @@ Vue.component('FontAwesomeIcon', FontAwesomeIcon)
 
 Vue.use(Buefy, {
   defaultIconPack: 'fas',
-  defaultIconComponent: 'FontAwesomeIcon'
+  defaultIconComponent: 'FontAwesomeIcon',
+  defaultTooltipType: 'is-light',
 })
 
 Vue.use(VueResize)
