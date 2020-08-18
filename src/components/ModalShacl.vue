@@ -40,10 +40,27 @@
   display: flex;
   justify-content: space-between;
 }
+
+rdf-editor::part(CodeMirror-vscrollbar) {
+  display: none;
+}
 </style>
 
 <script>
 import '@rdfjs-elements/rdf-snippet'
+import { serializers } from '@rdf-esm/formats-common'
+
+serializers.set('application/ld+json', async () => {
+  const JsonLdExt = (await import('@rdfjs/serializer-jsonld-ext')).default
+
+  return new JsonLdExt({
+    compact: true,
+    encoding: 'string',
+    context: {
+      sh: 'http://www.w3.org/ns/shacl#'
+    }
+  })
+})
 
 export default {
   name: 'ModalShacl',
