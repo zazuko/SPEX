@@ -94,7 +94,8 @@ export default {
 
   data () {
     const urlSettings = settingsFromURL(this.$route.query)
-    const settings = { ...config, ...urlSettings }
+    const localSettings = settingsFromLocalStorage()
+    const settings = { ...config, ...localSettings, ...urlSettings }
 
     return {
       settings,
@@ -133,6 +134,7 @@ export default {
       }
     },
     async loadEndpoint (settings) {
+      saveSettingsInLocalStorage(settings)
       await this.updateURL(settings)
       this.endpoint = new Endpoint(settings)
       await this.loadData()
@@ -197,6 +199,15 @@ export default {
       })
     }
   }
+}
+
+function settingsFromLocalStorage () {
+  const settings = localStorage.getItem('settings')
+  return settings ? JSON.parse(settings) : {}
+}
+
+function saveSettingsInLocalStorage (settings) {
+  localStorage.setItem('settings', JSON.stringify(settings))
 }
 
 const validURLOptions = ['url', 'graph', 'prefixes', 'forceIntrospection']
