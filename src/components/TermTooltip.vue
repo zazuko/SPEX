@@ -1,5 +1,5 @@
 <template>
-  <b-tooltip :label="label" type="is-dark" size="is-small" square>
+  <b-tooltip :label="label" type="is-dark" size="is-small" :delay="300" square>
     <slot />
   </b-tooltip>
 </template>
