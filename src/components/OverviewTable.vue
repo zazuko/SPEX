@@ -1,6 +1,10 @@
 <template>
   <div class="OverviewTable card is-size-7" :class="{ active: isActive }" :data-id="table.id">
-    <header class="card-header has-background-light">
+    <header
+      class="card-header has-background-light"
+      @mouseenter="$emit('hover-table', table)"
+      @mouseleave="$emit('unhover-table', table)"
+    >
       <h3 class="card-header-title">
         <TermTooltip :label="table.id">
           {{ table.name }}
