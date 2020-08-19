@@ -168,7 +168,7 @@ export default {
     },
 
     showShacl () {
-      const shacl = tablesToSHACL(this.tables)
+      const shacl = tablesToSHACL(this.tables, this.endpoint)
       this.$buefy.modal.open({
         parent: this,
         component: ModalShacl,

@@ -1,18 +1,18 @@
 import clownface from 'clownface'
 import { rdf, sh } from '@tpluscode/rdf-ns-builders'
 
-export function tablesToSHACL (tables) {
-  const context = { sh: 'http://www.w3.org/ns/shacl#' }
+export function tablesToSHACL (tables, endpoint) {
+  const prefixes = endpoint.prefixes.reduce((acc, { prefix, url }) => ({ ...acc, [prefix]: url }), {})
+  const context = { sh: 'http://www.w3.org/ns/shacl#', ...prefixes }
 
-  return tables.map((table) => {
+  const graph = tables.map((table) => {
     return {
-      '@context': context,
       '@type': 'sh:NodeShape',
-      'sh:targetClass': table.id,
+      'sh:targetClass': { '@id': endpoint.shrink(table.id) },
       'sh:property': table.columns.map((column) => {
         const typeProp = (type) => type.termType === 'NamedNode'
-          ? { 'sh:class': type.id }
-          : { 'sh:datatype': type.id }
+          ? { 'sh:class': { '@id': endpoint.shrink(type.id) } }
+          : { 'sh:datatype': { '@id': endpoint.shrink(type.id) } }
 
         let type = {}
         if (column.types.length === 1) {
@@ -23,12 +23,17 @@ export function tablesToSHACL (tables) {
 
         return {
           '@type': 'sh:PropertyShape',
-          'sh:path': column.id,
+          'sh:path': { '@id': endpoint.shrink(column.id) },
           ...type,
         }
       }),
     }
   })
+
+  return {
+    '@context': context,
+    '@graph': graph,
+  }
 }
 
 export function tablesFromSHACL (dataset, endpoint) {
