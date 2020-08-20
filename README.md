@@ -89,7 +89,7 @@ Note that right now the PWA [does not update](https://stackoverflow.com/question
 ## Extending SPEX
 
 SPEX is developed by Zazuko and released as Open Source Software under
-the MIT license.
+the [MIT license](LICENSE).
 
 We use SPEX on a daily base to work with datasets. There are many ideas
 of what could and should be added to SPEX. Check out the GitHub issues
