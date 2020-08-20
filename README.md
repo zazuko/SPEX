@@ -52,7 +52,8 @@ Introspection and auto-generation of SHACL shapes might give strange
 results, in particular:
 
 * when more than one class is assigned to instances of data
-* when there are many different datasets with the same class but different properties. For example, a dataset containing multiple RDF Cubes with different dimensions.
+* when there are many different datasets with the same class but different properties.
+For example, a dataset containing multiple RDF Cubes with different dimensions.
 
 In this case, it is best to provide pre-defined SHACL shapes instead.
 Inferring the correct structure automatically will require more work
@@ -60,7 +61,9 @@ than the generic queries used by SPEX.
 
 The URL of the shape is work in progress, see [this issue](https://github.com/zazuko/endpoint-explorer/issues/25) for more information.
 
-SPEX tries to find a good layout to render the different tables. This is not easy and there is surely room for improvement.
+SPEX tries to find a good layout to render the different tables.
+This is not easy and there is surely room for improvement.
+If the layout does not fit on the page, use the browser zoom controls.
 
 ## Accessing an unencrypted (http) SPARQL endpoint
 
