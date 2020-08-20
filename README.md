@@ -25,8 +25,8 @@ data. It assumes that URIs have at least one RDF class assigned and
 group entities that are part of the same class. For those classes, it
 will query the distinct properties, including optional ones. It also
 introspects the datatypes of properties and how they link to other
-concepts. For example a schema:Person that links to a
-schema:PostalAddress via the property schema:address.
+concepts. For example a [schema:Person](https://schema.org/Person) that links to a
+[schema:PostalAddress](https://schema.org/PostalAddress) via the property [schema:address](https://schema.org/address).
 
 This information is then visualized. If one hovers over a link or a
 property that points to another class, all involved classes & properties
