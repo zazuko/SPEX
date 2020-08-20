@@ -54,7 +54,7 @@ In this case, it is best to provide pre-defined SHACL shapes instead.
 Inferring the correct structure automatically will require more work
 than the generic queries used by SPEX.
 
-The URL of the shape is work in progress, see issue #25 for discussion.
+The URL of the shape is work in progress, see [this issue](https://github.com/zazuko/endpoint-explorer/issues/25) for more information.
 
 SPEX tries to find a good layout to render the different tables. This is not easy and there is surely room for improvement.
 
