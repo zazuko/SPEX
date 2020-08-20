@@ -14,6 +14,8 @@ data. For further graph exploration, we recommend tools like [Ontodia](http://on
 
 ## Usage
 
+You can try a [live instance of SPEX](https://zazuko.github.io/endpoint-explorer/). 
+
 SPEX is using SPARQL to see what data is available. As a minimal entry
 point, a SPARQL endpoint has to be provided. Once the SPARQL endpoint is
 configured, SPEX can introspect data. It can do that either on the
@@ -27,6 +29,8 @@ will query the distinct properties, including optional ones. It also
 introspects the datatypes of properties and how they link to other
 concepts. For example a [schema:Person](https://schema.org/Person) that links to a
 [schema:PostalAddress](https://schema.org/PostalAddress) via the property [schema:address](https://schema.org/address).
+
+![SPEX screenshot](docs/image/SPEX.png "SPEX in action")
 
 This information is then visualized. If one hovers over a link or a
 property that points to another class, all involved classes & properties
