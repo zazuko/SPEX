@@ -30,13 +30,13 @@ introspects the datatypes of properties and how they link to other
 concepts. For example a [schema:Person](https://schema.org/Person) that links to a
 [schema:PostalAddress](https://schema.org/PostalAddress) via the property [schema:address](https://schema.org/address).
 
-![SPEX screenshot](docs/image/SPEX.png "SPEX in action")
-
 This information is then visualized. If one hovers over a link or a
 property that points to another class, all involved classes & properties
 are highlighted. If one hovers over the class, all outgoing connections
 are highlighted. Use the browse-button to explore specific instances of
 a particular class.
+
+![SPEX screenshot](docs/image/SPEX.png "SPEX in action")
 
 Depending on the size of the dataset, introspection can be very costly.
 For that reason, SPEX first checks if there are SHACL shapes available
