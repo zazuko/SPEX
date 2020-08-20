@@ -42,7 +42,7 @@ this instead and not execute a SPARQL query.
 You can download the auto-generated shape as a starting point in case
 you want to provide shapes on the endpoint.
 
-## Limitations
+## Limitations
 
 Introspection and auto-generation of SHACL shapes might give strange
 results, in particular:
@@ -58,7 +58,7 @@ The URL of the shape is work in progress, see issue \#123.
 
 SPEX tries to find a good layout to render the different tables. This is not easy and there is surely room for improvement.
 
-## Accessing an unencrypted (http) SPARQL endpoint
+## Accessing an unencrypted (http) SPARQL endpoint
 
 SPEX is a web application that runs in a browser window. This will cause
 problems if a SPARQL endpoint is not available on https and SPEX is
@@ -74,7 +74,7 @@ http only SPARQL endpoint on localhost.
 The only way to fix this is to either implement a SPARQL proxy or to
 serve SPEX on an http resource.
 
-## SPEX as a local Application
+## SPEX as a local Application
 
 SPEX can be installed as a so-called [progressive web application](https://en.wikipedia.org/wiki/Progressive_web_application)
 (PWA). If you follow the [guide at MDN](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Developer_guide/Installing),
@@ -82,7 +82,7 @@ SPEX will be available on your desktop computer like any other application.
 
 Note that right now the PWA [does not update](https://stackoverflow.com/questions/49739438/when-and-how-does-a-pwa-update-itself) itself.
 
-## Extending SPEX
+## Extending SPEX
 
 SPEX is developed by Zazuko and released as Open Source Software under
 the MIT license.
@@ -94,10 +94,10 @@ to see what could be done next.
 There are three ways to get new features implemented:
 
 1. Implement it on your own and submit a pull-request to this repository.  
-2. Pay us for a specific feature. Get in contact with us by email to get a quote.
+2. Pay us for a specific feature. Get [in contact with us](mailto:info@zazuko.com?subject=SPEX) by email to get a quote.
 3. Wait for 1 or 2 to happen.
 
-## Support
+## Support
 
 Zazuko provides commercial support for SPEX, get in [contact with us](mailto:info@zazuko.com?subject=SPEX) for
 more information.
