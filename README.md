@@ -14,7 +14,7 @@ data. For further graph exploration, we recommend tools like [Ontodia](http://on
 
 ## Usage
 
-You can try a [live instance of SPEX](https://zazuko.github.io/endpoint-explorer/). 
+You can try a [live instance of SPEX](https://zazuko.github.io/SPEX/).
 
 SPEX is using SPARQL to see what data is available. As a minimal entry
 point, a SPARQL endpoint has to be provided. Once the SPARQL endpoint is
@@ -59,7 +59,7 @@ In this case, it is best to provide pre-defined SHACL shapes instead.
 Inferring the correct structure automatically will require more work
 than the generic queries used by SPEX.
 
-The URL of the shape is work in progress, see [this issue](https://github.com/zazuko/endpoint-explorer/issues/25) for more information.
+The URL of the shape is work in progress, see [this issue](https://github.com/zazuko/SPEX/issues/25) for more information.
 
 SPEX tries to find a good layout to render the different tables.
 This is not easy and there is surely room for improvement.
@@ -69,7 +69,7 @@ If the layout does not fit on the page, use the browser zoom controls.
 
 SPEX is a web application that runs in a browser window. This will cause
 problems if a SPARQL endpoint is not available on https and SPEX is
-served on https only. See 
+served on https only. See
 [Mixed Content](https://developers.google.com/web/fundamentals/security/prevent-mixed-content/fixing-mixed-content)
 restrictions for more information about why.
 
@@ -100,7 +100,7 @@ to see what could be done next.
 
 There are three ways to get new features implemented:
 
-1. Implement it on your own and submit a pull-request to this repository.  
+1. Implement it on your own and submit a pull-request to this repository.
 2. Pay us for a specific feature. Get [in contact with us](mailto:info@zazuko.com?subject=SPEX) by email to get a quote.
 3. Wait for 1 or 2 to happen.
 
