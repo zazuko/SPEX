@@ -9,7 +9,7 @@ module.exports = {
   ],
 
   pwa: {
-    name: 'SPARQL Endpoint Explorer',
+    name: 'SPEX',
     themeColor: '#ffb15e',
   },
 
