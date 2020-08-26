@@ -1,9 +1,10 @@
 import clownface from 'clownface'
 import { rdf, sh } from '@tpluscode/rdf-ns-builders'
+import { prefixes as _prefixes } from '@zazuko/rdf-vocabularies'
 
 export function tablesToSHACL (tables, endpoint) {
   const prefixes = endpoint.prefixes.reduce((acc, { prefix, url }) => ({ ...acc, [prefix]: url }), {})
-  const context = { sh: 'http://www.w3.org/ns/shacl#', ...prefixes }
+  const context = { ..._prefixes, ...prefixes }
 
   const graph = tables.map((table) => {
     return {
