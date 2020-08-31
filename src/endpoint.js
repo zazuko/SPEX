@@ -115,13 +115,13 @@ export class Endpoint {
 
   async fetchTableData (table) {
     const limit = 100
-    const graph = this.graph ? `<${this.graph}>` : '?g'
+    const graphClause = this.graph ? `GRAPH <${this.graph}>` : ''
     const query = `
       DESCRIBE ?subject {
         {
           SELECT ?subject
           WHERE {
-            GRAPH ${graph} {
+            ${graphClause} {
               ?subject a <${table.id}>
             }
           }
