@@ -54,6 +54,7 @@
 <style scoped>
 .card {
   min-height: 100%;
+  overflow-y: auto;
 }
 
 .prefix-row {
