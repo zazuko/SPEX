@@ -222,10 +222,10 @@ export default {
         .select('.links')
         .selectAll('.link')
         .data(links)
-        .on('mouseover', (link) => {
+        .on('mouseover', (event, link) => {
           this.activeLinks = [link]
         })
-        .on('mouseout', (link) => {
+        .on('mouseout', (event, link) => {
           this.activeLinks = []
         })
 
