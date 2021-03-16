@@ -5,23 +5,25 @@
         <Splitpanes horizontal>
           <Pane>
             <div class="OverviewPane">
-              <div class="level">
-                <div class="level-item">
-                  <b-button type="is-white" icon-right="cog" title="Options" @click="showSettings">
-                    <h2 class="title is-6">
-                      <span v-if="endpoint">{{ endpoint.url }}</span>
-                      <span v-else>No endpoint configured yet</span>
-                    </h2>
-                  </b-button>
-                </div>
-                <div class="level-right">
-                  <div class="level-item">
+              <b-navbar shadow>
+                <template #start>
+                  <b-navbar-item tag="div" class="p-0">
+                    <b-button type="is-white" icon-right="cog" title="Options" @click="showSettings">
+                      <h2 class="title is-6">
+                        <span v-if="endpoint">{{ endpoint.url }}</span>
+                        <span v-else>No endpoint configured yet</span>
+                      </h2>
+                    </b-button>
+                  </b-navbar-item>
+                </template>
+                <template #end>
+                  <b-navbar-item tag="div" class="p-0">
                     <b-button v-if="endpoint && !error" type="is-white" size="is-small" @click="showShacl">
                       SHACL
                     </b-button>
-                  </div>
-                </div>
-              </div>
+                  </b-navbar-item>
+                </template>
+              </b-navbar>
 
               <OverviewTables :tables="tables" @explore="exploreTable" />
 
