@@ -8,6 +8,7 @@ import { fas } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import 'vue-resize/dist/vue-resize.css'
 import VueResize from 'vue-resize'
+import PanZoom from 'vue-panzoom'
 import './registerServiceWorker'
 
 Vue.config.productionTip = false
@@ -22,6 +23,7 @@ Vue.use(Buefy, {
 })
 
 Vue.use(VueResize)
+Vue.use(PanZoom)
 
 new Vue({
   router,

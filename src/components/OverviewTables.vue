@@ -1,76 +1,77 @@
 <template>
-  <div class="OverviewTables">
-    <OverviewTable
-      v-for="table in tables"
-      :key="table.id"
-      :table="table"
-      :id="table.id"
-      :active-links="activeLinks"
-      @explore="explore"
-      @hover-table="onHoverTable"
-      @unhover-table="onUnhover"
-      @hover-column="onHoverColumn"
-      @unhover-column="onUnhover"
-    />
-    <div v-if="tables.length === 0" class="section">
-      <p>Nothing to show</p>
+  <panZoom class="PanZoom" selector=".OverviewTables" :options="panZoomOptions">
+    <div class="OverviewTables">
+      <OverviewTable
+        v-for="table in tables"
+        :key="table.id"
+        :table="table"
+        :id="table.id"
+        :active-links="activeLinks"
+        @explore="explore"
+        @hover-table="onHoverTable"
+        @unhover-table="onUnhover"
+        @hover-column="onHoverColumn"
+        @unhover-column="onUnhover"
+      />
+      <div v-if="tables.length === 0" class="section">
+        <p>Nothing to show</p>
+      </div>
+      <svg class="links">
+        <defs>
+          <marker
+            id="arrow"
+            viewBox="0 0 10 10"
+            refX="10" refY="5"
+            markerUnits="userSpaceOnUse"
+            markerWidth="10" markerHeight="10"
+            orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" class="link-arrow" />
+          </marker>
+          <marker
+            id="arrow-active"
+            viewBox="0 0 10 10"
+            refX="10" refY="5"
+            markerUnits="userSpaceOnUse"
+            markerWidth="10" markerHeight="10"
+            orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" class="link-arrow" />
+          </marker>
+          <marker
+            id="dot"
+            viewBox="0 0 100 100"
+            refX="50" refY="50"
+            markerUnits="userSpaceOnUse"
+            markerWidth="6" markerHeight="6"
+            orient="auto">
+            <circle cx="50" cy="50" r="50" class="link-start" />
+          </marker>
+          <marker
+            id="dot-active"
+            viewBox="0 0 100 100"
+            refX="50" refY="50"
+            markerUnits="userSpaceOnUse"
+            markerWidth="6" markerHeight="6"
+            orient="auto">
+            <circle cx="50" cy="50" r="50" class="link-start" />
+          </marker>
+        </defs>
+        <path v-for="(link, index) in links" :key="index" class="link" :class="{ active: activeLinks.includes(link) }">
+          <title>{{ link.label }}</title>
+        </path>
+      </svg>
     </div>
-    <svg class="links">
-      <defs>
-        <marker
-          id="arrow"
-          viewBox="0 0 10 10"
-          refX="10" refY="5"
-          markerUnits="userSpaceOnUse"
-          markerWidth="10" markerHeight="10"
-          orient="auto">
-          <path d="M 0 0 L 10 5 L 0 10 z" class="link-arrow" />
-        </marker>
-        <marker
-          id="arrow-active"
-          viewBox="0 0 10 10"
-          refX="10" refY="5"
-          markerUnits="userSpaceOnUse"
-          markerWidth="10" markerHeight="10"
-          orient="auto">
-          <path d="M 0 0 L 10 5 L 0 10 z" class="link-arrow" />
-        </marker>
-        <marker
-          id="dot"
-          viewBox="0 0 100 100"
-          refX="50" refY="50"
-          markerUnits="userSpaceOnUse"
-          markerWidth="6" markerHeight="6"
-          orient="auto">
-          <circle cx="50" cy="50" r="50" class="link-start" />
-        </marker>
-        <marker
-          id="dot-active"
-          viewBox="0 0 100 100"
-          refX="50" refY="50"
-          markerUnits="userSpaceOnUse"
-          markerWidth="6" markerHeight="6"
-          orient="auto">
-          <circle cx="50" cy="50" r="50" class="link-start" />
-        </marker>
-      </defs>
-      <path v-for="(link, index) in links" :key="index" class="link" :class="{ active: activeLinks.includes(link) }">
-        <title>{{ link.label }}</title>
-      </path>
-    </svg>
-  </div>
+  </panZoom>
 </template>
 
 <style scoped>
+.PanZoom,
 .OverviewTables {
   flex-grow: 1;
 
   position: relative;
-  overflow: auto;
 
   display: flex;
   flex-direction: column;
-  /* align-items: stretch; */
 }
 
 .links {
@@ -113,9 +114,26 @@
 }
 </style>
 
+<style>
+.vue-pan-zoom-scene {
+  flex-grow: 1;
+  outline: none;
+}
+</style>
+
 <script>
 import * as d3 from 'd3'
 import OverviewTable from './OverviewTable'
+
+const panZoomOptions = {
+  bounds: false,
+  autocenter: false,
+  minZoom: 0.1,
+  maxZoom: 1.2,
+  initialZoom: 1,
+  initialX: 0,
+  initialY: 0,
+}
 
 export default {
   name: 'OverviewTables',
@@ -125,6 +143,7 @@ export default {
   data () {
     return {
       activeLinks: [],
+      panZoomOptions,
     }
   },
 
