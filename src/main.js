@@ -6,8 +6,6 @@ import 'buefy/dist/buefy.css'
 import { library as iconsLibrary } from '@fortawesome/fontawesome-svg-core'
 import { fas } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import 'vue-resize/dist/vue-resize.css'
-import VueResize from 'vue-resize'
 import PanZoom from 'vue-panzoom'
 import './registerServiceWorker'
 
@@ -22,7 +20,6 @@ Vue.use(Buefy, {
   defaultTooltipType: 'is-light',
 })
 
-Vue.use(VueResize)
 Vue.use(PanZoom)
 
 new Vue({
