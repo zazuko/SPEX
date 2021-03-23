@@ -1,7 +1,8 @@
 import RDF from 'rdf-ext'
 import ParsingClient from 'sparql-http-client/ParsingClient'
 import TermSet from '@rdfjs/term-set'
-import { shrink, prefixes as _prefixes } from '@zazuko/rdf-vocabularies'
+import _prefixes from '@zazuko/rdf-vocabularies/prefixes'
+import { shrink } from '@zazuko/rdf-vocabularies/shrink'
 import { tablesFromSHACL } from '@/shacl'
 
 const SCHEMA_URI = '.well-known/schema'

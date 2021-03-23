@@ -72,7 +72,7 @@
 
 <script>
 import RDF from 'rdf-ext'
-import { shrink } from '@zazuko/rdf-vocabularies'
+import { shrink } from '@zazuko/rdf-vocabularies/shrink'
 import { Splitpanes, Pane } from 'splitpanes'
 import 'splitpanes/dist/splitpanes.css'
 import '@rdfjs-elements/rdf-editor/rdf-editor'

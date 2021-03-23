@@ -1,6 +1,6 @@
 import clownface from 'clownface'
 import { rdf, sh } from '@tpluscode/rdf-ns-builders'
-import { prefixes as _prefixes } from '@zazuko/rdf-vocabularies'
+import _prefixes from '@zazuko/rdf-vocabularies/prefixes'
 
 export function tablesToSHACL (tables, endpoint) {
   const prefixes = endpoint.prefixes.reduce((acc, { prefix, url }) => ({ ...acc, [prefix]: url }), {})
