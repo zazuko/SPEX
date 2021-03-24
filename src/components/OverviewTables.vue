@@ -153,11 +153,12 @@ export default {
     },
 
     renderGraph () {
+      const container = this.$el
       const root = d3.select('.OverviewTables')
       const nodes = this.nodes
       const links = this.links
-      const width = this.$el.clientWidth
-      const height = this.$el.clientHeight
+      const width = container.clientWidth
+      const height = container.clientHeight
       const margin = 5
 
       const simulation = d3.forceSimulation().nodes(nodes)
@@ -228,8 +229,8 @@ export default {
         // Update link positions
         const computeLinkPath = d3
           .linkHorizontal()
-          .source((d) => sourcePoint(d))
-          .target((d) => targetClosestAnchor(d))
+          .source((d) => sourcePoint(d, container))
+          .target((d) => targetClosestAnchor(d, container))
           .x(({ x }) => x)
           .y(({ y }) => y)
 
@@ -268,9 +269,9 @@ export default {
 /**
  * Property link source point
  */
-function sourcePoint (d) {
+function sourcePoint (d, container) {
   const radius = 3
-  const sourceElt = document.querySelector(`[data-id="${d.source.id}${d.sourceColumn}"]`)
+  const sourceElt = container.querySelector(`[data-id="${d.source.id}${d.sourceColumn}"]`)
   const offsetX = d.target.x > d.source.x ? (sourceElt.clientWidth + radius) : -radius
   const magic = 60 // TODO: Don't know where this difference is coming from...
   return {
@@ -282,9 +283,9 @@ function sourcePoint (d) {
 /**
  * Find closest point to link to target table
  */
-function targetClosestAnchor (d) {
-  const targetElt = document.querySelector(`[data-id="${d.target.id}"]`)
-  const source = sourcePoint(d)
+function targetClosestAnchor (d, container) {
+  const targetElt = container.querySelector(`[data-id="${d.target.id}"]`)
+  const source = sourcePoint(d, container)
   return nearestPointOnPerimeter(source, d.target, targetElt.clientWidth, targetElt.clientHeight)
 }
 
