@@ -14,7 +14,7 @@
     "@fortawesome/fontawesome-svg-core": "^1.2.35",
     "@fortawesome/free-solid-svg-icons": "^5.15.3",
     "@fortawesome/vue-fontawesome": "^2.0.2",
-    "@rdfjs-elements/rdf-editor": "^0.3.5",
+    "@rdfjs-elements/rdf-editor": "^0.3.7",
     "@rdfjs-elements/rdf-snippet": "^0.2.1",
     "@rdfjs/serializer-jsonld-ext": "^2.0.0",
     "@rdfjs/term-set": "1.0.1",
