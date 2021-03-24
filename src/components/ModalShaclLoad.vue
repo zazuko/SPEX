@@ -15,13 +15,6 @@
   </div>
 </template>
 
-<style scoped>
-.modal-card-head {
-  display: flex;
-  justify-content: space-between;
-}
-</style>
-
 <script>
 import RDF from 'rdf-ext'
 import * as N3 from 'n3'
@@ -55,3 +48,10 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.modal-card-head {
+  display: flex;
+  justify-content: space-between;
+}
+</style>

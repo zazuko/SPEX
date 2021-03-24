@@ -40,24 +40,6 @@
   </div>
 </template>
 
-<style scoped>
-.OverviewTable {
-  /* margin: 2rem; */
-  z-index: 1;
-  position: absolute;
-  opacity: 0.9;
-}
-
-.card-header-title,
-.card-header-icon {
-  padding: 0.5rem;
-}
-
-.active {
-  border: 2px solid #ffb15e;
-}
-</style>
-
 <script>
 import TermTooltip from './TermTooltip.vue'
 
@@ -91,3 +73,21 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.OverviewTable {
+  /* margin: 2rem; */
+  z-index: 1;
+  position: absolute;
+  opacity: 0.9;
+}
+
+.card-header-title,
+.card-header-icon {
+  padding: 0.5rem;
+}
+
+.active {
+  border: 2px solid #ffb15e;
+}
+</style>

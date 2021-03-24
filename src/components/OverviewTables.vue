@@ -63,64 +63,6 @@
   </panZoom>
 </template>
 
-<style scoped>
-.PanZoom,
-.OverviewTables {
-  flex-grow: 1;
-
-  position: relative;
-
-  display: flex;
-  flex-direction: column;
-}
-
-.links {
-  flex-grow: 1;
-  flex-basis: 100%;
-  /* Hack because I can't figure out how to make the SVG take the full parent width/height */
-  overflow: visible;
-  pointer-events: none;
-}
-
-.link {
-  fill: transparent;
-  stroke-width: 1;
-  stroke: #333;
-  marker-end: url(#arrow);
-  marker-start: url(#dot);
-  pointer-events: all;
-}
-
-.link-arrow {
-  fill: #456;
-}
-
-.link-start {
-  fill: #456;
-}
-
-/* SVG 1 doesn't provide a way to style markers based on their referencing
- * element. To circumvent this limitation, I use one marker for the normal
- * state, and one marker for the active state. */
-#arrow-active > .link-arrow { fill: #ffb15e; }
-#dot-active > .link-start { fill: #ffb15e; }
-
-.link.active {
-  z-index: 10;
-  stroke: #ffb15e;
-  stroke-width: 2;
-  marker-end: url(#arrow-active);
-  marker-start: url(#dot-active);
-}
-</style>
-
-<style>
-.vue-pan-zoom-scene {
-  flex-grow: 1;
-  outline: none;
-}
-</style>
-
 <script>
 import * as d3 from 'd3'
 import OverviewTable from './OverviewTable'
@@ -377,3 +319,61 @@ function nearestPointOnPerimeter (point, rectTopLeft, rectWidth, rectHeight) {
 }
 
 </script>
+
+<style scoped>
+.PanZoom,
+.OverviewTables {
+  flex-grow: 1;
+
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.links {
+  flex-grow: 1;
+  flex-basis: 100%;
+  /* Hack because I can't figure out how to make the SVG take the full parent width/height */
+  overflow: visible;
+  pointer-events: none;
+}
+
+.link {
+  fill: transparent;
+  stroke-width: 1;
+  stroke: #333;
+  marker-end: url(#arrow);
+  marker-start: url(#dot);
+  pointer-events: all;
+}
+
+.link-arrow {
+  fill: #456;
+}
+
+.link-start {
+  fill: #456;
+}
+
+/* SVG 1 doesn't provide a way to style markers based on their referencing
+ * element. To circumvent this limitation, I use one marker for the normal
+ * state, and one marker for the active state. */
+#arrow-active > .link-arrow { fill: #ffb15e; }
+#dot-active > .link-start { fill: #ffb15e; }
+
+.link.active {
+  z-index: 10;
+  stroke: #ffb15e;
+  stroke-width: 2;
+  marker-end: url(#arrow-active);
+  marker-start: url(#dot-active);
+}
+</style>
+
+<style>
+.vue-pan-zoom-scene {
+  flex-grow: 1;
+  outline: none;
+}
+</style>

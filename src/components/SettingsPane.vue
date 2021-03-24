@@ -51,36 +51,6 @@
   </div>
 </template>
 
-<style scoped>
-.card {
-  min-height: 100%;
-  overflow-y: auto;
-}
-
-.prefix-row {
-  display: flex;
-  flex-direction: row;
-}
-
-.prefix-row > * {
-  margin-right: 3px;
-  margin-bottom: 3px;
-}
-
-.prefix-row > *:last-child {
-  margin-right: 0;
-  margin-bottom: 0;
-}
-
-.prefix-row > .prefix-prefix {
-  width: 5rem;
-}
-
-.prefix-row > .prefix-url {
-  flex-grow: 1;
-}
-</style>
-
 <script>
 import { Endpoint } from '@/endpoint'
 
@@ -129,3 +99,33 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.card {
+  min-height: 100%;
+  overflow-y: auto;
+}
+
+.prefix-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.prefix-row > * {
+  margin-right: 3px;
+  margin-bottom: 3px;
+}
+
+.prefix-row > *:last-child {
+  margin-right: 0;
+  margin-bottom: 0;
+}
+
+.prefix-row > .prefix-prefix {
+  width: 5rem;
+}
+
+.prefix-row > .prefix-url {
+  flex-grow: 1;
+}
+</style>

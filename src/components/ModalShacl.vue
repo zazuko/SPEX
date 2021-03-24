@@ -26,26 +26,6 @@
   </div>
 </template>
 
-<style scoped>
-.modal-card-head {
-  display: flex;
-  justify-content: space-between;
-}
-
-.modal-card-actions > * {
-  margin-right: 0.2rem;
-}
-
-.snippet-controls {
-  display: flex;
-  justify-content: space-between;
-}
-
-rdf-editor::part(CodeMirror-vscrollbar) {
-  display: none;
-}
-</style>
-
 <script>
 import '@rdfjs-elements/rdf-snippet'
 import { serializers } from '@rdf-esm/formats-common'
@@ -92,3 +72,23 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.modal-card-head {
+  display: flex;
+  justify-content: space-between;
+}
+
+.modal-card-actions > * {
+  margin-right: 0.2rem;
+}
+
+.snippet-controls {
+  display: flex;
+  justify-content: space-between;
+}
+
+rdf-editor::part(CodeMirror-vscrollbar) {
+  display: none;
+}
+</style>

@@ -49,29 +49,6 @@
   </div>
 </template>
 
-<style scoped>
-.Overview {
-  flex-grow: 1;
-  overflow-y: hidden;
-}
-
-.OverviewPane {
-  flex-grow: 1;
-
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  overflow: hidden;
-}
-
-.splitpanes .splitpanes__pane {
-  background-color: white;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-</style>
-
 <script>
 import { Splitpanes, Pane } from 'splitpanes'
 import 'splitpanes/dist/splitpanes.css'
@@ -257,3 +234,26 @@ function deserializeURLParam (param, value) {
   return value
 }
 </script>
+
+<style scoped>
+.Overview {
+  flex-grow: 1;
+  overflow-y: hidden;
+}
+
+.OverviewPane {
+  flex-grow: 1;
+
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  overflow: hidden;
+}
+
+.splitpanes .splitpanes__pane {
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+</style>

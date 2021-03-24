@@ -34,42 +34,6 @@
   </div>
 </template>
 
-<style scoped>
-.Overview {
-  flex-grow: 1;
-  overflow-y: hidden;
-}
-
-.OverviewPane {
-  flex-grow: 1;
-
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  overflow: hidden;
-}
-
-.splitpanes .splitpanes__pane {
-  background-color: white;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-.title {
-  padding-bottom: calc(0.375em - 1px);
-  padding-left: 0.75em;
-  padding-right: 0.75em;
-  padding-top: calc(0.375em - 1px);
-}
-
-.shacl-editor {
-  width: 100%;
-  height: 100%;
-  overflow: scroll;
-}
-</style>
-
 <script>
 import RDF from 'rdf-ext'
 import { shrink } from '@zazuko/rdf-vocabularies/shrink'
@@ -128,3 +92,39 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.Overview {
+  flex-grow: 1;
+  overflow-y: hidden;
+}
+
+.OverviewPane {
+  flex-grow: 1;
+
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  overflow: hidden;
+}
+
+.splitpanes .splitpanes__pane {
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.title {
+  padding-bottom: calc(0.375em - 1px);
+  padding-left: 0.75em;
+  padding-right: 0.75em;
+  padding-top: calc(0.375em - 1px);
+}
+
+.shacl-editor {
+  width: 100%;
+  height: 100%;
+  overflow: scroll;
+}
+</style>

@@ -44,30 +44,6 @@
   </div>
 </template>
 
-<style scoped>
-.card {
-  min-height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
-.card-header-title,
-.card-header-icon {
-  padding: 0.5rem;
-}
-
-.card-content {
-  padding: 0;
-  overflow: auto;
-}
-
-.term-values {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-}
-</style>
-
 <script>
 import Term from './Term.vue'
 import TermDescribe from './TermDescribe.vue'
@@ -125,3 +101,27 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.card {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-header-title,
+.card-header-icon {
+  padding: 0.5rem;
+}
+
+.card-content {
+  padding: 0;
+  overflow: auto;
+}
+
+.term-values {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+</style>

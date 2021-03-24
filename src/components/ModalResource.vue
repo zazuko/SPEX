@@ -37,18 +37,6 @@
   </div>
 </template>
 
-<style scoped>
-.modal-card {
-  width: 60rem;
-  max-width: 100%;
-}
-
-.modal-card-body {
-  border-bottom-left-radius: 6px;
-  border-bottom-right-radius: 6px;
-}
-</style>
-
 <script>
 import Term from './Term.vue'
 import TermLink from './TermLink.vue'
@@ -74,3 +62,15 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.modal-card {
+  width: 60rem;
+  max-width: 100%;
+}
+
+.modal-card-body {
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+}
+</style>
