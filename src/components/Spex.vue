@@ -1,0 +1,190 @@
+<template>
+  <div class="Overview">
+    <Splitpanes class="default-theme">
+      <Pane>
+        <Splitpanes horizontal>
+          <Pane>
+            <div class="OverviewPane">
+              <b-navbar shadow>
+                <template #start>
+                  <b-navbar-item tag="div" class="p-0">
+                    <b-button type="is-white" icon-right="cog" title="Options" @click="showSettings">
+                      <h2 class="title is-6">
+                        <span v-if="endpoint">{{ endpoint.url }}</span>
+                        <span v-else>No endpoint configured yet</span>
+                      </h2>
+                    </b-button>
+                  </b-navbar-item>
+                </template>
+                <template #end>
+                  <b-navbar-item tag="div" class="p-0">
+                    <b-button v-if="endpoint && !error" type="is-white" size="is-small" @click="showShacl">
+                      SHACL
+                    </b-button>
+                  </b-navbar-item>
+                </template>
+              </b-navbar>
+
+              <OverviewTables :tables="tables" @explore="exploreTable" />
+
+              <div class="section" v-if="error">
+                <div class="message is-danger">
+                  <div class="message-body">
+                    Error loading data: {{ error }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </Pane>
+
+          <Pane v-if="explorerShown">
+            <TableExplorer :table="exploredTable" :endpoint="endpoint" @close="hideExplorer" />
+          </Pane>
+        </Splitpanes>
+      </Pane>
+      <Pane v-if="settingsShown" size="30">
+        <SettingsPane :settings="settings" @change="loadEndpoint" @close="hideSettings" />
+      </Pane>
+    </Splitpanes>
+  </div>
+</template>
+
+<script>
+import { Splitpanes, Pane } from 'splitpanes'
+import 'splitpanes/dist/splitpanes.css'
+import ModalShacl from '@/components/ModalShacl.vue'
+import ModalShaclLoad from '@/components/ModalShaclLoad.vue'
+import OverviewTables from '@/components/OverviewTables.vue'
+import SettingsPane from '@/components/SettingsPane.vue'
+import TableExplorer from '@/components/TableExplorer.vue'
+import { Endpoint } from '@/endpoint'
+import { tablesToSHACL, tablesFromSHACL } from '@/shacl'
+
+export default {
+  name: 'Spex',
+  components: { OverviewTables, Pane, SettingsPane, Splitpanes, TableExplorer },
+
+  props: ['settings'],
+
+  data () {
+    return {
+      endpoint: null,
+      settingsShown: false,
+      explorerShown: false,
+      exploredTable: null,
+      tables: [],
+      error: null
+    }
+  },
+
+  async mounted () {
+    await this.loadEndpoint(this.settings)
+  },
+
+  methods: {
+    async loadData () {
+      if (!this.endpoint) {
+        throw new Error('No endpoint defined')
+      }
+
+      this.resetView()
+
+      this.tables = []
+      this.error = null
+      const loader = this.$buefy.loading.open({})
+      try {
+        this.tables = await this.endpoint.fetchTables()
+      } catch (e) {
+        this.error = e
+        this.showSettings()
+        console.error(e)
+      } finally {
+        loader.close()
+      }
+    },
+
+    async loadEndpoint (settings) {
+      console.log(settings)
+      this.$emit('settings-changed', settings)
+      this.endpoint = new Endpoint(settings)
+      await this.loadData()
+    },
+
+    showSettings () {
+      this.settingsShown = true
+    },
+
+    hideSettings () {
+      this.settingsShown = false
+    },
+
+    exploreTable (table) {
+      this.explorerShown = true
+      this.exploredTable = table
+    },
+
+    hideExplorer () {
+      this.explorerShown = false
+    },
+
+    resetView () {
+      this.settingsShown = false
+      this.exploredTable = null
+      this.explorerShown = false
+    },
+
+    showShacl () {
+      const shacl = tablesToSHACL(this.tables, this.endpoint)
+      this.$buefy.modal.open({
+        parent: this,
+        component: ModalShacl,
+        props: { shacl, loadShacl: this.loadShacl },
+        hasModalCard: true,
+        trapFocus: true,
+      })
+    },
+
+    loadShacl () {
+      const modal = this.$buefy.modal.open({
+        parent: this,
+        component: ModalShaclLoad,
+        props: {
+          load: (dataset) => {
+            modal.close()
+            try {
+              this.tables = tablesFromSHACL(dataset, this.endpoint)
+            } catch (e) {
+              console.error(e)
+            }
+          }
+        },
+        hasModalCard: true,
+        trapFocus: true,
+      })
+    }
+  }
+}
+</script>
+
+<style scoped>
+.Overview {
+  flex-grow: 1;
+  overflow-y: hidden;
+}
+
+.OverviewPane {
+  flex-grow: 1;
+
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  overflow: hidden;
+}
+
+.splitpanes .splitpanes__pane {
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+</style>
