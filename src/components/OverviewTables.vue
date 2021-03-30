@@ -64,8 +64,14 @@
 </template>
 
 <script>
+import Vue from 'vue'
 import * as d3 from 'd3'
 import OverviewTable from './OverviewTable'
+import PanZoom from 'vue-panzoom/src/components/pan-zoom/component.vue'
+import panZoom from 'panzoom'
+
+// Make panZoom available for the PanZoom component
+Vue.prototype.$panZoom = panZoom
 
 const panZoomOptions = {
   bounds: false,
@@ -79,7 +85,7 @@ const panZoomOptions = {
 
 export default {
   name: 'OverviewTables',
-  components: { OverviewTable },
+  components: { OverviewTable, PanZoom },
   props: ['tables'],
 
   data () {
