@@ -7,6 +7,8 @@ import { tablesFromSHACL } from '@/shacl'
 
 const SCHEMA_URI = '.well-known/schema'
 
+const initialPrefixes = [...Object.keys(_prefixes)]
+
 export class Endpoint {
   constructor ({ url, user = null, password = null, prefixes = [], graph = '', forceIntrospection = false }) {
     this.url = url
@@ -17,6 +19,14 @@ export class Endpoint {
     this.client = new ParsingClient({ endpointUrl: url, user, password })
     this.forceIntrospection = forceIntrospection
 
+    // Reinitialize prefixes
+    Object.keys(_prefixes).forEach((prefix) => {
+      if (!initialPrefixes.includes(prefix)) {
+        delete _prefixes[prefix]
+      }
+    })
+
+    // Apply custom prefixes
     prefixes.forEach(({ prefix, url }) => {
       _prefixes[prefix] = url
     })
