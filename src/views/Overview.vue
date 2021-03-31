@@ -1,5 +1,5 @@
 <template>
-  <Spex :settings="settings" @settings-changed="settingsChanged" />
+  <Spex :settings="settings" @settings-change="onSettingsChange" />
 </template>
 
 <script>
@@ -21,7 +21,8 @@ export default {
   },
 
   methods: {
-    settingsChanged (settings) {
+    onSettingsChange (settings) {
+      this.settings = settings
       saveSettingsInLocalStorage(settings)
       this.updateURL(settings)
     },

@@ -9,17 +9,17 @@
     </div>
     <form class="card-content" @submit.prevent="onSubmit">
       <b-field label="Endpoint URL">
-        <b-input v-model="settings.url" />
+        <b-input v-model="data.url" />
       </b-field>
       <b-field label="Username">
-        <b-input v-model="settings.user" />
+        <b-input v-model="data.user" />
       </b-field>
       <b-field label="Password">
-        <b-input type="password" v-model="settings.password" password-reveal />
+        <b-input type="password" v-model="data.password" password-reveal />
       </b-field>
       <b-field label="Graph" :message="fetchError" :type="fetchError ? 'is-danger' : ''">
         <b-field>
-          <b-select v-model="settings.graph" expanded>
+          <b-select v-model="data.graph" expanded>
             <option :value="null">DEFAULT</option>
             <option v-for="graph in graphs" :key="graph" :value="graph">
               {{ graph }}
@@ -29,16 +29,16 @@
         </b-field>
       </b-field>
       <b-field label="Custom prefixes" :addons="false">
-        <div v-for="(prefix, index) in settings.prefixes" :key="index" class="prefix-row">
+        <div v-for="(prefix, index) in data.prefixes" :key="index" class="prefix-row">
           <b-input v-model="prefix.prefix" placeholder="schema" class="prefix-prefix" required />
           <b-input v-model="prefix.url" placeholder="http://schema.org/" class="prefix-url" required />
           <b-button type="is-white" icon-left="minus" title="Remove prefix" @click="removePrefix(index)" />
         </div>
-        <p v-if="settings.prefixes.length === 0" class="has-text-grey">No custom prefix</p>
+        <p v-if="data.prefixes.length === 0" class="has-text-grey">No custom prefix</p>
         <b-button type="is-white" icon-left="plus" title="Add prefix" @click="addPrefix" />
       </b-field>
       <b-field :addons="false">
-        <b-switch v-model="settings.forceIntrospection">
+        <b-switch v-model="data.forceIntrospection">
           Force introspection
         </b-switch>
         <p class="help">
@@ -53,6 +53,7 @@
 
 <script>
 import { Endpoint } from '@/endpoint'
+import cloneDeep from 'lodash.clonedeep'
 
 export default {
   name: 'SettingsPane',
@@ -63,6 +64,7 @@ export default {
       graphs: [],
       loadingGraphs: false,
       fetchError: null,
+      data: cloneDeep(this.settings),
     }
   },
 
@@ -72,15 +74,17 @@ export default {
 
   methods: {
     onSubmit () {
-      this.$emit('change', this.settings)
+      this.$emit('change', this.data)
     },
+
     onClose () {
       this.$emit('close')
     },
+
     async fetchGraphs () {
       this.loadingGraphs = true
       this.fetchError = ''
-      const endpoint = new Endpoint(this.settings)
+      const endpoint = new Endpoint(this.data)
 
       try {
         this.graphs = await endpoint.fetchGraphs()
@@ -90,13 +94,21 @@ export default {
         this.loadingGraphs = false
       }
     },
+
     addPrefix () {
-      this.settings.prefixes.push({ prefix: '', url: '' })
+      this.data.prefixes.push({ prefix: '', url: '' })
     },
+
     removePrefix (index) {
-      this.settings.prefixes.splice(index, 1)
+      this.data.prefixes.splice(index, 1)
     },
-  }
+  },
+
+  watch: {
+    settings (settings) {
+      this.data = cloneDeep(settings)
+    },
+  },
 }
 </script>
 

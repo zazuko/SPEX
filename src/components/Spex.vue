@@ -104,8 +104,7 @@ export default {
     },
 
     async loadEndpoint (settings) {
-      console.log(settings)
-      this.$emit('settings-changed', settings)
+      this.$emit('settings-change', settings)
       this.endpoint = new Endpoint(settings)
       await this.loadData()
     },
