@@ -10,7 +10,7 @@ this data and follow links to other data.
 SPEX can be very useful to explore and introspect a formerly unknown
 dataset, but it is not a generic graph-browser. Its purpose is to give a
 better understanding of the schema and show basic relations between
-data. For further graph exploration, we recommend tools like [Ontodia](http://ontodia.org/).
+data. For further graph exploration, we recommend tools like [Graph Explorer](https://github.com/zazuko/graph-explorer).
 
 ## Usage
 
