@@ -7,6 +7,7 @@
 </template>
 
 <script>
+import { ModalProgrammatic as Modal } from 'buefy'
 import ModalResource from './ModalResource.vue'
 
 export default {
@@ -21,7 +22,7 @@ export default {
 
   methods: {
     show () {
-      this.$buefy.modal.open({
+      Modal.open({
         parent: this,
         component: ModalResource,
         props: { uri: this.term.value, endpoint: this.endpoint },

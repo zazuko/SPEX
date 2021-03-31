@@ -29,6 +29,7 @@
 <script>
 import '@rdfjs-elements/rdf-snippet'
 import { serializers } from '@rdf-esm/formats-common'
+import { ToastProgrammatic as Toast } from 'buefy'
 
 serializers.set('application/ld+json', async () => {
   const JsonLdExt = (await import('@rdfjs/serializer-jsonld-ext')).default
@@ -62,7 +63,7 @@ export default {
     async copy () {
       const content = this.$refs.snippet.codeMirror.value
       await navigator.clipboard.writeText(content)
-      this.$buefy.toast.open('Copied 👍')
+      Toast.open('Copied 👍')
     },
 
     load () {

@@ -36,6 +36,9 @@
         </tbody>
       </table>
     </div>
+
+    <b-loading :active="isLoading" />
+
     <div class="message is-danger" v-if="error">
       <div class="message-body">
         Error loading data: {{ error }}
@@ -66,7 +69,8 @@ export default {
   data () {
     return {
       data: [],
-      error: null
+      error: null,
+      isLoading: false,
     }
   },
 
@@ -82,14 +86,14 @@ export default {
         return
       }
 
-      const loader = this.$buefy.loading.open({})
+      this.isLoading = true
       try {
         this.data = await this.endpoint.fetchTableData(this.table)
       } catch (e) {
         this.error = e
         console.error(e)
       } finally {
-        loader.close()
+        this.isLoading = false
       }
     },
   },

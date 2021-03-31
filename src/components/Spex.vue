@@ -27,6 +27,8 @@
 
               <OverviewTables :tables="tables" @explore="exploreTable" />
 
+              <b-loading :active="isLoading" />
+
               <div class="section" v-if="error">
                 <div class="message is-danger">
                   <div class="message-body">
@@ -52,6 +54,7 @@
 <script>
 import { Splitpanes, Pane } from 'splitpanes'
 import 'splitpanes/dist/splitpanes.css'
+import { ModalProgrammatic as Modal } from 'buefy'
 import ModalShacl from '@/components/ModalShacl.vue'
 import ModalShaclLoad from '@/components/ModalShaclLoad.vue'
 import OverviewTables from '@/components/OverviewTables.vue'
@@ -73,6 +76,7 @@ export default {
       explorerShown: false,
       exploredTable: null,
       tables: [],
+      isLoading: false,
       error: null
     }
   },
@@ -91,7 +95,7 @@ export default {
 
       this.tables = []
       this.error = null
-      const loader = this.$buefy.loading.open({})
+      this.isLoading = true
       try {
         this.tables = await this.endpoint.fetchTables()
       } catch (e) {
@@ -99,7 +103,7 @@ export default {
         this.showSettings()
         console.error(e)
       } finally {
-        loader.close()
+        this.isLoading = false
       }
     },
 
@@ -134,7 +138,7 @@ export default {
 
     showShacl () {
       const shacl = tablesToSHACL(this.tables, this.endpoint)
-      this.$buefy.modal.open({
+      Modal.open({
         parent: this,
         component: ModalShacl,
         props: { shacl, loadShacl: this.loadShacl },
@@ -144,7 +148,7 @@ export default {
     },
 
     loadShacl () {
-      const modal = this.$buefy.modal.open({
+      const modal = Modal.open({
         parent: this,
         component: ModalShaclLoad,
         props: {
