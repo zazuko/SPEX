@@ -13,7 +13,7 @@
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint",
     "deploy": "./scripts/deploy.sh",
-    "prepublish": "npm run build-lib"
+    "prepublishOnly": "npm run build-lib"
   },
   "main": "dist/spex.umd.js",
   "files": [
