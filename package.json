@@ -1,17 +1,26 @@
 {
-  "name": "spex",
+  "name": "@zazuko/spex",
   "version": "0.1.0",
-  "private": true,
   "author": "Zazuko (https://zazuko.com)",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zazuko/spex.git"
+  },
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "build-lib": "vue-cli-service build --target lib --inline-vue --name spex ./src/index.js",
+    "build-lib": "vue-cli-service build --target lib --formats umd,umd-min --inline-vue --name spex ./src/index.js",
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint",
-    "deploy": "./scripts/deploy.sh"
+    "deploy": "./scripts/deploy.sh",
+    "prepublish": "npm run build-lib"
   },
   "main": "dist/spex.umd.js",
+  "files": [
+    "/src",
+    "/dist/spex.css",
+    "/dist/spex.umd.min.js"
+  ],
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.35",
     "@fortawesome/free-solid-svg-icons": "^5.15.3",
