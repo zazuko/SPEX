@@ -109,8 +109,13 @@ export default {
 
     async loadEndpoint (settings) {
       this.$emit('settings-change', settings)
-      this.endpoint = new Endpoint(settings)
-      await this.loadData()
+
+      if (settings.url) {
+        this.endpoint = new Endpoint(settings)
+        await this.loadData()
+      } else {
+        this.endpoint = null
+      }
     },
 
     showSettings () {
