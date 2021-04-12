@@ -26,10 +26,13 @@
               </b-navbar>
 
               <Splitpanes vertical>
-                <Pane size="20">
-                  <TablesList :tables="tables" @toggle-table="toggleTable" />
+                <Pane size="20" v-if="tablesListShown">
+                  <TablesList :tables="tables" @toggle-table="toggleTable" @close="hideTablesList" />
                 </Pane>
-                <Pane>
+                <Pane class="is-relative">
+                  <b-button v-show="!tablesListShown" icon-left="bars" size="is-small" class="TablesListButton m-3" @click="showTablesList">
+                    Classes
+                  </b-button>
                   <OverviewTables :tables="tables" @explore="exploreTable" @toggle-table="toggleTable" />
                 </Pane>
               </Splitpanes>
@@ -82,6 +85,7 @@ export default {
       endpoint: null,
       settingsShown: false,
       explorerShown: false,
+      tablesListShown: false,
       listShown: false,
       exploredTable: null,
       tables: [],
@@ -142,6 +146,14 @@ export default {
 
     toggleTable (table, show) {
       table.isShown = show
+    },
+
+    showTablesList () {
+      this.tablesListShown = true
+    },
+
+    hideTablesList () {
+      this.tablesListShown = false
     },
 
     hideExplorer () {
@@ -207,5 +219,12 @@ export default {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+}
+
+.TablesListButton {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
 }
 </style>

@@ -1,11 +1,11 @@
 <template>
   <div class="card is-size-7">
     <div class="card-header has-background-light">
-      <p class="card-header-title">
+      <h3 class="card-header-title">
         <span v-if="table">{{ table.name }}</span>
         <span v-else>No table selected</span>
-      </p>
-      <p class="card-header-icon">
+      </h3>
+      <p class="card-header-icon py-0 px-1">
         <b-button type="is-light" icon-left="times" @click="onClose" title="Close" />
       </p>
     </div>
