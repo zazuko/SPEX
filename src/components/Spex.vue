@@ -25,7 +25,14 @@
                 </template>
               </b-navbar>
 
-              <OverviewTables :tables="tables" @explore="exploreTable" />
+              <Splitpanes vertical>
+                <Pane size="20">
+                  <TablesList :tables="tables" @toggle-table="toggleTable" />
+                </Pane>
+                <Pane>
+                  <OverviewTables :tables="tables" @explore="exploreTable" @toggle-table="toggleTable" />
+                </Pane>
+              </Splitpanes>
 
               <b-loading :active="isLoading" />
 
@@ -60,12 +67,13 @@ import ModalShaclLoad from '@/components/ModalShaclLoad.vue'
 import OverviewTables from '@/components/OverviewTables.vue'
 import SettingsPane from '@/components/SettingsPane.vue'
 import TableExplorer from '@/components/TableExplorer.vue'
+import TablesList from '@/components/TablesList.vue'
 import { Endpoint } from '@/endpoint'
 import { tablesToSHACL, tablesFromSHACL } from '@/shacl'
 
 export default {
   name: 'Spex',
-  components: { OverviewTables, Pane, SettingsPane, Splitpanes, TableExplorer },
+  components: { OverviewTables, Pane, SettingsPane, Splitpanes, TableExplorer, TablesList },
 
   props: ['settings'],
 
@@ -74,6 +82,7 @@ export default {
       endpoint: null,
       settingsShown: false,
       explorerShown: false,
+      listShown: false,
       exploredTable: null,
       tables: [],
       isLoading: false,
@@ -129,6 +138,10 @@ export default {
     exploreTable (table) {
       this.explorerShown = true
       this.exploredTable = table
+    },
+
+    toggleTable (table, show) {
+      table.isShown = show
     },
 
     hideExplorer () {

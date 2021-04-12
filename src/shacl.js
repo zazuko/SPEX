@@ -71,6 +71,7 @@ export function tablesFromSHACL (dataset, endpoint) {
         id,
         name: endpoint.shrink(id),
         columns,
+        isShown: true,
       }
     })
     .filter(Boolean)

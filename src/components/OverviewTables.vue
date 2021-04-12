@@ -2,12 +2,13 @@
   <panZoom class="PanZoom" selector=".OverviewTables" :options="panZoomOptions">
     <div class="OverviewTables">
       <OverviewTable
-        v-for="table in tables"
+        v-for="table in tablesVisible"
         :key="table.id"
         :table="table"
         :id="table.id"
         :active-links="activeLinks"
-        @explore="explore"
+        @explore="$emit('explore', $event)"
+        @hide="$emit('toggle-table', $event, false)"
         @hover-table="onHoverTable"
         @unhover-table="onUnhover"
         @hover-column="onHoverColumn"
@@ -102,15 +103,19 @@ export default {
   },
 
   computed: {
+    tablesVisible () {
+      return this.tables.filter(({ isShown }) => isShown)
+    },
+
     nodes () {
-      return this.tables.map((table) => ({
+      return this.tablesVisible.map((table) => ({
         ...table
       }))
     },
 
     links () {
-      const tableIds = new Set(this.tables.map(({ id }) => id))
-      return this.tables
+      const tableIds = new Set(this.tablesVisible.map(({ id }) => id))
+      return this.tablesVisible
         .flatMap(table => table.columns.map((column) => ({ ...column, table })))
         .reduce((acc, column) => {
           column.types.forEach((type) => {
@@ -139,10 +144,6 @@ export default {
   },
 
   methods: {
-    explore (table) {
-      this.$emit('explore', table)
-    },
-
     onHoverTable (table) {
       this.activeLinks = this.links.filter((link) => link.source.id === table.id)
     },

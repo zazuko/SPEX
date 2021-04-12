@@ -79,7 +79,7 @@ export class Endpoint {
   async introspectTables () {
     const structure = await this._fetchStructure()
     const tables = structure.reduce((tables, { cls, property, linktype, datatype }) => {
-      const table = tables.get(cls.value) || { id: cls.value, name: this.shrink(cls.value), columns: new Map() }
+      const table = tables.get(cls.value) || { id: cls.value, name: this.shrink(cls.value), columns: new Map(), isShown: true }
 
       const typeURI = (linktype && linktype.value) || (datatype && datatype.value) || null
       const typeTermType = linktype ? 'NamedNode' : (datatype ? 'Literal' : null)
