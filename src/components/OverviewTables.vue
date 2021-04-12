@@ -329,6 +329,10 @@ function nearestPointOnPerimeter (point, rectTopLeft, rectWidth, rectHeight) {
 </script>
 
 <style scoped>
+.PanZoom {
+  background-color: #fbfbfb;
+}
+
 .PanZoom,
 .OverviewTables {
   flex-grow: 1;
