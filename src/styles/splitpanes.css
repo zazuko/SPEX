@@ -1,0 +1,8 @@
+
+.splitpanes.default-theme .splitpanes__pane {
+  background-color: white;
+}
+
+.splitpanes.default-theme .splitpanes__splitter {
+  border-right: 1px solid #eee;
+}

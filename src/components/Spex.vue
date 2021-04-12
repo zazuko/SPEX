@@ -215,7 +215,6 @@ export default {
 }
 
 .splitpanes .splitpanes__pane {
-  background-color: white;
   display: flex;
   flex-direction: column;
   overflow: hidden;

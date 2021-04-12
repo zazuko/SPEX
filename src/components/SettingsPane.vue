@@ -1,10 +1,9 @@
 <template>
   <div class="card">
-    <div class="card-header">
-      <p class="card-header-title">
-        <b-button icon-left="chevron-right" @click="onClose" class="button is-white" title="Close">
-          Options
-        </b-button>
+    <div class="card-header has-background-light">
+      <h3 class="card-header-title">Options</h3>
+      <p class="card-header-icon py-0 px-1">
+        <b-button icon-left="times" type="is-light" @click="onClose" class="button is-white" title="Close" />
       </p>
     </div>
     <form class="card-content" @submit.prevent="onSubmit">
