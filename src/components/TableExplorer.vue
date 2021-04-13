@@ -1,5 +1,5 @@
 <template>
-  <div class="card is-size-7">
+  <div class="card">
     <div class="card-header has-background-light">
       <h3 class="card-header-title">
         <span v-if="table">{{ table.name }}</span>

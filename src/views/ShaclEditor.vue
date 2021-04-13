@@ -2,7 +2,7 @@
   <div class="Overview">
     <Splitpanes class="default-theme">
       <Pane size="40">
-        <h2 class="title is-6">SHACL editor</h2>
+        <h2 class="title is-5">SHACL editor</h2>
         <rdf-editor class="shacl-editor" :format="format" :serialized.prop="shacl" ref="shaclEditor" />
         <b-field label="Format">
           <b-select v-model="format">
@@ -15,7 +15,7 @@
         <Splitpanes horizontal>
           <Pane>
             <div class="OverviewPane">
-              <h2 class="title is-6">Representation</h2>
+              <h2 class="title is-5">Representation</h2>
 
               <OverviewTables :tables="tables" />
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="OverviewTable card is-size-7" :class="{ active: isActive }" :data-id="table.id">
+  <div class="OverviewTable card" :class="{ active: isActive }" :data-id="table.id">
     <header
       class="card-header has-background-light"
       @mouseenter="$emit('hover-table', table)"
@@ -12,10 +12,10 @@
       </h3>
       <span class="card-header-icon">
         <b-tooltip label="Hide">
-          <b-button type="is-light" size="is-small" icon-left="eye-slash" @click="$emit('hide', table)" />
+          <b-button type="is-light" icon-left="eye-slash" @click="$emit('hide', table)" />
         </b-tooltip>
         <b-tooltip label="Explore">
-          <b-button type="is-light" size="is-small" icon-left="table" @click="$emit('explore', table)" />
+          <b-button type="is-light" icon-left="table" @click="$emit('explore', table)" />
         </b-tooltip>
       </span>
     </header>

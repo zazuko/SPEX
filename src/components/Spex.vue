@@ -9,7 +9,7 @@
                 <template #start>
                   <b-navbar-item tag="div" class="p-0">
                     <b-button type="is-white" icon-right="cog" title="Options" @click="showSettings">
-                      <h2 class="title is-6">
+                      <h2>
                         <span v-if="endpoint">{{ endpoint.url }}</span>
                         <span v-else>No endpoint configured yet</span>
                       </h2>
@@ -18,7 +18,7 @@
                 </template>
                 <template #end>
                   <b-navbar-item tag="div" class="p-0">
-                    <b-button v-if="endpoint && !error" type="is-white" size="is-small" @click="showShacl">
+                    <b-button v-if="endpoint && !error" type="is-white" @click="showShacl">
                       SHACL
                     </b-button>
                   </b-navbar-item>
@@ -30,7 +30,7 @@
                   <TablesList :tables="tables" @toggle-table="toggleTable" @close="hideTablesList" />
                 </Pane>
                 <Pane class="is-relative">
-                  <b-button v-show="!tablesListShown" icon-left="bars" size="is-small" class="TablesListButton m-3" @click="showTablesList">
+                  <b-button v-show="!tablesListShown" icon-left="bars" class="TablesListButton m-3" @click="showTablesList">
                     Classes
                   </b-button>
                   <OverviewTables :tables="tables" @explore="exploreTable" @toggle-table="toggleTable" />

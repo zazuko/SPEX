@@ -1,6 +1,6 @@
 <template>
   <span>
-    <b-button v-if="canDescribe" type="is-white" size="is-small" icon-right="eye" @click="show">
+    <b-button v-if="canDescribe" type="is-white" icon-right="eye" @click="show">
       <slot />
     </b-button>
   </span>

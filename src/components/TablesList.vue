@@ -1,5 +1,5 @@
 <template>
-  <div class="card is-size-7 is-shadowless">
+  <div class="card is-shadowless">
     <div class="card-header has-background-light">
       <h3 class="card-header-title">Classes</h3>
       <p class="card-header-icon py-0 px-1">
@@ -9,7 +9,7 @@
     <ul class="card-content px-0 py-1">
       <li v-for="table in tables" :key="table.id" class="panel-block is-justify-content-space-between">
         <span>{{ table.name }}</span>
-        <b-switch type="is-primary" size="is-small" :value="table.isShown" @input="$emit('toggle-table', table, $event)" />
+        <b-switch type="is-primary" :value="table.isShown" @input="$emit('toggle-table', table, $event)" />
       </li>
     </ul>
   </div>

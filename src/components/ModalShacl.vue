@@ -3,7 +3,7 @@
     <div class="modal-card-head">
       <p>Generated SHACL shapes</p>
       <div class="modal-card-actions">
-        <b-button size="is-small" icon-left="upload" title="Load SHACL shapes" @click="load"></b-button>
+        <b-button icon-left="upload" title="Load SHACL shapes" @click="load"></b-button>
       </div>
     </div>
     <div class="modal-card-body">
@@ -14,12 +14,11 @@
             :key="format.value"
             :native-value="format.value"
             v-model="selectedFormat"
-            size="is-small"
           >
             {{ format.label }}
           </b-radio-button>
         </b-field>
-        <b-button size="is-small" icon-left="clipboard" @click="copy">Copy</b-button>
+        <b-button icon-left="clipboard" @click="copy">Copy</b-button>
       </div>
       <rdf-editor :serialized.prop="shaclStr" :format="selectedFormat" ref="snippet" readonly />
     </div>

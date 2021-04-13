@@ -1,7 +1,7 @@
 <template>
   <a :href="uri" target="_blank" rel="noopener noreferrer" class="term-link">
     <slot />
-    <b-icon icon="external-link-alt" class="term-link-icon" size="is-small" />
+    <b-icon icon="external-link-alt" class="term-link-icon" />
   </a>
 </template>
 
