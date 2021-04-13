@@ -2,17 +2,13 @@
   "name": "@zazuko/spex",
   "version": "0.1.2",
   "author": "Zazuko (https://zazuko.com)",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/zazuko/spex.git"
-  },
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "build-lib": "vue-cli-service build --target lib --formats umd,umd-min --inline-vue --name spex ./src/index.js",
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint",
     "deploy": "./scripts/deploy.sh",
+    "build-lib": "vue-cli-service build --target lib --formats umd,umd-min --inline-vue --name spex ./src/index.js",
     "prepublishOnly": "npm run build-lib"
   },
   "main": "dist/spex.umd.js",
@@ -25,16 +21,16 @@
     "@fortawesome/fontawesome-svg-core": "^1.2.35",
     "@fortawesome/free-solid-svg-icons": "^5.15.3",
     "@fortawesome/vue-fontawesome": "^2.0.2",
-    "@rdfjs-elements/rdf-editor": "^0.3.7",
-    "@rdfjs-elements/rdf-snippet": "^0.2.1",
+    "@rdfjs-elements/rdf-editor": "^0.3.8",
+    "@rdfjs-elements/rdf-snippet": "^0.2.2",
     "@rdfjs/serializer-jsonld-ext": "^2.0.0",
     "@rdfjs/term-set": "1.0.1",
     "@tpluscode/rdf-ns-builders": "^0.4.2",
     "@tpluscode/rdf-string": "0.2.23",
     "@zazuko/rdf-vocabularies": "2021.3.31",
-    "buefy": "^0.9.5",
+    "buefy": "^0.9.6",
     "clownface": "^1.2.0",
-    "core-js": "^3.9.1",
+    "core-js": "^3.10.1",
     "d3": "6.6.2",
     "lodash.clonedeep": "^4.5.0",
     "lodash.debounce": "4.0.8",
@@ -48,19 +44,20 @@
     "vue-router": "^3.5.1"
   },
   "devDependencies": {
+    "@babel/core": "^7.12.16",
+    "@babel/eslint-parser": "^7.12.16",
     "@vue/cli-plugin-babel": "~4.5.12",
-    "@vue/cli-plugin-eslint": "~4.5.12",
+    "@vue/cli-plugin-eslint": "^5.0.0-alpha.8",
     "@vue/cli-plugin-pwa": "~4.5.12",
     "@vue/cli-plugin-router": "~4.5.12",
     "@vue/cli-plugin-unit-jest": "~4.5.12",
     "@vue/cli-service": "~4.5.12",
-    "@vue/eslint-config-standard": "^5.1.2",
+    "@vue/eslint-config-standard": "^6.0.0",
     "@vue/test-utils": "^1.1.3",
-    "babel-eslint": "^10.1.0",
-    "eslint": "^6.7.2",
+    "eslint": "^7.20.0",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^4.3.1",
+    "eslint-plugin-promise": "^5.1.0",
     "eslint-plugin-vue": "^7.8.0",
     "vue-template-compiler": "^2.6.12"
   },
@@ -74,7 +71,7 @@
       "@vue/standard"
     ],
     "parserOptions": {
-      "parser": "babel-eslint"
+      "parser": "@babel/eslint-parser"
     },
     "rules": {
       "no-unused-vars": "warn",
@@ -101,5 +98,9 @@
   "jest": {
     "preset": "@vue/cli-plugin-unit-jest"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zazuko/spex.git"
+  }
 }
