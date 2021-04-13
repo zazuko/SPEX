@@ -15,12 +15,11 @@ import {
   Toast,
   Tooltip,
 } from 'buefy'
-import 'buefy/dist/buefy.css'
 import { library as iconsLibrary } from '@fortawesome/fontawesome-svg-core'
 import { fas } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import Spex from './components/Spex.vue'
-import './styles/splitpanes.css'
+import './styles/index.css'
 
 export { default as Spex } from './components/Spex.vue'
 
