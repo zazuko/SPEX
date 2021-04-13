@@ -1,4 +1,10 @@
 
+.splitpanes .splitpanes__pane {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
 .splitpanes.default-theme .splitpanes__pane {
   background-color: white;
 }

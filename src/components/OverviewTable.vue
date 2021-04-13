@@ -1,16 +1,16 @@
 <template>
-  <div class="OverviewTable card" :class="{ active: isActive }" :data-id="table.id">
+  <div class="absolute border rounded shadow-md bg-white opacity-90" :class="{ active: isActive }" :data-id="table.id">
     <header
-      class="card-header has-background-light"
+      class="bg-gray-100 flex items-center justify-between px-4 py-2"
       @mouseenter="$emit('hover-table', table)"
       @mouseleave="$emit('unhover-table', table)"
     >
-      <h3 class="card-header-title">
+      <h3 class="font-bold">
         <TermTooltip :label="table.id">
           {{ table.name }}
         </TermTooltip>
       </h3>
-      <span class="card-header-icon">
+      <span>
         <b-tooltip label="Hide">
           <b-button type="is-light" icon-left="eye-slash" @click="$emit('hide', table)" />
         </b-tooltip>
@@ -19,7 +19,7 @@
         </b-tooltip>
       </span>
     </header>
-    <table class="card-content table is-fullwidth">
+    <table class="w-full">
       <tr
         v-for="(column, index) in table.columns"
         :key="index"
@@ -28,12 +28,12 @@
         @mouseenter="$emit('hover-column', table, column)"
         @mouseleave="$emit('unhover-column', table, column)"
       >
-        <th>
+        <th class="border-b px-4 py-2">
           <TermTooltip :label="column.id">
             {{ column.name }}
           </TermTooltip>
         </th>
-        <td>
+        <td class="border-b px-4 py-2">
           <div v-for="type in column.types" :key="type.id">
             <TermTooltip :label="type.id">
               {{ type.name }}
@@ -76,18 +76,6 @@ export default {
 </script>
 
 <style scoped>
-.OverviewTable {
-  /* margin: 2rem; */
-  z-index: 1;
-  position: absolute;
-  opacity: 0.9;
-}
-
-.card-header-title,
-.card-header-icon {
-  padding: 0.5rem;
-}
-
 .active {
   border: 2px solid #ffb15e;
 }

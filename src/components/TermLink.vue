@@ -1,25 +1,14 @@
 <template>
-  <a :href="uri" target="_blank" rel="noopener noreferrer" class="term-link">
-    <slot />
-    <b-icon icon="external-link-alt" class="term-link-icon" />
+  <a :href="uri" target="_blank" rel="noopener noreferrer" class="flex items-baseline gap-2 term-link">
+    <span><slot /></span>
+    <b-icon icon="external-link-alt" class="invisible w-3 term-link-icon" />
   </a>
 </template>
 
 <style scoped>
-.term-link-icon {
-  visibility: hidden;
-  margin-left: 0.2em;
-}
-
 .term-link:hover .term-link-icon,
 .term-link:focus .term-link-icon {
   visibility: visible;
-}
-</style>
-
-<style>
-.icon.term-link-icon > svg {
-  height: 0.8em;
 }
 </style>
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="card is-shadowless">
+  <div class="card is-shadowless overflow-y-auto">
     <div class="card-header has-background-light">
       <h3 class="card-header-title">Classes</h3>
       <p class="card-header-icon py-0 px-1">
@@ -21,9 +21,3 @@ export default {
   props: ['tables'],
 }
 </script>
-
-<style scoped>
-.card {
-  overflow-y: auto;
-}
-</style>

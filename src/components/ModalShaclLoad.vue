@@ -1,5 +1,5 @@
 <template>
-  <div class="modal-card" style="width: auto;">
+  <div class="modal-card w-auto">
     <div class="modal-card-head">Load SHACL shapes</div>
     <div class="modal-card-body">
       <form @submit.prevent="onSubmit">
@@ -48,10 +48,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-.modal-card-head {
-  display: flex;
-  justify-content: space-between;
-}
-</style>

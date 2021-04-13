@@ -1,18 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" class="h-full flex flex-col">
     <router-view/>
   </div>
 </template>
-
-<style>
-html, body, #app {
-  font-size: 14px;
-  line-height: 20px;
-  height: 100%;
-}
-
-#app {
-  display: flex;
-  flex-direction: column;
-}
-</style>

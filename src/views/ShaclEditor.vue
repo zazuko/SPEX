@@ -1,37 +1,35 @@
 <template>
-  <div class="Overview">
-    <Splitpanes class="default-theme">
-      <Pane size="40">
-        <h2 class="title is-5">SHACL editor</h2>
-        <rdf-editor class="shacl-editor" :format="format" :serialized.prop="shacl" ref="shaclEditor" />
-        <b-field label="Format">
-          <b-select v-model="format">
-            <option v-for="format in formats" :key="format" :value="format">{{ format }}</option>
-          </b-select>
-        </b-field>
-        <b-button type="is-primary" icon-left="sync" @click="loadShacl">Update</b-button>
-      </Pane>
-      <Pane>
-        <Splitpanes horizontal>
-          <Pane>
-            <div class="OverviewPane">
-              <h2 class="title is-5">Representation</h2>
+  <Splitpanes class="default-theme">
+    <Pane size="40">
+      <h2 class="font-bold text-lg px-4 py-2 bg-gray-200">SHACL editor</h2>
+      <rdf-editor class="w-full h-full overflow-hidden" :format="format" :serialized.prop="shacl" ref="shaclEditor" />
+      <b-field label="Format">
+        <b-select v-model="format">
+          <option v-for="format in formats" :key="format" :value="format">{{ format }}</option>
+        </b-select>
+      </b-field>
+      <b-button type="is-primary" icon-left="sync" @click="loadShacl">Update</b-button>
+    </Pane>
+    <Pane>
+      <Splitpanes horizontal>
+        <Pane>
+          <div class="flex-grow flex flex-col">
+            <h2 class="font-bold text-lg px-4 py-2 bg-gray-200">Representation</h2>
 
-              <OverviewTables :tables="tables" />
+            <OverviewTables :tables="tables" />
 
-              <div class="section" v-if="error">
-                <div class="message is-danger">
-                  <div class="message-body">
-                    Error loading data: {{ error }}
-                  </div>
+            <div class="section" v-if="error">
+              <div class="message is-danger">
+                <div class="message-body">
+                  Error loading data: {{ error }}
                 </div>
               </div>
             </div>
-          </Pane>
-        </Splitpanes>
-      </Pane>
-    </Splitpanes>
-  </div>
+          </div>
+        </Pane>
+      </Splitpanes>
+    </Pane>
+  </Splitpanes>
 </template>
 
 <script>
@@ -92,39 +90,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-.Overview {
-  flex-grow: 1;
-  overflow-y: hidden;
-}
-
-.OverviewPane {
-  flex-grow: 1;
-
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  overflow: hidden;
-}
-
-.splitpanes .splitpanes__pane {
-  background-color: white;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-.title {
-  padding-bottom: calc(0.375em - 1px);
-  padding-left: 0.75em;
-  padding-right: 0.75em;
-  padding-top: calc(0.375em - 1px);
-}
-
-.shacl-editor {
-  width: 100%;
-  height: 100%;
-  overflow: scroll;
-}
-</style>

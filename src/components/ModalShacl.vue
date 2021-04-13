@@ -1,13 +1,11 @@
 <template>
-  <div class="modal-card" style="width: auto;">
-    <div class="modal-card-head">
-      <p>Generated SHACL shapes</p>
-      <div class="modal-card-actions">
-        <b-button icon-left="upload" title="Load SHACL shapes" @click="load"></b-button>
-      </div>
+  <div class="modal-card w-auto">
+    <div class="modal-card-head flex justify-between py-4">
+      <h3>Generated SHACL shapes</h3>
+      <b-button icon-left="upload" title="Load SHACL shapes" @click="load"></b-button>
     </div>
-    <div class="modal-card-body">
-      <div class="snippet-controls">
+    <div class="modal-card-body overflow-y-hidden flex flex-col pb-0">
+      <div class="flex justify-between">
         <b-field>
           <b-radio-button
             v-for="format in formats"
@@ -20,7 +18,7 @@
         </b-field>
         <b-button icon-left="clipboard" @click="copy">Copy</b-button>
       </div>
-      <rdf-editor :serialized.prop="shaclStr" :format="selectedFormat" ref="snippet" readonly />
+      <rdf-editor :serialized.prop="shaclStr" :format="selectedFormat" ref="snippet" readonly class="overflow-y-auto" />
     </div>
   </div>
 </template>
@@ -74,18 +72,14 @@ export default {
 </script>
 
 <style scoped>
-.modal-card-head {
-  display: flex;
-  justify-content: space-between;
+rdf-editor::part(CodeMirror-sizer) {
+  margin-bottom: 0 !important;
+  min-height: 0 !important;
+  border-right-width: 0 !important;
 }
 
-.modal-card-actions > * {
-  margin-right: 0.2rem;
-}
-
-.snippet-controls {
-  display: flex;
-  justify-content: space-between;
+rdf-editor::part(CodeMirror-scroll) {
+  position: static;
 }
 
 rdf-editor::part(CodeMirror-vscrollbar) {

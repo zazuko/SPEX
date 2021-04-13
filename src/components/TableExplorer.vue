@@ -1,5 +1,5 @@
 <template>
-  <div class="card">
+  <div class="card h-full flex flex-col">
     <div class="card-header has-background-light">
       <h3 class="card-header-title">
         <span v-if="table">{{ table.name }}</span>
@@ -9,7 +9,7 @@
         <b-button type="is-light" icon-left="times" @click="onClose" title="Close" />
       </p>
     </div>
-    <div class="card-content">
+    <div class="card-content p-0 overflow-auto">
       <table class="table is-fullwidth" v-if="table">
         <thead>
           <tr>
@@ -27,7 +27,7 @@
               </TermLink>
             </td>
             <td v-for="(column, index) in table.columns" :key="index">
-              <p class="term-values" v-for="(value, index) in (row[column.id] || [])" :key="index">
+              <p class="flex items-center" v-for="(value, index) in (row[column.id] || [])" :key="index">
                 <Term :term="value" :endpoint="endpoint" />
                 <TermDescribe :term="value" :endpoint="endpoint" />
               </p>
@@ -105,27 +105,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-.card {
-  min-height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
-.card-header-title,
-.card-header-icon {
-  padding: 0.5rem;
-}
-
-.card-content {
-  padding: 0;
-  overflow: auto;
-}
-
-.term-values {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-}
-</style>

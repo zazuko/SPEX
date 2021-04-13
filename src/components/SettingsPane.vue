@@ -1,5 +1,5 @@
 <template>
-  <div class="card">
+  <div class="card is-shadowless overflow-y-auto">
     <div class="card-header has-background-light">
       <h3 class="card-header-title">Options</h3>
       <p class="card-header-icon py-0 px-1">
@@ -27,14 +27,16 @@
           <b-button icon-left="sync" title="Load graphs" @click="fetchGraphs" :loading="loadingGraphs" />
         </b-field>
       </b-field>
-      <b-field label="Custom prefixes" :addons="false">
-        <div v-for="(prefix, index) in data.prefixes" :key="index" class="prefix-row">
-          <b-input v-model="prefix.prefix" placeholder="schema" class="prefix-prefix" required />
-          <b-input v-model="prefix.url" placeholder="http://schema.org/" class="prefix-url" required />
+      <b-field label="Custom prefixes" :addons="false" class="flex flex-col items-stretch gap-1">
+        <div v-for="(prefix, index) in data.prefixes" :key="index" class="flex gap-1">
+          <b-input v-model="prefix.prefix" placeholder="schema" class="w-24" required />
+          <b-input v-model="prefix.url" placeholder="http://schema.org/" class="flex-grow" required />
           <b-button type="is-white" icon-left="minus" title="Remove prefix" @click="removePrefix(index)" />
         </div>
         <p v-if="data.prefixes.length === 0" class="has-text-grey">No custom prefix</p>
-        <b-button type="is-white" icon-left="plus" title="Add prefix" @click="addPrefix" />
+        <p>
+          <b-button type="is-white" icon-left="plus" title="Add prefix" @click="addPrefix" />
+        </p>
       </b-field>
       <b-field :addons="false">
         <b-switch v-model="data.forceIntrospection">
@@ -110,33 +112,3 @@ export default {
   },
 }
 </script>
-
-<style scoped>
-.card {
-  min-height: 100%;
-  overflow-y: auto;
-}
-
-.prefix-row {
-  display: flex;
-  flex-direction: row;
-}
-
-.prefix-row > * {
-  margin-right: 3px;
-  margin-bottom: 3px;
-}
-
-.prefix-row > *:last-child {
-  margin-right: 0;
-  margin-bottom: 0;
-}
-
-.prefix-row > .prefix-prefix {
-  width: 5rem;
-}
-
-.prefix-row > .prefix-url {
-  flex-grow: 1;
-}
-</style>

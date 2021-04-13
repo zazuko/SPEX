@@ -1,9 +1,10 @@
 <template>
-  <panZoom class="PanZoom" selector=".OverviewTables" :options="panZoomOptions">
-    <div class="OverviewTables">
+  <panZoom class="flex-grow bg-gray-50 relative flex flex-col overflow-hidden" selector=".OverviewTables" :options="panZoomOptions">
+    <div class="OverviewTables flex-grow relative flex flex-col">
       <OverviewTable
         v-for="table in tablesVisible"
         :key="table.id"
+        class="OverviewTable"
         :table="table"
         :id="table.id"
         :active-links="activeLinks"
@@ -329,20 +330,6 @@ function nearestPointOnPerimeter (point, rectTopLeft, rectWidth, rectHeight) {
 </script>
 
 <style scoped>
-.PanZoom {
-  background-color: #fbfbfb;
-}
-
-.PanZoom,
-.OverviewTables {
-  flex-grow: 1;
-
-  position: relative;
-
-  display: flex;
-  flex-direction: column;
-}
-
 .links {
   flex-grow: 1;
   flex-basis: 100%;
