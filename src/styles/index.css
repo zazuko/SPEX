@@ -16,4 +16,22 @@
   }
 }
 
+@layer components {
+  .button.is-primary {
+    @apply bg-primary-400 hover:bg-primary-500;
+  }
+
+  .switch input[type=checkbox]:checked + .check.is-primary {
+    @apply bg-primary-400;
+  }
+
+  .switch:hover input[type=checkbox]:checked + .check.is-primary {
+    @apply bg-primary-300;
+  }
+
+  .has-text-primary {
+    @apply text-primary-400 !important;
+  }
+}
+
 @import './splitpanes.css';
