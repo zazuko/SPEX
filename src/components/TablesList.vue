@@ -7,7 +7,7 @@
       </p>
     </div>
     <ul class="card-content px-0 py-1">
-      <li v-for="table in tables" :key="table.id" class="panel-block is-justify-content-space-between">
+      <li v-for="table in tables" :key="table.id" class="panel-block is-justify-content-space-between pr-0">
         <span>{{ table.name }}</span>
         <b-switch type="is-primary" :value="table.isShown" @input="$emit('toggle-table', table, $event)" />
       </li>
