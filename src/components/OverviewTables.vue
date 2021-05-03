@@ -172,7 +172,6 @@ export default {
       const links = this.links
       const width = container.clientWidth
       const height = container.clientHeight
-      const margin = 5
 
       const simulation = d3.forceSimulation().nodes(nodes)
 
@@ -189,7 +188,6 @@ export default {
           })
           .strength(1)
         )
-        .force('bounds', keepInBounds)
         .stop()
 
       // draw lines for the links
@@ -222,16 +220,6 @@ export default {
         .force('collision', null)
         .force('links', null)
         .force('charge', null)
-
-      // Force that prevents nodes from going off screen
-      function keepInBounds () {
-        simulation
-          .nodes()
-          .forEach((d) => {
-            d.x = d.x < margin ? margin : d.x
-            d.y = d.y < margin ? margin : d.y
-          })
-      }
 
       function renderSimulation () {
         // Update node positions
