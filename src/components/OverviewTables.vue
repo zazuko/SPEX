@@ -1,6 +1,11 @@
 <template>
-  <panZoom class="flex-grow bg-gray-50 relative flex flex-col overflow-hidden" selector=".OverviewTables" :options="panZoomOptions">
-    <div class="OverviewTables flex-grow relative flex flex-col">
+  <panZoom
+    v-if="tablesVisible.length > 0"
+    class="flex-grow bg-gray-50 relative flex flex-col overflow-hidden"
+    selector=".OverviewTables"
+    :options="panZoomOptions"
+  >
+    <div class="OverviewTables h-full flex-grow relative flex flex-col">
       <OverviewTable
         v-for="table in tablesVisible"
         :key="table.id"
@@ -15,9 +20,6 @@
         @hover-column="onHoverColumn"
         @unhover-column="onUnhover"
       />
-      <div v-if="tables.length === 0" class="section">
-        <p>Nothing to show</p>
-      </div>
       <svg class="links">
         <defs>
           <marker
@@ -63,6 +65,9 @@
       </svg>
     </div>
   </panZoom>
+  <div v-else class="flex-grow bg-gray-50 flex flex-col items-center justify-center">
+    <p class="pb-4">No classes to show</p>
+  </div>
 </template>
 
 <script>
