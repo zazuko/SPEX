@@ -24,7 +24,7 @@
               </template>
             </b-navbar>
 
-            <Splitpanes vertical>
+            <Splitpanes vertical v-show="!isLoading && !error">
               <Pane size="20" v-if="tablesListShown">
                 <TablesList :tables="tables" @toggle-table="toggleTable" @close="hideTablesList" />
               </Pane>
