@@ -1,7 +1,7 @@
 import namespace from '@rdfjs/namespace'
 import prefixes from '@zazuko/rdf-vocabularies/prefixes'
 
-prefixes.spex = 'https://ld.zazuko.com/spex/'
+prefixes.spex = 'https://described.at/spex/'
 
 export const rdf = namespace(prefixes.rdf)
 export const schema = namespace(prefixes.schema)
