@@ -1,10 +1,15 @@
-import clownface from 'clownface'
-import { rdf, sh } from '@tpluscode/rdf-ns-builders'
-import _prefixes from '@zazuko/rdf-vocabularies/prefixes'
+import { sh, prefixes } from './namespace'
 
+/**
+ * Serializes a list of a tables as a SHACL graph.
+ *
+ * @param {Array} tables - List of tables
+ * @param {Endpoint} endpoint
+ * @returns Object - JSON-LD SHACL
+ */
 export function tablesToSHACL (tables, endpoint) {
-  const prefixes = endpoint.prefixes.reduce((acc, { prefix, url }) => ({ ...acc, [prefix]: url }), {})
-  const context = { ..._prefixes, ...prefixes }
+  const customPrefixes = endpoint.prefixes.reduce((acc, { prefix, url }) => ({ ...acc, [prefix]: url }), {})
+  const context = { ...prefixes, ...customPrefixes }
 
   const graph = tables.map((table) => {
     return {
@@ -33,16 +38,23 @@ export function tablesToSHACL (tables, endpoint) {
 
   return {
     '@context': context,
-    '@graph': graph,
+    '@graph': {
+      '@type': 'spex:DefaultShapes',
+      'schema:hasPart': graph,
+    },
   }
 }
 
-export function tablesFromSHACL (dataset, endpoint) {
-  const cf = clownface({ dataset })
-
-  const shapes = cf.has(rdf.type, sh.NodeShape).toArray()
-
+/**
+ * Extracts a list of tables from an RDF graph.
+ *
+ * @param {Clownface} shapes - Pointer to node shapes
+ * @param {Endpoint} endpoint
+ * @returns
+ */
+export function tablesFromSHACL (shapes, endpoint) {
   return shapes
+    .toArray()
     .map((shape) => {
       const targetClass = shape.out(sh.targetClass).term
 

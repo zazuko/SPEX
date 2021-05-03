@@ -1,11 +1,12 @@
+import clownface from 'clownface'
 import RDF from 'rdf-ext'
 import ParsingClient from 'sparql-http-client/ParsingClient'
 import TermSet from '@rdfjs/term-set'
-import _prefixes from '@zazuko/rdf-vocabularies/prefixes'
 import { shrink } from '@zazuko/rdf-vocabularies/shrink'
 import { tablesFromSHACL } from '@/shacl'
+import { rdf, schema, spex, prefixes as _prefixes } from './namespace'
 
-const SCHEMA_URI = '.well-known/schema'
+const SCHEMA_URI = '.well-known/void'
 
 const initialPrefixes = [...Object.keys(_prefixes)]
 
@@ -54,9 +55,7 @@ export class Endpoint {
 
     const tables = await this.fetchSHACL()
 
-    return tables.length > 0
-      ? tables
-      : this.introspectTables()
+    return tables || this.introspectTables()
   }
 
   /**
@@ -71,9 +70,15 @@ export class Endpoint {
       ${fromClause}
     `
     const quads = await this.client.query.construct(query)
-    const dataset = RDF.dataset(quads)
+    const dataset = clownface({
+      dataset: RDF.dataset(quads),
+      term: RDF.namedNode(schemaURI),
+    })
+    const defaultShapes = dataset.out(spex.shapes).has(rdf.type, spex.DefaultShapes)
 
-    return tablesFromSHACL(dataset, this)
+    return defaultShapes.term
+      ? tablesFromSHACL(defaultShapes.out(schema.hasPart), this)
+      : null
   }
 
   async introspectTables () {

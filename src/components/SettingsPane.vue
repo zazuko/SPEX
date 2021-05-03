@@ -43,7 +43,7 @@
           Force introspection
         </b-switch>
         <p class="help">
-          By default, the explorer will use the endpoint schema provided at <code>endpoint/.well-known/schema</code>
+          By default, the explorer will use the endpoint schema provided at <code>endpoint/.well-known/void</code>
           (if any). Use this option to force an introspection.
         </p>
       </b-field>
