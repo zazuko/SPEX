@@ -39,7 +39,6 @@
     "sparql-http-client": "^2.3.0",
     "splitpanes": "2.3.6",
     "vue": "^2.6.12",
-    "vue-panzoom": "^1.1.4",
     "vue-router": "^3.5.1"
   },
   "devDependencies": {

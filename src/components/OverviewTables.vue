@@ -1,11 +1,10 @@
 <template>
-  <panZoom
+  <div
+    id="overview-wrapper"
     v-if="tablesVisible.length > 0"
     class="flex-grow bg-gray-50 relative flex flex-col overflow-hidden"
-    selector=".OverviewTables"
-    :options="panZoomOptions"
   >
-    <div class="OverviewTables h-full flex-grow relative flex flex-col">
+    <div id="overview" class="relative h-full flex-grow flex flex-col">
       <OverviewTable
         v-for="table in tablesVisible"
         :key="table.id"
@@ -64,41 +63,24 @@
         </path>
       </svg>
     </div>
-  </panZoom>
+  </div>
   <div v-else class="flex-grow bg-gray-50 flex flex-col items-center justify-center">
     <p class="pb-4">No classes to show</p>
   </div>
 </template>
 
 <script>
-import Vue from 'vue'
 import * as d3 from 'd3'
 import OverviewTable from './OverviewTable'
-import PanZoom from 'vue-panzoom/src/components/pan-zoom/component.vue'
-import panZoom from 'panzoom'
-
-// Make panZoom available for the PanZoom component
-Vue.prototype.$panZoom = panZoom
-
-const panZoomOptions = {
-  bounds: false,
-  autocenter: false,
-  minZoom: 0.1,
-  maxZoom: 1.2,
-  initialZoom: 1,
-  initialX: 0,
-  initialY: 0,
-}
 
 export default {
   name: 'OverviewTables',
-  components: { OverviewTable, PanZoom },
+  components: { OverviewTable },
   props: ['tables'],
 
   data () {
     return {
       activeLinks: [],
-      panZoomOptions,
     }
   },
 
@@ -167,11 +149,18 @@ export default {
 
     renderGraph () {
       const container = this.$el
-      const root = d3.select('.OverviewTables')
+      const wrapper = d3.select('#overview-wrapper')
+      const root = d3.select('#overview')
       const nodes = this.nodes
       const links = this.links
       const width = container.clientWidth
       const height = container.clientHeight
+
+      // Setup pan-zoom
+      wrapper.call(d3.zoom()
+        .scaleExtent([0.1, 1.2])
+        .on('zoom', onZoom)
+      )
 
       const simulation = d3.forceSimulation().nodes(nodes)
 
@@ -262,6 +251,11 @@ export default {
           .on('start', dragstarted)
           .on('drag', dragged)
           .on('end', dragended)
+      }
+
+      function onZoom ({ transform }) {
+        root.style('transform', `translate(${transform.x}px, ${transform.y}px) scale(${transform.k})`)
+        root.style('transform-origin', '0 0')
       }
     },
   }
