@@ -2,7 +2,7 @@
   <Splitpanes class="default-theme">
     <Pane size="40">
       <h2 class="font-bold text-lg px-4 py-2 bg-gray-200">SHACL editor</h2>
-      <rdf-editor class="w-full h-full overflow-hidden" :format="format" :serialized.prop="shacl" ref="shaclEditor" />
+      <rdf-editor class="w-full h-full overflow-hidden" :format="format" :value="shacl" ref="shaclEditor" />
       <b-field label="Format">
         <b-select v-model="format">
           <option v-for="format in formats" :key="format" :value="format">{{ format }}</option>

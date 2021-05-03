@@ -18,7 +18,13 @@
         </b-field>
         <b-button icon-left="clipboard" @click="copy">Copy</b-button>
       </div>
-      <rdf-editor :serialized.prop="shaclStr" :format="selectedFormat" ref="snippet" readonly class="overflow-y-auto" />
+      <rdf-editor
+        :value="shaclStr"
+        :format="selectedFormat"
+        ref="snippet"
+        readonly
+        class="overflow-y-auto"
+      />
     </div>
   </div>
 </template>
@@ -79,10 +85,19 @@ rdf-editor::part(CodeMirror-sizer) {
 }
 
 rdf-editor::part(CodeMirror-scroll) {
-  position: static;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+rdf-editor::part(CodeMirror-lines) {
+  padding-bottom: 0;
 }
 
 rdf-editor::part(CodeMirror-vscrollbar) {
+  display: none;
+}
+
+rdf-editor::part(CodeMirror-hscrollbar) {
   display: none;
 }
 </style>
