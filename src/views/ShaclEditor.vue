@@ -39,8 +39,10 @@ import { Splitpanes, Pane } from 'splitpanes'
 import 'splitpanes/dist/splitpanes.css'
 import '@rdfjs-elements/rdf-editor'
 import { parsers } from '@rdf-esm/formats-common'
+import clownface from 'clownface'
 import OverviewTables from '@/components/OverviewTables.vue'
 import { tablesFromSHACL } from '@/shacl'
+import { rdf, sh } from '@/namespace'
 
 const formats = [...parsers.keys()]
 
@@ -82,7 +84,8 @@ export default {
       try {
         const quads = await editor.quads
         const dataset = RDF.dataset(quads)
-        this.tables = tablesFromSHACL(dataset, endpoint)
+        const shapes = clownface({ dataset }).has(rdf.type, sh.NodeShape)
+        this.tables = tablesFromSHACL(shapes, endpoint)
       } catch (e) {
         this.error = e.toString()
       }
