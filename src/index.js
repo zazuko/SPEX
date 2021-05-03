@@ -16,7 +16,18 @@ import {
   Tooltip,
 } from 'buefy'
 import { library as iconsLibrary } from '@fortawesome/fontawesome-svg-core'
-import { fas } from '@fortawesome/free-solid-svg-icons'
+import { faBars } from '@fortawesome/free-solid-svg-icons/faBars'
+import { faCog } from '@fortawesome/free-solid-svg-icons/faCog'
+import { faClipboard } from '@fortawesome/free-solid-svg-icons/faClipboard'
+import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons/faExternalLinkAlt'
+import { faEye } from '@fortawesome/free-solid-svg-icons/faEye'
+import { faEyeSlash } from '@fortawesome/free-solid-svg-icons/faEyeSlash'
+import { faMinus } from '@fortawesome/free-solid-svg-icons/faMinus'
+import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus'
+import { faSync } from '@fortawesome/free-solid-svg-icons/faSync'
+import { faTable } from '@fortawesome/free-solid-svg-icons/faTable'
+import { faTimes } from '@fortawesome/free-solid-svg-icons/faTimes'
+import { faUpload } from '@fortawesome/free-solid-svg-icons/faUpload'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import Spex from './components/Spex.vue'
 import './styles/index.css'
@@ -26,7 +37,20 @@ export { default as Spex } from './components/Spex.vue'
 export function initialize (Vue) {
   Vue.config.productionTip = false
 
-  iconsLibrary.add(fas)
+  iconsLibrary.add(
+    faBars,
+    faClipboard,
+    faCog,
+    faExternalLinkAlt,
+    faEye,
+    faEyeSlash,
+    faMinus,
+    faPlus,
+    faSync,
+    faTable,
+    faTimes,
+    faUpload,
+  )
   Vue.component('FontAwesomeIcon', FontAwesomeIcon)
 
   Vue.use(Button)
