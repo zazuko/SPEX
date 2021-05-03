@@ -22,7 +22,6 @@
     "@fortawesome/free-solid-svg-icons": "^5.15.3",
     "@fortawesome/vue-fontawesome": "^2.0.2",
     "@rdfjs-elements/rdf-editor": "^0.3.8",
-    "@rdfjs-elements/rdf-snippet": "^0.2.2",
     "@rdfjs/serializer-jsonld-ext": "^2.0.0",
     "@rdfjs/term-set": "1.0.2",
     "@tpluscode/rdf-ns-builders": "^0.4.2",

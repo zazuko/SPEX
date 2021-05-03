@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import '@rdfjs-elements/rdf-snippet'
+import '@rdfjs-elements/rdf-editor'
 import { serializers } from '@rdf-esm/formats-common'
 import { ToastProgrammatic as Toast } from 'buefy'
 
