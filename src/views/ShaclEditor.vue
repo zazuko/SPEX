@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import RDF from 'rdf-ext'
+import RDF from '@rdfjs/dataset'
 import { shrink } from '@zazuko/rdf-vocabularies/shrink'
 import { Splitpanes, Pane } from 'splitpanes'
 import 'splitpanes/dist/splitpanes.css'

@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import RDF from 'rdf-ext'
+import RDF from '@rdfjs/dataset'
 import * as N3 from 'n3'
 
 export default {

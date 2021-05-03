@@ -1,5 +1,5 @@
 import clownface from 'clownface'
-import RDF from 'rdf-ext'
+import RDF from '@rdfjs/dataset'
 import ParsingClient from 'sparql-http-client/ParsingClient'
 import TermSet from '@rdfjs/term-set'
 import { shrink } from '@zazuko/rdf-vocabularies/shrink'
@@ -74,7 +74,7 @@ export class Endpoint {
       dataset: RDF.dataset(quads),
       term: RDF.namedNode(schemaURI),
     })
-    const defaultShapes = dataset.out(spex.shapes).has(rdf.type, spex.DefaultShapes)
+    const defaultShapes = dataset.out(spex.shape).has(rdf.type, spex.DefaultShapes)
 
     return defaultShapes.term
       ? tablesFromSHACL(defaultShapes.out(schema.hasPart), this)
