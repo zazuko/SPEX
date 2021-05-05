@@ -1,7 +1,7 @@
 <template>
-  <div class="absolute border rounded shadow-md bg-white opacity-90" :class="{ active: isActive }" :data-id="table.id">
+  <div class="absolute border rounded shadow-md bg-white opacity-90 text-sm" :class="{ active: isActive }" :data-id="table.id">
     <header
-      class="bg-gray-100 flex items-center justify-between px-4 py-2"
+      class="bg-gray-100 flex items-center justify-between px-3 py-2"
       @mouseenter="$emit('hover-table', table)"
       @mouseleave="$emit('unhover-table', table)"
     >
@@ -28,12 +28,12 @@
         @mouseenter="$emit('hover-column', table, column)"
         @mouseleave="$emit('unhover-column', table, column)"
       >
-        <th class="border-b px-4 py-2">
+        <th class="border-b px-3 py-2">
           <TermTooltip :label="column.id">
             {{ column.name }}
           </TermTooltip>
         </th>
-        <td class="border-b px-4 py-2">
+        <td class="border-b px-3 py-2">
           <div v-for="type in column.types" :key="type.id">
             <TermTooltip :label="type.id">
               {{ type.name }}
