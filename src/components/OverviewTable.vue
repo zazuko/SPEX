@@ -10,7 +10,7 @@
           {{ table.name }}
         </TermTooltip>
       </h3>
-      <span>
+      <span class="flex flex-nowrap">
         <b-tooltip label="Hide">
           <b-button type="is-light" icon-left="eye-slash" @click="$emit('hide', table)" />
         </b-tooltip>
