@@ -2,9 +2,9 @@
   <div
     id="overview-wrapper"
     v-if="tablesVisible.length > 0"
-    class="flex-grow bg-gray-50 relative flex flex-col overflow-hidden"
+    class="flex-grow bg-gray-50 relative overflow-hidden"
   >
-    <div id="overview" class="relative h-full flex-grow flex flex-col">
+    <div id="overview" class="relative">
       <OverviewTable
         v-for="table in tablesVisible"
         :key="table.id"
@@ -72,6 +72,7 @@
 <script>
 import * as d3 from 'd3'
 import OverviewTable from './OverviewTable'
+import dagre from 'dagre'
 
 export default {
   name: 'OverviewTables',
@@ -153,31 +154,28 @@ export default {
       const root = d3.select('#overview')
       const nodes = this.nodes
       const links = this.links
-      const width = container.clientWidth
-      const height = container.clientHeight
 
-      // Setup pan-zoom
-      wrapper.call(d3.zoom()
-        .scaleExtent([0.1, 1.2])
-        .on('zoom', onZoom)
-      )
-
+      const layout = computeLayout(root, nodes, links)
       const simulation = d3.forceSimulation().nodes(nodes)
 
       simulation
-        .force('center', d3.forceCenter(width / 2, height / 2))
-        .force('links', d3.forceLink(links).id(({ id }) => id))
-        .force('collision', d3
-          .forceCollide()
-          .radius(({ id }) => {
-            const elt = root.select(`[data-id="${id}"]`)
-            const width = elt.style('width').replace('px', '')
-            const height = elt.style('height').replace('px', '')
-            return (Math.max(width, height) / 2) + 20
-          })
-          .strength(1)
-        )
+        .force('links', d3.forceLink(links).id(({ id }) => id).strength(0))
+        .force('posX', d3.forceX().strength(1).x(node => layout.nodes[node.id].x))
+        .force('posY', d3.forceY().strength(1).y(node => layout.nodes[node.id].y))
         .stop()
+
+      root.style('width', `${layout.width}px`)
+      root.style('height', `${layout.height}px`)
+
+      // Setup pan-zoom
+      const initScaleX = window.innerWidth / layout.width
+      const initScaleY = window.innerHeight / layout.height
+      const initScale = Math.min(initScaleX, initScaleY)
+      const initX = Math.max((window.innerWidth - (layout.width * initScale)) / 2, 0)
+      const initY = Math.max((window.innerHeight - (layout.height * initScale)) / 2, 0)
+      const zoom = d3.zoom().scaleExtent([0.1, 1.2]).on('zoom', onZoom)
+      wrapper.call(zoom)
+      wrapper.call(zoom.transform, d3.zoomIdentity.translate(initX, initY).scale(initScale))
 
       // draw lines for the links
       const link = root
@@ -205,10 +203,8 @@ export default {
 
       // Remove all forces after simulation is finished to allow dragging nodes around without affecting the other nodes
       simulation
-        .force('center', null)
-        .force('collision', null)
-        .force('links', null)
-        .force('charge', null)
+        .force('posX', null)
+        .force('posY', null)
 
       function renderSimulation () {
         // Update node positions
@@ -314,6 +310,53 @@ function nearestPointOnPerimeter (point, rectTopLeft, rectWidth, rectHeight) {
   }
 }
 
+// Compute graph layout using Dagre
+function computeLayout (root, nodes, links) {
+  const g = new dagre.graphlib.Graph()
+
+  g.setGraph({
+    rankdir: 'RL',
+    // align: 'DL',
+    nodesep: 20,
+    ranksep: 50,
+    marginx: 10,
+    marginy: 10,
+  })
+
+  // Default to assigning a new object as a label for each new edge.
+  g.setDefaultEdgeLabel(() => ({}))
+
+  nodes.forEach(node => {
+    const elt = root.select(`[data-id="${node.id}"]`)
+    const width = elt.style('width').replace('px', '')
+    const height = elt.style('height').replace('px', '')
+
+    g.setNode(node.id, { width, height })
+  })
+
+  links.forEach(({ source, target }) => {
+    g.setEdge(source, target)
+  })
+
+  dagre.layout(g)
+
+  return {
+    width: g._label.width,
+    height: g._label.height,
+    nodes: g.nodes().reduce((acc, id) => {
+      const node = g.node(id)
+
+      return {
+        ...acc,
+        [id]: {
+          id,
+          x: node.x - (node.width / 2),
+          y: node.y - (node.height / 2),
+        }
+      }
+    }, {}),
+  }
+}
 </script>
 
 <style scoped>

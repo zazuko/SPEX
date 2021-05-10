@@ -32,6 +32,7 @@
     "clownface": "^1.2.0",
     "core-js": "^3.11.2",
     "d3": "~6.7.0",
+    "dagre": "^0.8.5",
     "lodash.clonedeep": "^4.5.0",
     "lodash.debounce": "4.0.8",
     "n3": "^1.10.0",
