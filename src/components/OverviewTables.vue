@@ -63,6 +63,9 @@
         </path>
       </svg>
     </div>
+    <p class="z-10 absolute bottom-1 right-1 text-sm text-gray-400">
+      introspected
+    </p>
   </div>
   <div v-else class="flex-grow bg-gray-50 flex flex-col items-center justify-center">
     <p class="pb-4">No classes to show</p>
