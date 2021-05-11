@@ -37,7 +37,7 @@
     "lodash.debounce": "4.0.8",
     "n3": "^1.10.0",
     "register-service-worker": "^1.7.2",
-    "sparql-http-client": "^2.3.0",
+    "sparql-http-client": "^2.3.1",
     "splitpanes": "2.3.6",
     "vue": "^2.6.12",
     "vue-router": "^3.5.1"
