@@ -50,6 +50,7 @@ export class Endpoint {
       WHERE {
         GRAPH ?g { ?s ?p ?o }
       }
+      ORDER BY ?g
       OFFSET ${offset}
       LIMIT ${limit}
     `
