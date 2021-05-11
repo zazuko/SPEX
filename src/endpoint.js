@@ -41,12 +41,17 @@ export class Endpoint {
   /**
    * Fetch a list of graphs in the endpoint
    */
-  async fetchGraphs () {
+  async fetchGraphs (opts = {}) {
+    const offset = opts.offset || 0
+    const limit = opts.limit || null
+
     const query = `
       SELECT DISTINCT ?g
       WHERE {
         GRAPH ?g { ?s ?p ?o }
       }
+      OFFSET ${offset}
+      LIMIT ${limit}
     `
     const graphs = await this.client.query.select(query)
     return graphs.map(({ g: { value } }) => value)

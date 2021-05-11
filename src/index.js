@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import {
+  Autocomplete,
   Button,
   ConfigProgrammatic,
   Field,
@@ -16,6 +17,7 @@ import {
   Tooltip,
 } from 'buefy'
 import { library as iconsLibrary } from '@fortawesome/fontawesome-svg-core'
+import { faAngleDown } from '@fortawesome/free-solid-svg-icons/faAngleDown'
 import { faBars } from '@fortawesome/free-solid-svg-icons/faBars'
 import { faCog } from '@fortawesome/free-solid-svg-icons/faCog'
 import { faClipboard } from '@fortawesome/free-solid-svg-icons/faClipboard'
@@ -27,6 +29,7 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus'
 import { faSync } from '@fortawesome/free-solid-svg-icons/faSync'
 import { faTable } from '@fortawesome/free-solid-svg-icons/faTable'
 import { faTimes } from '@fortawesome/free-solid-svg-icons/faTimes'
+import { faTimesCircle } from '@fortawesome/free-solid-svg-icons/faTimesCircle'
 import { faUpload } from '@fortawesome/free-solid-svg-icons/faUpload'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import Spex from './components/Spex.vue'
@@ -39,6 +42,7 @@ export function initialize (Vue) {
 
   iconsLibrary.add(
     faBars,
+    faAngleDown,
     faClipboard,
     faCog,
     faExternalLinkAlt,
@@ -49,10 +53,12 @@ export function initialize (Vue) {
     faSync,
     faTable,
     faTimes,
+    faTimesCircle,
     faUpload,
   )
   Vue.component('FontAwesomeIcon', FontAwesomeIcon)
 
+  Vue.use(Autocomplete)
   Vue.use(Button)
   Vue.use(Field)
   Vue.use(Icon)

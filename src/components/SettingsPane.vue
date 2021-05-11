@@ -8,7 +8,7 @@
     </div>
     <form class="card-content" @submit.prevent="onSubmit">
       <b-field label="Endpoint URL">
-        <b-input v-model="data.url" />
+        <b-input v-model="data.url" @blur="fetchGraphs" />
       </b-field>
       <b-field label="Username">
         <b-input v-model="data.user" />
@@ -18,13 +18,18 @@
       </b-field>
       <b-field label="Graph" :message="fetchError" :type="fetchError ? 'is-danger' : ''">
         <b-field>
-          <b-select v-model="data.graph" expanded>
-            <option :value="null">DEFAULT</option>
-            <option v-for="graph in graphs" :key="graph" :value="graph">
-              {{ graph }}
-            </option>
-          </b-select>
-          <b-button icon-left="sync" title="Load graphs" @click="fetchGraphs" :loading="loadingGraphs" />
+          <b-autocomplete
+            :data="graphs"
+            :loading="loadingGraphs"
+            placeholder="DEFAULT"
+            v-model="data.graph"
+            @infinite-scroll="fetchMoreGraphs"
+            icon-right="angle-down"
+            expanded
+            check-infinite-scroll
+            open-on-focus
+            clearable
+          ></b-autocomplete>
         </b-field>
       </b-field>
       <b-field label="Custom prefixes" :addons="false" class="flex flex-col items-stretch gap-1">
@@ -56,15 +61,19 @@
 import { Endpoint } from '@/endpoint'
 import cloneDeep from 'lodash.clonedeep'
 
+const graphsPageSize = 10
+
 export default {
   name: 'SettingsPane',
   props: ['settings'],
 
   data () {
     return {
+      endpoint: null,
       graphs: [],
       loadingGraphs: false,
       fetchError: null,
+      graphsOffset: 0,
       data: cloneDeep(this.settings),
     }
   },
@@ -85,12 +94,26 @@ export default {
     async fetchGraphs () {
       this.loadingGraphs = true
       this.fetchError = ''
-      const endpoint = new Endpoint(this.data)
+      this.endpoint = new Endpoint(this.data)
+      this.graphsOffset = 0
+      this.graphs = await this.fetchGraphPage()
+    },
+
+    async fetchMoreGraphs () {
+      const newGraphs = await this.fetchGraphPage()
+      this.graphs = this.graphs.concat(newGraphs)
+    },
+
+    async fetchGraphPage () {
+      this.loadingGraphs = true
 
       try {
-        this.graphs = await endpoint.fetchGraphs()
+        const page = { offset: this.graphsOffset, limit: graphsPageSize }
+        this.graphsOffset = this.graphsOffset + graphsPageSize
+        return await this.endpoint.fetchGraphs(page)
       } catch (e) {
         this.fetchError = e.toString()
+        return []
       } finally {
         this.loadingGraphs = false
       }
@@ -108,6 +131,12 @@ export default {
   watch: {
     settings (settings) {
       this.data = cloneDeep(settings)
+    },
+
+    'data.url' () {
+      this.endpoint = new Endpoint(this.data)
+      this.graphs = []
+      this.data.graph = null
     },
   },
 }
