@@ -9,6 +9,7 @@ import { rdf, schema, spex, prefixes as _prefixes } from './namespace'
 const SCHEMA_URI = '.well-known/void'
 
 const initialPrefixes = [...Object.keys(_prefixes)]
+const displayLanguage = ['en', '*']
 
 export class Endpoint {
   constructor ({ url, user = null, password = null, prefixes = [], graph = '', forceIntrospection = false }) {
@@ -83,13 +84,16 @@ export class Endpoint {
       dataset: RDF.dataset(quads),
       term: RDF.namedNode(schemaURI),
     })
-    const defaultShapes = dataset.out(spex.shape).has(rdf.type, spex.DefaultShapes)
 
+    const defaultShapes = dataset.out(spex.shape).has(rdf.type, spex.DefaultShapes)
     const tables = defaultShapes.term
       ? tablesFromSHACL(defaultShapes.out(schema.hasPart), this)
       : null
 
-    const viewports = []
+    const viewports = dataset.out(spex.viewport).map(viewport => ({
+      name: viewport.out(schema.name, { language: displayLanguage }).value,
+      tables: new Set(viewport.out(spex.includes).terms.map(({ value }) => value)),
+    }))
 
     return {
       tables,

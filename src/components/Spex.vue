@@ -25,7 +25,12 @@
 
           <Splitpanes vertical v-if="datamodel" class="overflow-hidden">
             <Pane size="20" v-if="tablesListShown">
-              <TablesList :datamodel="datamodel" @toggle-table="toggleTable" @close="hideTablesList" />
+              <TablesList
+                :datamodel="datamodel"
+                @toggle-table="toggleTable"
+                @select-viewport="selectViewport"
+                @close="hideTablesList"
+              />
             </Pane>
             <Pane class="relative h-full">
               <b-button v-show="!tablesListShown" icon-left="bars" class="z-10 absolute m-3" @click="showTablesList">
@@ -144,6 +149,20 @@ export default {
 
     toggleTable (table, show) {
       table.isShown = show
+    },
+
+    selectViewport (viewport) {
+      const shownTables = viewport
+        ? viewport.tables
+        : new Set(this.datamodel.tables.map(({ id }) => id))
+
+      this.datamodel.tables.forEach(table => {
+        if (shownTables.has(table.id)) {
+          table.isShown = true
+        } else {
+          table.isShown = false
+        }
+      })
     },
 
     showTablesList () {
