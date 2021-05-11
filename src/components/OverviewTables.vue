@@ -63,7 +63,7 @@
         </path>
       </svg>
     </div>
-    <p class="z-10 absolute bottom-1 right-1 text-sm text-gray-400">
+    <p v-show="datamodel.isIntrospected" class="z-10 absolute bottom-1 right-1 text-sm text-gray-400">
       introspected
     </p>
   </div>
