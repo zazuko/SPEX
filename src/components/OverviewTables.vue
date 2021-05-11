@@ -77,7 +77,7 @@ import dagre from 'dagre'
 export default {
   name: 'OverviewTables',
   components: { OverviewTable },
-  props: ['tables'],
+  props: ['datamodel'],
 
   data () {
     return {
@@ -93,7 +93,7 @@ export default {
 
   computed: {
     tablesVisible () {
-      return this.tables.filter(({ isShown }) => isShown)
+      return this.datamodel.tables.filter(({ isShown }) => isShown)
     },
 
     nodes () {

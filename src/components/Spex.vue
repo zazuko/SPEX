@@ -1,50 +1,48 @@
 <template>
   <Splitpanes class="default-theme flex-grow overflow-hidden">
     <Pane>
-      <Splitpanes horizontal>
-        <Pane>
-          <div class="flex-grow">
-            <b-navbar shadow>
-              <template #start>
-                <b-navbar-item tag="div" class="p-0">
-                  <b-button type="is-white" icon-right="cog" title="Options" @click="showSettings">
-                    <h2>
-                      <span v-if="endpoint">{{ endpoint.url }}</span>
-                      <span v-else>No endpoint configured yet</span>
-                    </h2>
-                  </b-button>
-                </b-navbar-item>
-              </template>
-              <template #end>
-                <b-navbar-item tag="div" class="p-0">
-                  <b-button v-if="endpoint && !error" type="is-white" @click="showShacl">
-                    SHACL
-                  </b-button>
-                </b-navbar-item>
-              </template>
-            </b-navbar>
-
-            <Splitpanes vertical v-show="!isLoading && !error">
-              <Pane size="20" v-if="tablesListShown">
-                <TablesList :tables="tables" @toggle-table="toggleTable" @close="hideTablesList" />
-              </Pane>
-              <Pane class="is-relative">
-                <b-button v-show="!tablesListShown" icon-left="bars" class="z-10 absolute m-3" @click="showTablesList">
-                  Classes
+      <Splitpanes horizontal class="h-full">
+        <Pane class="flex flex-col">
+          <b-navbar shadow>
+            <template #start>
+              <b-navbar-item tag="div" class="p-0">
+                <b-button type="is-white" icon-right="cog" title="Options" @click="showSettings">
+                  <h2>
+                    <span v-if="endpoint">{{ endpoint.url }}</span>
+                    <span v-else>No endpoint configured yet</span>
+                  </h2>
                 </b-button>
-                <OverviewTables :tables="tables" @explore="exploreTable" @toggle-table="toggleTable" />
-              </Pane>
-            </Splitpanes>
+              </b-navbar-item>
+            </template>
+            <template #end>
+              <b-navbar-item tag="div" class="p-0">
+                <b-button v-if="endpoint && !error" type="is-white" @click="showShacl">
+                  SHACL
+                </b-button>
+              </b-navbar-item>
+            </template>
+          </b-navbar>
 
-            <div class="section relative" v-if="isLoading">
-              <b-loading active :is-full-page="false" />
-            </div>
+          <Splitpanes vertical v-if="datamodel" class="overflow-hidden">
+            <Pane size="20" v-if="tablesListShown">
+              <TablesList :datamodel="datamodel" @toggle-table="toggleTable" @close="hideTablesList" />
+            </Pane>
+            <Pane class="relative h-full">
+              <b-button v-show="!tablesListShown" icon-left="bars" class="z-10 absolute m-3" @click="showTablesList">
+                Classes
+              </b-button>
+              <OverviewTables :datamodel="datamodel" @explore="exploreTable" @toggle-table="toggleTable" />
+            </Pane>
+          </Splitpanes>
 
-            <div class="section" v-if="error">
-              <div class="message is-danger">
-                <div class="message-body">
-                  Error loading data: {{ error }}
-                </div>
+          <div class="section relative" v-if="isLoading">
+            <b-loading active :is-full-page="false" />
+          </div>
+
+          <div class="section" v-if="error">
+            <div class="message is-danger">
+              <div class="message-body">
+                Error loading data: {{ error }}
               </div>
             </div>
           </div>
@@ -88,7 +86,7 @@ export default {
       tablesListShown: false,
       listShown: false,
       exploredTable: null,
-      tables: [],
+      datamodel: null,
       isLoading: false,
       error: null
     }
@@ -106,11 +104,11 @@ export default {
 
       this.resetView()
 
-      this.tables = []
       this.error = null
       this.isLoading = true
+      this.datamodel = null
       try {
-        this.tables = await this.endpoint.fetchTables()
+        this.datamodel = await this.endpoint.fetchDatamodel()
       } catch (e) {
         this.error = e
         this.showSettings()
@@ -167,7 +165,7 @@ export default {
     },
 
     showShacl () {
-      const shacl = tablesToSHACL(this.tables, this.endpoint)
+      const shacl = tablesToSHACL(this.datamodel, this.endpoint)
       Modal.open({
         parent: this,
         component: ModalShacl,
@@ -185,7 +183,7 @@ export default {
           load: (dataset) => {
             modal.close()
             try {
-              this.tables = tablesFromSHACL(dataset, this.endpoint)
+              this.datamodel = tablesFromSHACL(dataset, this.endpoint)
             } catch (e) {
               console.error(e)
             }

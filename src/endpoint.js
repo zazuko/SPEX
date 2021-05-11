@@ -37,6 +37,9 @@ export class Endpoint {
     return shrink(uri) || uri
   }
 
+  /**
+   * Fetch a list of graphs in the endpoint
+   */
   async fetchGraphs () {
     const query = `
       SELECT DISTINCT ?g
@@ -48,20 +51,26 @@ export class Endpoint {
     return graphs.map(({ g: { value } }) => value)
   }
 
-  async fetchTables () {
+  /**
+   * Fetch data model, either by introspecting it or by querying the
+   * pre-defined SHACL definition
+   */
+  async fetchDatamodel () {
     if (this.forceIntrospection) {
-      return this.introspectTables()
+      return this.fetchIntrospectDatamodel()
     }
 
-    const tables = await this.fetchSHACL()
+    const datamodel = await this.fetchPredefinedDatamodel()
 
-    return tables || this.introspectTables()
+    return datamodel.tables
+      ? datamodel
+      : this.fetchIntrospectDatamodel()
   }
 
   /**
-   * Retrieve table structure from pre-defined SHACL definition.
+   * Fetch data model from pre-defined SHACL definition
    */
-  async fetchSHACL () {
+  async fetchPredefinedDatamodel () {
     const schemaURI = this.url.replace(/query\/?$/, SCHEMA_URI)
     const fromClause = this.graph ? `FROM <${this.graph}>` : ''
     const query = `
@@ -76,14 +85,25 @@ export class Endpoint {
     })
     const defaultShapes = dataset.out(spex.shape).has(rdf.type, spex.DefaultShapes)
 
-    return defaultShapes.term
+    const tables = defaultShapes.term
       ? tablesFromSHACL(defaultShapes.out(schema.hasPart), this)
       : null
+
+    const viewports = []
+
+    return {
+      tables,
+      viewports,
+      isIntrospected: false,
+    }
   }
 
-  async introspectTables () {
+  /**
+   * Fetch data model by introspecting the endpoint
+   */
+  async fetchIntrospectDatamodel () {
     const structure = await this._fetchStructure()
-    const tables = structure.reduce((tables, { cls, property, linktype, datatype }) => {
+    const tablesMap = structure.reduce((tables, { cls, property, linktype, datatype }) => {
       const table = tables.get(cls.value) || { id: cls.value, name: this.shrink(cls.value), columns: new Map(), isShown: true }
 
       const typeURI = (linktype && linktype.value) || (datatype && datatype.value) || null
@@ -107,7 +127,13 @@ export class Endpoint {
       return tables
     }, new Map())
 
-    return [...tables.values()].map((table) => ({ ...table, columns: [...table.columns.values()] }))
+    const tables = [...tablesMap.values()].map((table) => ({ ...table, columns: [...table.columns.values()] }))
+
+    return {
+      tables,
+      viewports: [],
+      isIntrospected: true,
+    }
   }
 
   async _fetchStructure () {
@@ -129,8 +155,11 @@ export class Endpoint {
     return this.client.query.select(query)
   }
 
-  async fetchTableData (table) {
-    const limit = 100
+  /**
+   * Fetch a sample of the data of a given table
+   */
+  async fetchTableData (table, opts = {}) {
+    const limit = opts.limit || 100
     const graphClause = this.graph ? `GRAPH <${this.graph}>` : ''
     const query = `
       DESCRIBE ?subject {
@@ -163,6 +192,9 @@ export class Endpoint {
     return [...rows.values()]
   }
 
+  /**
+   * Fetch triples related to a given resource.
+   */
   async fetchResource (uri) {
     const query = `
       DESCRIBE <${uri}> {}
