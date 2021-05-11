@@ -171,11 +171,11 @@ export default {
       root.style('height', `${layout.height}px`)
 
       // Setup pan-zoom
-      const initScaleX = window.innerWidth / layout.width
-      const initScaleY = window.innerHeight / layout.height
+      const initScaleX = container.clientWidth / layout.width
+      const initScaleY = container.clientHeight / layout.height
       const initScale = Math.min(initScaleX, initScaleY, 1)
-      const initX = Math.max((window.innerWidth - (layout.width * initScale)) / 2, 0)
-      const initY = Math.max((window.innerHeight - (layout.height * initScale)) / 2, 0)
+      const initX = Math.max((container.clientWidth - (layout.width * initScale)) / 2, 0)
+      const initY = Math.max((container.clientHeight - (layout.height * initScale)) / 2, 0)
       const zoom = d3.zoom().scaleExtent([0.1, 1.2]).on('zoom', onZoom)
       wrapper.call(zoom)
       wrapper.call(zoom.transform, d3.zoomIdentity.translate(initX, initY).scale(initScale))
