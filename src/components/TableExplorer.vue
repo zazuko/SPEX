@@ -37,7 +37,9 @@
       </table>
     </div>
 
-    <b-loading :active="isLoading" />
+    <div class="section relative" v-if="isLoading">
+      <b-loading active :is-full-page="false" />
+    </div>
 
     <div class="message is-danger" v-if="error">
       <div class="message-body">
