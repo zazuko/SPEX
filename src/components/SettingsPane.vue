@@ -93,7 +93,6 @@ export default {
 
     async fetchGraphs () {
       this.loadingGraphs = true
-      this.fetchError = ''
       this.endpoint = new Endpoint(this.data)
       this.graphsOffset = 0
       this.graphs = await this.fetchGraphPage()
@@ -106,6 +105,7 @@ export default {
 
     async fetchGraphPage () {
       this.loadingGraphs = true
+      this.fetchError = ''
 
       try {
         const page = { offset: this.graphsOffset, limit: graphsPageSize }
