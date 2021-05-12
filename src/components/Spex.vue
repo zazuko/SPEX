@@ -178,7 +178,6 @@ export default {
     },
 
     resetView () {
-      this.settingsShown = false
       this.exploredTable = null
       this.explorerShown = false
     },
