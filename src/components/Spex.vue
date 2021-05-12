@@ -184,7 +184,7 @@ export default {
     },
 
     showShacl () {
-      const shacl = tablesToSHACL(this.datamodel, this.endpoint)
+      const shacl = tablesToSHACL(this.datamodel.tables, this.endpoint)
       Modal.open({
         parent: this,
         component: ModalShacl,

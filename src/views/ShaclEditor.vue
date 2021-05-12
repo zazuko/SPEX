@@ -16,7 +16,7 @@
           <div class="flex-grow flex flex-col">
             <h2 class="font-bold text-lg px-4 py-2 bg-gray-200">Representation</h2>
 
-            <OverviewTables :tables="tables" />
+            <OverviewTables :datamodel="datamodel" />
 
             <div class="section" v-if="error">
               <div class="message is-danger">
@@ -64,6 +64,11 @@ export default {
       formats,
       shacl: initialEditorContent,
       tables: [],
+      datamodel: {
+        tables: [],
+        viewports: [],
+        isIntrospected: false,
+      },
       error: null
     }
   },
@@ -73,7 +78,7 @@ export default {
       const editor = this.$refs.shaclEditor
 
       this.error = null
-      this.tables = []
+      this.datamodel.tables = []
 
       const endpoint = {
         shrink (uri) {
@@ -85,7 +90,7 @@ export default {
         const quads = await editor.quads
         const dataset = RDF.dataset(quads)
         const shapes = clownface({ dataset }).has(rdf.type, sh.NodeShape)
-        this.tables = tablesFromSHACL(shapes, endpoint)
+        this.datamodel.tables = tablesFromSHACL(shapes, endpoint)
       } catch (e) {
         this.error = e.toString()
       }
