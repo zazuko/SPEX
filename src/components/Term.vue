@@ -15,11 +15,12 @@ export default {
 
   data () {
     const displayValue = termValue(this.endpoint, this.term)
+    const expandedValue = expandValue(this.endpoint, this.term)
 
     return {
       displayValue,
       language: this.term && this.term.language,
-      tooltip: this.term.value !== displayValue ? this.term.value : ''
+      tooltip: expandedValue !== displayValue ? expandedValue : ''
     }
   }
 }
@@ -31,6 +32,17 @@ function termValue (endpoint, term) {
 
   if (term.termType === 'NamedNode') {
     return endpoint.shrink(term.value)
+  }
+
+  return term.value
+}
+
+function expandValue (endpoint, term) {
+  if (term.termType === 'Literal') {
+    const datatype = term.datatype ? `^^${endpoint.shrink(term.datatype.value)}` : ''
+    const language = term.language ? `@${term.language}` : ''
+
+    return `${term.value}${datatype}${language}`
   }
 
   return term.value
