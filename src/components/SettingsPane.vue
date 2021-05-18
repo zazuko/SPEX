@@ -11,10 +11,10 @@
         <b-input v-model="data.url" @blur="fetchGraphs" />
       </b-field>
       <b-field label="Username">
-        <b-input v-model="data.user" />
+        <b-input v-model="data.user" @blur="fetchGraphs" />
       </b-field>
       <b-field label="Password">
-        <b-input type="password" v-model="data.password" password-reveal />
+        <b-input type="password" v-model="data.password" password-reveal @blur="fetchGraphs" />
       </b-field>
       <b-field label="Graph" :message="fetchError" :type="fetchError ? 'is-danger' : ''">
         <b-field>
