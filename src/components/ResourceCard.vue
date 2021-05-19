@@ -1,7 +1,7 @@
 <template>
   <div class="absolute border rounded shadow-md bg-white opacity-90 text-sm" :class="{ active: isActive }" :data-id="resource.id">
     <header
-      class="bg-gray-100 flex items-center justify-between px-3 py-2"
+      class="bg-gray-100 flex items-center gap-4 justify-between px-3 py-2"
       @mouseenter="$emit('hover-title', resource)"
       @mouseleave="$emit('unhover-title', resource)"
     >
@@ -30,9 +30,11 @@
         </th>
         <td class="border-b px-3 py-2">
           <div v-for="value in property.values" :key="value.id">
-            <TermTooltip :label="value.id">
-              {{ value.name }}
-            </TermTooltip>
+            <slot name="property-value" :value="value">
+              <TermTooltip :label="value.id">
+                {{ value.name }}
+              </TermTooltip>
+            </slot>
           </div>
         </td>
       </tr>

@@ -60,14 +60,16 @@ import dagre from 'dagre'
 
 export default {
   name: 'GraphLayout',
-  props: [
+  props: {
     // List of objects with an `id` property
-    'nodes',
+    nodes: { required: true, type: Array },
     // List of obejcts with `label`, `source` and `target` properties
-    'links',
+    links: { required: true, type: Array },
     // List of currently highlighted links
-    'activeLinks',
-  ],
+    activeLinks: { required: true, type: Array },
+    // Adjust zoom level when nodes change
+    autoZoom: { default: true },
+  },
 
   mounted () {
     this.$nextTick(() => {
@@ -117,7 +119,9 @@ export default {
       const initY = Math.max((container.clientHeight - (layout.height * initScale)) / 2, 0)
       const zoom = d3.zoom().scaleExtent([0.1, 1.2]).on('zoom', onZoom)
       containerSelection.call(zoom)
-      containerSelection.call(zoom.transform, d3.zoomIdentity.translate(initX, initY).scale(initScale))
+      if (this.autoZoom) {
+        containerSelection.call(zoom.transform, d3.zoomIdentity.translate(initX, initY).scale(initScale))
+      }
 
       // Draw lines for links
       const linkFromGraphLink = (graphLink) =>
