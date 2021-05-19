@@ -114,21 +114,21 @@ export class Endpoint {
   async fetchIntrospectDatamodel () {
     const structure = await this._fetchStructure()
     const tablesMap = structure.reduce((tables, { cls, property, linktype, datatype }) => {
-      const table = tables.get(cls.value) || { id: cls.value, name: this.shrink(cls.value), columns: new Map(), isShown: true }
+      const table = tables.get(cls.value) || { id: cls.value, name: this.shrink(cls.value), properties: new Map(), isShown: true }
 
       const typeURI = (linktype && linktype.value) || (datatype && datatype.value) || null
       const typeTermType = linktype ? 'NamedNode' : (datatype ? 'Literal' : null)
       const type = typeURI && { id: typeURI, name: this.shrink(typeURI), termType: typeTermType }
 
-      if (table.columns.has(property.value)) {
+      if (table.properties.has(property.value)) {
         if (type) {
-          table.columns.get(property.value).types.push(type)
+          table.properties.get(property.value).values.push(type)
         }
       } else {
-        table.columns.set(property.value, {
+        table.properties.set(property.value, {
           id: property.value,
           name: this.shrink(property.value),
-          types: type ? [type] : []
+          values: type ? [type] : []
         })
       }
 
@@ -137,7 +137,7 @@ export class Endpoint {
       return tables
     }, new Map())
 
-    const tables = [...tablesMap.values()].map((table) => ({ ...table, columns: [...table.columns.values()] }))
+    const tables = [...tablesMap.values()].map((table) => ({ ...table, properties: [...table.properties.values()] }))
 
     return {
       tables,

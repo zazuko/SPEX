@@ -14,8 +14,8 @@
         <thead>
           <tr>
             <th>URI</th>
-            <th v-for="(column, index) in table.columns" :key="index">
-              {{ column.name }}
+            <th v-for="(property, index) in table.properties" :key="index">
+              {{ property.name }}
             </th>
           </tr>
         </thead>
@@ -26,8 +26,8 @@
                 {{ row.id }}
               </TermLink>
             </td>
-            <td v-for="(column, index) in table.columns" :key="index">
-              <p class="flex items-center" v-for="(value, index) in (row[column.id] || [])" :key="index">
+            <td v-for="(property, index) in table.properties" :key="index">
+              <p class="flex items-center" v-for="(value, index) in (row[property.id] || [])" :key="index">
                 <Term :term="value" :endpoint="endpoint" />
                 <TermDescribe :term="value" :endpoint="endpoint" />
               </p>

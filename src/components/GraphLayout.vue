@@ -208,7 +208,7 @@ export default {
  */
 function sourcePoint (d, container) {
   const radius = 3
-  const sourceElt = container.querySelector(`[data-id="${d.source.id}${d.sourceColumn}"]`)
+  const sourceElt = container.querySelector(`[data-id="${d.source.id}${d.sourceProperty}"]`)
   const offsetX = d.target.x > d.source.x ? (sourceElt.clientWidth + radius) : -radius
   const magic = 60 // TODO: Don't know where this difference is coming from...
   return {

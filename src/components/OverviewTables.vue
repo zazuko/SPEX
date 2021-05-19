@@ -16,8 +16,8 @@
         @hide="$emit('toggle-table', $event, false)"
         @hover-table="onHoverTable"
         @unhover-table="onUnhover"
-        @hover-column="onHoverColumn"
-        @unhover-column="onUnhover"
+        @hover-property="onHoverProperty"
+        @unhover-property="onUnhover"
       />
     </template>
     <template v-slot:default>
@@ -54,13 +54,13 @@ export default {
     links () {
       const tableIds = new Set(this.tablesVisible.map(({ id }) => id))
       return this.tablesVisible
-        .flatMap(table => table.columns.map((column) => ({ ...column, table })))
-        .reduce((acc, column) => {
-          column.types.forEach((type) => {
-            const source = column.table.id
-            const target = type.id
+        .flatMap(table => table.properties.map((property) => ({ ...property, table })))
+        .reduce((acc, property) => {
+          property.values.forEach((value) => {
+            const source = property.table.id
+            const target = value.id
             if (tableIds.has(target)) {
-              acc.push({ source, target, sourceColumn: column.id, label: column.name })
+              acc.push({ source, target, sourceProperty: property.id, label: property.name })
             }
           })
 
@@ -71,13 +71,13 @@ export default {
 
   methods: {
     onHoverTable (table) {
-      this.activeLinks = this.links.filter((link) => link.source.id === table.id)
+      this.activeLinks = this.links.filter((link) => link.source === table.id)
     },
 
-    onHoverColumn (table, column) {
+    onHoverProperty (table, property) {
       this.activeLinks = this.links.filter((link) => (
-        link.source.id === table.id &&
-        link.sourceColumn === column.id
+        link.source === table.id &&
+        link.sourceProperty === property.id
       ))
     },
 

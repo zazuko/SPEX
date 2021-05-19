@@ -21,22 +21,22 @@
     </header>
     <table class="w-full">
       <tr
-        v-for="(column, index) in table.columns"
+        v-for="(property, index) in table.properties"
         :key="index"
-        :data-id="table.id + column.id"
-        :class="{ active: isColumnActive(column) }"
-        @mouseenter="$emit('hover-column', table, column)"
-        @mouseleave="$emit('unhover-column', table, column)"
+        :data-id="table.id + property.id"
+        :class="{ active: isPropertyActive(property) }"
+        @mouseenter="$emit('hover-property', table, property)"
+        @mouseleave="$emit('unhover-property', table, property)"
       >
         <th class="border-b px-3 py-2">
-          <TermTooltip :label="column.id">
-            {{ column.name }}
+          <TermTooltip :label="property.id">
+            {{ property.name }}
           </TermTooltip>
         </th>
         <td class="border-b px-3 py-2">
-          <div v-for="type in column.types" :key="type.id">
-            <TermTooltip :label="type.id">
-              {{ type.name }}
+          <div v-for="value in property.values" :key="value.id">
+            <TermTooltip :label="value.id">
+              {{ value.name }}
             </TermTooltip>
           </div>
         </td>
@@ -60,15 +60,15 @@ export default {
 
   computed: {
     isActive () {
-      return this.activeLinks.some((link) => link.target.id === this.table.id)
+      return this.activeLinks.some((link) => link.target === this.table.id)
     }
   },
 
   methods: {
-    isColumnActive (column) {
+    isPropertyActive (property) {
       return this.activeLinks.some((link) => (
-        link.source.id === this.table.id &&
-        link.sourceColumn === column.id
+        link.source === this.table.id &&
+        link.sourceProperty === property.id
       ))
     }
   }

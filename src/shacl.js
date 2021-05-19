@@ -15,21 +15,21 @@ export function tablesToSHACL (tables, endpoint) {
     return {
       '@type': 'sh:NodeShape',
       'sh:targetClass': { '@id': endpoint.shrink(table.id) },
-      'sh:property': table.columns.map((column) => {
+      'sh:property': table.properties.map((property) => {
         const typeProp = (type) => type.termType === 'NamedNode'
           ? { 'sh:class': { '@id': endpoint.shrink(type.id) } }
           : { 'sh:datatype': { '@id': endpoint.shrink(type.id) } }
 
         let type = {}
-        if (column.types.length === 1) {
-          type = typeProp(column.types[0])
-        } else if (column.types.length > 1) {
-          type['sh:or'] = { '@list': column.types.map(typeProp) }
+        if (property.values.length === 1) {
+          type = typeProp(property.values[0])
+        } else if (property.values.length > 1) {
+          type['sh:or'] = { '@list': property.values.map(typeProp) }
         }
 
         return {
           '@type': 'sh:PropertyShape',
-          'sh:path': { '@id': endpoint.shrink(column.id) },
+          'sh:path': { '@id': endpoint.shrink(property.id) },
           ...type,
         }
       }),
@@ -61,7 +61,7 @@ export function tablesFromSHACL (shapes, endpoint) {
       if (!targetClass) return null
 
       const id = targetClass.value
-      const columns = shape
+      const properties = shape
         .out(sh.property)
         .map((property) => {
           const path = property.out(sh.path).term
@@ -69,12 +69,12 @@ export function tablesFromSHACL (shapes, endpoint) {
           if (!path) return null
 
           const id = path.value
-          const types = propertyTypes(property, endpoint)
+          const values = propertyTypes(property, endpoint)
 
           return {
             id,
             name: endpoint.shrink(id),
-            types,
+            values,
           }
         })
         .filter(Boolean)
@@ -82,7 +82,7 @@ export function tablesFromSHACL (shapes, endpoint) {
       return {
         id,
         name: endpoint.shrink(id),
-        columns,
+        properties,
         isShown: true,
       }
     })
