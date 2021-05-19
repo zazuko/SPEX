@@ -1,5 +1,5 @@
 <template>
-  <graph-layout
+  <GraphLayout
     :nodes="tablesVisible"
     :links="links"
     :active-links="activeLinks"
@@ -25,7 +25,7 @@
         introspected
       </p>
     </template>
-  </graph-layout>
+  </GraphLayout>
   <div v-else class="flex-grow bg-gray-50 flex flex-col items-center justify-center">
     <p class="pb-4">No classes to show</p>
   </div>

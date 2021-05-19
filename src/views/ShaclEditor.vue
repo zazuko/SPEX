@@ -16,7 +16,7 @@
           <div class="flex-grow flex flex-col">
             <h2 class="font-bold text-lg px-4 py-2 bg-gray-200">Representation</h2>
 
-            <graph-layout
+            <GraphLayout
               :nodes="datamodel.tables"
               :links="links"
               :active-links="activeLinks"
@@ -24,7 +24,7 @@
               <template v-slot:node="{ node }">
                 <ResourceCard :resource="node" :active-links="activeLinks" />
               </template>
-            </graph-layout>
+            </GraphLayout>
 
             <div class="section" v-if="error">
               <div class="message is-danger">
