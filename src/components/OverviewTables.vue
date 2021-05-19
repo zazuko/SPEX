@@ -14,8 +14,8 @@
         :active-links="activeLinks"
         @explore="$emit('explore', $event)"
         @hide="$emit('toggle-table', $event, false)"
-        @hover-table="onHoverTable"
-        @unhover-table="onUnhover"
+        @hover-title="onHoverTable"
+        @unhover-title="onUnhover"
         @hover-property="onHoverProperty"
         @unhover-property="onUnhover"
       />

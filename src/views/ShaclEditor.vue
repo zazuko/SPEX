@@ -16,7 +16,15 @@
           <div class="flex-grow flex flex-col">
             <h2 class="font-bold text-lg px-4 py-2 bg-gray-200">Representation</h2>
 
-            <OverviewTables :datamodel="datamodel" />
+            <graph-layout
+              :nodes="datamodel.tables"
+              :links="links"
+              :active-links="activeLinks"
+            >
+              <template v-slot:node="{ node }">
+                <ResourceCard :resource="node" :active-links="activeLinks" />
+              </template>
+            </graph-layout>
 
             <div class="section" v-if="error">
               <div class="message is-danger">
@@ -40,9 +48,10 @@ import 'splitpanes/dist/splitpanes.css'
 import '@rdfjs-elements/rdf-editor'
 import { parsers } from '@rdf-esm/formats-common'
 import clownface from 'clownface'
-import OverviewTables from '@/components/OverviewTables.vue'
 import { tablesFromSHACL } from '@/shacl'
 import { rdf, sh } from '@/namespace'
+import GraphLayout from '@/components/GraphLayout.vue'
+import ResourceCard from '@/components/ResourceCard.vue'
 
 const formats = [...parsers.keys()]
 
@@ -53,9 +62,10 @@ const initialEditorContent = `
 
 export default {
   components: {
-    OverviewTables,
+    GraphLayout,
     Splitpanes,
-    Pane
+    Pane,
+    ResourceCard,
   },
 
   data () {
@@ -63,14 +73,34 @@ export default {
       format: 'text/turtle',
       formats,
       shacl: initialEditorContent,
-      tables: [],
       datamodel: {
         tables: [],
         viewports: [],
         isIntrospected: false,
       },
-      error: null
+      error: null,
+      activeLinks: [],
     }
+  },
+
+  computed: {
+    links () {
+      const tables = this.datamodel.tables
+      const tableIds = new Set(tables.map(({ id }) => id))
+      return tables
+        .flatMap(table => table.properties.map((property) => ({ ...property, table })))
+        .reduce((acc, property) => {
+          property.values.forEach((value) => {
+            const source = property.table.id
+            const target = value.id
+            if (tableIds.has(target)) {
+              acc.push({ source, target, sourceProperty: property.id, label: property.name })
+            }
+          })
+
+          return acc
+        }, [])
+    },
   },
 
   methods: {
