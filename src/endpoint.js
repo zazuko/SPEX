@@ -213,7 +213,13 @@ export class Endpoint {
 
     const properties = quads.reduce((acc, { predicate, object }) => {
       if (!acc.has(predicate.value)) {
-        acc.set(predicate.value, { id: predicate.value, term: predicate, values: [] })
+        const property = {
+          id: predicate.value,
+          term: predicate,
+          name: this.shrink(predicate.value),
+          values: [],
+        }
+        acc.set(predicate.value, property)
       }
 
       acc.get(predicate.value).values.push(object)
@@ -223,6 +229,11 @@ export class Endpoint {
 
     const term = { value: uri, termType: 'NamedNode' }
 
-    return { id: uri, term, properties: [...properties.values()] }
+    return {
+      id: uri,
+      term,
+      name: this.shrink(term.value),
+      properties: [...properties.values()],
+    }
   }
 }

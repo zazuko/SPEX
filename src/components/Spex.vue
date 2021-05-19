@@ -54,7 +54,25 @@
         </Pane>
 
         <Pane v-if="explorerShown">
-          <TableExplorer :table="exploredTable" :endpoint="endpoint" @close="hideExplorer" />
+          <Splitpanes vertical>
+            <Pane>
+              <TableExplorer
+                :table="exploredTable"
+                :endpoint="endpoint"
+                @close="hideExplorer"
+                @explore-resource="exploreResource"
+              />
+            </Pane>
+            <Pane v-if="exploredResources.length > 0">
+              <ResourcesExplorer
+                :resources="exploredResources"
+                :endpoint="endpoint"
+                @close="hideResourcesExplorer"
+                @explore-resource="exploreResource"
+                @unexplore-resource="unexploreResource"
+              />
+            </Pane>
+          </Splitpanes>
         </Pane>
       </Splitpanes>
     </Pane>
@@ -71,6 +89,7 @@ import { ModalProgrammatic as Modal } from 'buefy'
 import ModalShacl from '@/components/ModalShacl.vue'
 import ModalShaclLoad from '@/components/ModalShaclLoad.vue'
 import OverviewTables from '@/components/OverviewTables.vue'
+import ResourcesExplorer from '@/components/ResourcesExplorer.vue'
 import SettingsPane from '@/components/SettingsPane.vue'
 import TableExplorer from '@/components/TableExplorer.vue'
 import TablesList from '@/components/TablesList.vue'
@@ -79,7 +98,15 @@ import { tablesToSHACL, tablesFromSHACL } from '@/shacl'
 
 export default {
   name: 'Spex',
-  components: { OverviewTables, Pane, SettingsPane, Splitpanes, TableExplorer, TablesList },
+  components: {
+    OverviewTables,
+    Pane,
+    ResourcesExplorer,
+    SettingsPane,
+    Splitpanes,
+    TableExplorer,
+    TablesList,
+  },
 
   props: ['settings'],
 
@@ -91,6 +118,7 @@ export default {
       tablesListShown: false,
       listShown: false,
       exploredTable: null,
+      exploredResources: [],
       datamodel: null,
       isLoading: false,
       error: null
@@ -145,6 +173,19 @@ export default {
     exploreTable (table) {
       this.explorerShown = true
       this.exploredTable = table
+    },
+
+    exploreResource (resource) {
+      this.unexploreResource(resource)
+      this.exploredResources.push(resource)
+    },
+
+    unexploreResource (resource) {
+      this.exploredResources = this.exploredResources.filter((r) => r.id !== resource.id)
+    },
+
+    hideResourcesExplorer () {
+      this.exploredResources = []
     },
 
     toggleTable (table, show) {

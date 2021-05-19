@@ -29,7 +29,12 @@
             <td v-for="(property, index) in table.properties" :key="index">
               <p class="flex items-center" v-for="(value, index) in (row[property.id] || [])" :key="index">
                 <Term :term="value" :endpoint="endpoint" />
-                <TermDescribe :term="value" :endpoint="endpoint" />
+                <b-button
+                  v-if="value.termType === 'NamedNode'"
+                  icon-left="eye"
+                  type="is-white"
+                  @click="$emit('explore-resource', { id: value.value, name: value.value, term: value })"
+                />
               </p>
             </td>
           </tr>
@@ -51,7 +56,6 @@
 
 <script>
 import Term from './Term.vue'
-import TermDescribe from './TermDescribe.vue'
 import TermLink from './TermLink.vue'
 
 export default {
@@ -60,7 +64,6 @@ export default {
 
   components: {
     Term,
-    TermDescribe,
     TermLink,
   },
 
