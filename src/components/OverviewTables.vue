@@ -10,7 +10,6 @@
     <template v-slot:node="{ node }">
       <OverviewTable
         :table="node"
-        :id="node.id"
         :active-links="activeLinks"
         @explore="$emit('explore', $event)"
         @hide="$emit('toggle-table', $event, false)"
