@@ -59,6 +59,7 @@ export default {
   },
 
   async mounted () {
+    this.fetchResources()
   },
 
   watch: {
