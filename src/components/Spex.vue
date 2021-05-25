@@ -53,9 +53,9 @@
           </div>
         </Pane>
 
-        <Pane v-if="explorerShown">
+        <Pane v-if="tableExplorerShown || resourcesExplorerShown">
           <Splitpanes vertical>
-            <Pane>
+            <Pane v-if="tableExplorerShown">
               <TableExplorer
                 :table="exploredTable"
                 :endpoint="endpoint"
@@ -63,7 +63,7 @@
                 @explore-resource="exploreResource"
               />
             </Pane>
-            <Pane v-if="exploredResources.length > 0">
+            <Pane v-if="resourcesExplorerShown">
               <ResourcesExplorer
                 :resources="exploredResources"
                 :endpoint="endpoint"
@@ -114,7 +114,7 @@ export default {
     return {
       endpoint: null,
       settingsShown: false,
-      explorerShown: false,
+      tableExplorerShown: false,
       tablesListShown: false,
       listShown: false,
       exploredTable: null,
@@ -127,6 +127,12 @@ export default {
 
   async mounted () {
     await this.loadEndpoint(this.settings)
+  },
+
+  computed: {
+    resourcesExplorerShown () {
+      return this.exploredResources.length > 0
+    },
   },
 
   methods: {
@@ -171,7 +177,7 @@ export default {
     },
 
     exploreTable (table) {
-      this.explorerShown = true
+      this.tableExplorerShown = true
       this.exploredTable = table
     },
 
@@ -215,12 +221,12 @@ export default {
     },
 
     hideExplorer () {
-      this.explorerShown = false
+      this.tableExplorerShown = false
     },
 
     resetView () {
       this.exploredTable = null
-      this.explorerShown = false
+      this.tableExplorerShown = false
     },
 
     showShacl () {
