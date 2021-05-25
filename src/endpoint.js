@@ -186,8 +186,8 @@ export class Endpoint {
     `
     const results = await this.client.query.construct(query)
 
-    const rows = results.reduce((acc, { subject: { value: subject }, predicate: { value: predicate }, object }) => {
-      const row = acc.get(subject) || { id: subject }
+    const rows = results.reduce((acc, { subject, predicate: { value: predicate }, object }) => {
+      const row = acc.get(subject.value) || { id: subject.value, term: subject }
 
       if (!row[predicate]) {
         row[predicate] = new TermSet()
@@ -195,7 +195,7 @@ export class Endpoint {
 
       row[predicate].add(object)
 
-      acc.set(subject, row)
+      acc.set(subject.value, row)
       return acc
     }, new Map())
 

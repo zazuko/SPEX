@@ -29,12 +29,7 @@
         <template v-slot:property-value="{ value }">
           <div class="flex items-center">
             <Term :term="value" :endpoint="endpoint" />
-            <b-button
-              v-if="value.termType === 'NamedNode'"
-              icon-left="eye"
-              type="is-white"
-              @click="$emit('explore-resource', { id: value.value ,name: value.value, term: value })"
-            />
+            <TermExploreButton :term="value" @explore-resource="$emit('explore-resource', $event)" />
           </div>
         </template>
       </ResourceCard>
@@ -46,10 +41,11 @@
 import GraphLayout from '../components/GraphLayout.vue'
 import ResourceCard from '../components/ResourceCard.vue'
 import Term from '../components/Term.vue'
+import TermExploreButton from '../components/TermExploreButton.vue'
 
 export default {
   name: 'ResourcesExplorer',
-  components: { GraphLayout, ResourceCard, Term },
+  components: { GraphLayout, ResourceCard, Term, TermExploreButton },
   props: ['resources', 'endpoint'],
 
   data () {

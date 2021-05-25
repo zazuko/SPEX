@@ -22,19 +22,15 @@
         <tbody>
           <tr v-for="(row, index) in data" :key="index">
             <td>
-              <TermLink :uri="row.id">
-                {{ row.id }}
-              </TermLink>
+              <p class="flex items-center">
+                <Term :term="row.term" :endpoint="endpoint" />
+                <TermExploreButton :term="row.term" @explore-resource="$emit('explore-resource', $event)" />
+              </p>
             </td>
             <td v-for="(property, index) in table.properties" :key="index">
               <p class="flex items-center" v-for="(value, index) in (row[property.id] || [])" :key="index">
                 <Term :term="value" :endpoint="endpoint" />
-                <b-button
-                  v-if="value.termType === 'NamedNode'"
-                  icon-left="eye"
-                  type="is-white"
-                  @click="$emit('explore-resource', { id: value.value, name: value.value, term: value })"
-                />
+                <TermExploreButton :term="value" @explore-resource="$emit('explore-resource', $event)" />
               </p>
             </td>
           </tr>
@@ -56,7 +52,7 @@
 
 <script>
 import Term from './Term.vue'
-import TermLink from './TermLink.vue'
+import TermExploreButton from './TermExploreButton.vue'
 
 export default {
   name: 'TableExplorer',
@@ -64,7 +60,7 @@ export default {
 
   components: {
     Term,
-    TermLink,
+    TermExploreButton,
   },
 
   async mounted () {
