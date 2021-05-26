@@ -14,7 +14,7 @@ data. For further graph exploration, we recommend tools like [Graph Explorer](ht
 
 ## Usage
 
-You can try a [live instance of SPEX](https://zazuko.github.io/SPEX/).
+You can try a [live instance of SPEX](https://spex.zazuko.com).
 
 SPEX is using SPARQL to see what data is available. As a minimal entry
 point, a SPARQL endpoint has to be provided. Once the SPARQL endpoint is
