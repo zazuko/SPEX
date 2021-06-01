@@ -234,7 +234,11 @@ export default {
       Modal.open({
         parent: this,
         component: ModalShacl,
-        props: { shacl, loadShacl: this.loadShacl },
+        props: {
+          shacl,
+          loadShacl: this.loadShacl,
+          endpoint: this.endpoint,
+        },
         hasModalCard: true,
         trapFocus: true,
       })

@@ -21,6 +21,8 @@
       <rdf-editor
         :value="shaclStr"
         :format="selectedFormat"
+        :prefixes.prop="prefixes"
+        :customPrefixes.prop="customPrefixes"
         ref="snippet"
         readonly
         class="overflow-y-auto"
@@ -31,26 +33,16 @@
 
 <script>
 import '@rdfjs-elements/rdf-editor'
-import { serializers } from '@rdf-esm/formats-common'
 import { ToastProgrammatic as Toast } from 'buefy'
-
-serializers.set('application/ld+json', async () => {
-  const JsonLdExt = (await import('@rdfjs/serializer-jsonld-ext')).default
-
-  return new JsonLdExt({
-    compact: true,
-    encoding: 'string',
-    context: {
-      sh: 'http://www.w3.org/ns/shacl#'
-    }
-  })
-})
 
 export default {
   name: 'ModalShacl',
-  props: ['shacl', 'loadShacl'],
+  props: ['shacl', 'loadShacl', 'endpoint'],
 
   data () {
+    const customPrefixes = this.endpoint.prefixes.reduce((acc, { prefix, url }) =>
+      ({ ...acc, [prefix]: url }), {})
+
     return {
       shaclStr: JSON.stringify(this.shacl, null, 2),
       formats: [
@@ -58,7 +50,9 @@ export default {
         { label: 'Turtle', value: 'text/turtle' },
         { label: 'N-Triples', value: 'application/n-triples' },
       ],
-      selectedFormat: 'application/ld+json'
+      selectedFormat: 'application/ld+json',
+      prefixes: ['sh', 'schema'].join(','),
+      customPrefixes,
     }
   },
 
