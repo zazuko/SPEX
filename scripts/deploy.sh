@@ -11,6 +11,7 @@ fi
 
 git checkout --orphan gh-pages
 npm run build
+echo "spex.zazuko.com" > dist/CNAME
 git --work-tree dist add --all
 git --work-tree dist commit -m 'Deploy'
 git push origin HEAD:gh-pages --force
