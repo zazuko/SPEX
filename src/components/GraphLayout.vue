@@ -119,6 +119,7 @@ export default {
       const initY = Math.max((container.clientHeight - (layout.height * initScale)) / 2, 0)
       const zoom = d3.zoom().scaleExtent([0.1, 1.2]).on('zoom', onZoom)
       containerSelection.call(zoom)
+      setupZoomArrowKeys(containerSelection, zoom)
       if (this.autoZoom) {
         containerSelection.call(zoom.transform, d3.zoomIdentity.translate(initX, initY).scale(initScale))
       }
@@ -306,6 +307,24 @@ function computeLayout (root, nodes, links) {
       }
     }, {}),
   }
+}
+
+function setupZoomArrowKeys (container, zoom) {
+  d3.select('body').on('keydown', (event) => {
+    if (event.target.localName !== 'body') return
+
+    const step = 50
+    const translation = {
+      ArrowUp: [0, step],
+      ArrowRight: [-step, 0],
+      ArrowDown: [0, -step],
+      ArrowLeft: [step, 0],
+    }[event.key]
+
+    if (translation) {
+      container.call(zoom.translateBy, ...translation)
+    }
+  })
 }
 </script>
 
