@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Overview from '../views/Overview.vue'
 
 const ShaclEditor = () => import('../views/ShaclEditor.vue')
+const RdfEditor = () => import('../views/RdfEditor.vue')
 
 Vue.use(VueRouter)
 
@@ -16,6 +17,11 @@ const routes = [
     path: '/shacl',
     name: 'ShaclEditor',
     component: ShaclEditor
+  },
+  {
+    path: '/rdf-editor',
+    name: 'RdfEditor',
+    component: RdfEditor
   }
 ]
 
