@@ -1,26 +1,37 @@
 <template>
   <Splitpanes class="default-theme">
     <Pane size="40">
-      <h2 class="font-bold text-lg px-4 py-2 bg-gray-200">RDF editor</h2>
-      <rdf-editor class="w-full h-full overflow-hidden" :format="format" :value="shacl" ref="shaclEditor" />
-      <div class="p-2 flex gap-2 items-end">
-        <b-field label="Format">
-          <b-select v-model="format">
-            <option v-for="format in formats" :key="format" :value="format">{{ format }}</option>
-          </b-select>
-        </b-field>
-        <b-field class="mb-3 flex-grow">
-          <b-button type="is-primary" icon-left="sync" @click="loadResources" class="w-full">
-            Update representation
-          </b-button>
-        </b-field>
+      <header class="px-4 py-2 bg-gray-200 flex items-center justify-between">
+        <h2 class="font-bold text-lg">RDF editor</h2>
+        <b-select v-model="format">
+          <option v-for="format in formats" :key="format" :value="format">{{ format }}</option>
+        </b-select>
+      </header>
+      <rdf-editor
+        class="w-full h-full overflow-hidden"
+        :format="format"
+        :value="shacl"
+        ref="shaclEditor"
+        auto-parse
+        parseDelay="1000"
+        @parsing-failed="onParsingFailed"
+        @quads-changed="onQuadsChanged"
+      />
+      <div v-if="parseError" class="message is-danger mb-0">
+        <div class="message-body">
+          {{ parseError }}
+        </div>
       </div>
     </Pane>
     <Pane>
       <Splitpanes horizontal>
         <Pane>
           <div class="flex-grow flex flex-col">
-            <h2 class="font-bold text-lg px-4 py-2 bg-gray-200">Representation</h2>
+            <header class="px-4 py-2 bg-gray-200 flex items-center justify-between">
+              <h2 class="font-bold text-lg">Representation</h2>
+              <!-- Hack to fix header height :shrug: -->
+              <b-input class="invisible" readonly />
+            </header>
 
             <GraphLayout
               class="card-content p-0"
@@ -48,14 +59,6 @@
                 </ResourceCard>
               </template>
             </GraphLayout>
-
-            <div class="section" v-if="error">
-              <div class="message is-danger">
-                <div class="message-body">
-                  Error showing data: {{ error }}
-                </div>
-              </div>
-            </div>
           </div>
         </Pane>
       </Splitpanes>
@@ -94,7 +97,7 @@ export default {
       formats,
       shacl: initialEditorContent,
       resources: [],
-      error: null,
+      parseError: null,
       activeLinks: [],
       endpoint: {
         shrink (uri) {
@@ -132,21 +135,6 @@ export default {
   },
 
   methods: {
-    async loadResources () {
-      const editor = this.$refs.shaclEditor
-
-      this.error = null
-      this.resources = []
-
-      try {
-        const quads = await editor.quads
-        const dataset = RDF.dataset(quads)
-        this.resources = extractResources(dataset, this.endpoint)
-      } catch (e) {
-        this.error = e.toString()
-      }
-    },
-
     onLinkHover (link) {
       this.activeLinks.push(link)
     },
@@ -165,6 +153,26 @@ export default {
         link.sourceProperty === property.id
       ))
     },
+
+    onParsingFailed (e) {
+      this.parseError = e?.detail?.error
+    },
+
+    onQuadsChanged (e) {
+      this.parseError = null
+      this.loadResources()
+    },
+
+    async loadResources () {
+      const editor = this.$refs.shaclEditor
+
+      this.resources = []
+
+      const quads = await editor.quads
+      const dataset = RDF.dataset(quads)
+      this.resources = extractResources(dataset, this.endpoint)
+    },
+
   }
 }
 
