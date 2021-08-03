@@ -11,7 +11,6 @@ import {
   Navbar,
   Radio,
   Select,
-  Skeleton,
   Switch,
   Toast,
   Tooltip,
@@ -68,7 +67,6 @@ export function initialize (Vue) {
   Vue.use(Loading)
   Vue.use(Radio)
   Vue.use(Select)
-  Vue.use(Skeleton)
   Vue.use(Switch)
   Vue.use(Toast)
   Vue.use(Tooltip)
