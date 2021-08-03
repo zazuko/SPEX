@@ -9,47 +9,62 @@
       </p>
     </div>
     <form class="card-content" @submit.prevent="onSubmit">
-      <b-field label="Endpoint URL">
-        <b-input v-model="data.url" @blur="fetchGraphs" />
-      </b-field>
-      <b-field label="Username">
-        <b-input v-model="data.user" @blur="fetchGraphs" />
-      </b-field>
-      <b-field label="Password">
-        <b-input type="password" v-model="data.password" password-reveal @blur="fetchGraphs" />
-      </b-field>
-      <b-field label="Graph" :message="fetchError" :type="fetchError ? 'is-danger' : ''">
-        <b-field>
-          <b-autocomplete
-            :data="graphs"
-            :loading="loadingGraphs"
-            placeholder="DEFAULT"
-            v-model="data.graph"
-            @infinite-scroll="fetchMoreGraphs"
-            icon-right="angle-down"
-            expanded
-            check-infinite-scroll
-            open-on-focus
-            clearable
-          ></b-autocomplete>
-        </b-field>
-      </b-field>
-      <b-field label="Custom prefixes" :addons="false" class="flex flex-col items-stretch gap-1">
-        <div v-for="(prefix, index) in data.prefixes" :key="index" class="flex gap-1">
-          <b-input v-model="prefix.prefix" placeholder="schema" class="w-24" required />
-          <b-input v-model="prefix.url" placeholder="http://schema.org/" class="flex-grow" required />
-          <button class="button is-white" title="Remove prefix" @click="removePrefix(index)">
-            <MinusSmIcon class="icon" />
-          </button>
+      <div class="field">
+        <label class="label" for="endpoint">Endpoint URL</label>
+        <input id="endpoint" type="text" class="input" v-model="data.url" @blur="fetchGraphs" />
+      </div>
+      <div class="field">
+        <label class="label" for="username">Username</label>
+        <input id="username" type="text" class="input" v-model="data.user" @blur="fetchGraphs" />
+      </div>
+      <div class="field">
+        <label class="label" for="password">Password</label>
+        <input id="password" type="password" class="input" v-model="data.password" @blur="fetchGraphs" />
+      </div>
+      <div class="field" :class="fetchError ? 'is-danger' : ''">
+        <label class="label" for="graph">Graph</label>
+        <b-autocomplete
+          id="graph"
+          :data="graphs"
+          :loading="loadingGraphs"
+          placeholder="DEFAULT"
+          v-model="data.graph"
+          @infinite-scroll="fetchMoreGraphs"
+          icon-right="angle-down"
+          expanded
+          check-infinite-scroll
+          open-on-focus
+          clearable
+        ></b-autocomplete>
+      </div>
+      <div class="field">
+        <div class="message is-danger" v-if="fetchError">
+          <div class="message-body">
+            {{ fetchError }}
+          </div>
         </div>
-        <p v-if="data.prefixes.length === 0" class="has-text-grey">No custom prefix</p>
-        <p>
-          <button class="button is-white" title="Add prefix" @click="addPrefix">
-            <PlusSmIcon class="icon" />
-          </button>
-        </p>
-      </b-field>
-      <b-field :addons="false">
+      </div>
+      <div class="field">
+        <label class="label">Custom prefixes</label>
+        <div class="flex flex-col gap-1">
+          <div v-for="(prefix, index) in data.prefixes" :key="index" class="flex gap-1">
+            <input type="text" v-model="prefix.prefix" placeholder="schema" class="input w-24" required />
+            <input type="text" v-model="prefix.url" placeholder="http://schema.org/" class="input flex-grow" required />
+            <button class="button is-white" title="Remove prefix" @click="removePrefix(index)">
+              <MinusSmIcon class="icon" />
+            </button>
+          </div>
+          <p v-if="data.prefixes.length === 0" class="has-text-grey">
+            No custom prefix
+          </p>
+          <p>
+            <button class="button is-white" title="Add prefix" @click="addPrefix">
+              <PlusSmIcon class="icon" />
+            </button>
+          </p>
+        </div>
+      </div>
+      <div class="field">
         <b-switch v-model="data.forceIntrospection">
           Force introspection
         </b-switch>
@@ -57,10 +72,10 @@
           By default, the explorer will use the endpoint schema provided at <code>endpoint/.well-known/void</code>
           (if any). Use this option to force an introspection.
         </p>
-      </b-field>
-      <b-field>
+      </div>
+      <div class="field">
         <button class="button is-primary" type="submit">Load</button>
-      </b-field>
+      </div>
     </form>
   </div>
 </template>

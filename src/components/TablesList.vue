@@ -9,8 +9,9 @@
       </p>
     </div>
     <div class="card-content px-0 py-1">
-      <b-field v-show="datamodel.viewports.length > 0" class="m-0 px-2 py-2 border-b" label="Predefined views">
-        <b-select @input="$emit('select-viewport', $event)">
+      <div v-show="datamodel.viewports.length > 0" class="field m-0 px-2 py-2 border-b">
+        <label class="label" for="predefined-views">Predefined views</label>
+        <b-select id="predefined-views" @input="$emit('select-viewport', $event)">
           <option :value="null">-</option>
           <option
             v-for="(viewport, index) in datamodel.viewports"
@@ -18,7 +19,7 @@
             :value="viewport"
           >{{ viewport.name }}</option>
         </b-select>
-      </b-field>
+      </div>
       <ul>
         <li v-for="table in datamodel.tables" :key="table.id" class="panel-block is-justify-content-space-between pr-0">
           <span>{{ table.name }}</span>

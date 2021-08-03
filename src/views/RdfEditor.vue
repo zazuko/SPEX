@@ -30,7 +30,7 @@
             <header class="px-4 py-2 bg-gray-200 flex items-center justify-between">
               <h2 class="font-bold text-lg">Representation</h2>
               <!-- Hack to fix header height :shrug: -->
-              <b-input class="invisible" readonly />
+              <input class="input invisible" readonly />
             </header>
 
             <GraphLayout

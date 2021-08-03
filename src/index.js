@@ -2,9 +2,7 @@ import Vue from 'vue'
 import {
   Autocomplete,
   ConfigProgrammatic,
-  Field,
   Icon,
-  Input,
   Modal,
   Radio,
   Select,
@@ -55,9 +53,7 @@ export function initialize (Vue) {
   Vue.component('FontAwesomeIcon', FontAwesomeIcon)
 
   Vue.use(Autocomplete)
-  Vue.use(Field)
   Vue.use(Icon)
-  Vue.use(Input)
   Vue.use(Modal)
   Vue.use(Radio)
   Vue.use(Select)

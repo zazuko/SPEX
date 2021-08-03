@@ -3,13 +3,18 @@
     <div class="modal-card-head">Load SHACL shapes</div>
     <div class="modal-card-body">
       <form @submit.prevent="onSubmit">
-        <b-field :addons="false" :message="error" :type="{ 'is-danger': error }">
-          <b-input type="textarea" v-model="data" />
+        <div class="field">
+          <textarea type="textarea" class="textarea" v-model="data" :class="{ 'is-danger': error }" />
+          <p class="help is-danger" v-if="error">
+            {{ error }}
+          </p>
           <p class="help">
             Paste your SHACL shapes in <strong>N3</strong> format in the field above.
           </p>
-        </b-field>
-        <b-field><button class="button is-primary" type="submit">Load</button></b-field>
+        </div>
+        <div class="field">
+          <button class="button is-primary" type="submit">Load</button>
+        </div>
       </form>
     </div>
   </div>

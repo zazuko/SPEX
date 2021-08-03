@@ -8,7 +8,7 @@
     </div>
     <div class="modal-card-body overflow-y-hidden flex flex-col pb-0">
       <div class="flex justify-between">
-        <b-field>
+        <div class="field has-addons">
           <b-radio-button
             v-for="format in formats"
             :key="format.value"
@@ -17,7 +17,7 @@
           >
             {{ format.label }}
           </b-radio-button>
-        </b-field>
+        </div>
         <button class="button" @click="copy">
           <ClipboardCopyIcon class="icon" />
           <span>Copy</span>
