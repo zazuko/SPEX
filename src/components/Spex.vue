@@ -3,25 +3,17 @@
     <Pane>
       <Splitpanes horizontal class="h-full">
         <Pane class="flex flex-col">
-          <b-navbar shadow>
-            <template #start>
-              <b-navbar-item tag="div" class="p-0">
-                <b-button type="is-white" icon-right="cog" title="Options" @click="showSettings">
-                  <h2>
-                    <span v-if="endpoint">{{ endpoint.url }}</span>
-                    <span v-else>No endpoint configured yet</span>
-                  </h2>
-                </b-button>
-              </b-navbar-item>
-            </template>
-            <template #end>
-              <b-navbar-item tag="div" class="p-0">
-                <b-button v-if="endpoint && !error" type="is-white" @click="showShacl">
-                  SHACL
-                </b-button>
-              </b-navbar-item>
-            </template>
-          </b-navbar>
+          <div class="z-10 py-1 shadow-sm flex justify-between items-center">
+            <b-button type="is-white" icon-right="cog" title="Options" @click="showSettings">
+              <h2>
+                <span v-if="endpoint">{{ endpoint.url }}</span>
+                <span v-else>No endpoint configured yet</span>
+              </h2>
+            </b-button>
+            <b-button v-if="endpoint && !error" type="is-white" size="is-small" @click="showShacl">
+              SHACL
+            </b-button>
+          </div>
 
           <Splitpanes vertical v-if="datamodel" class="overflow-hidden">
             <Pane size="20" v-if="tablesListShown">

@@ -8,7 +8,6 @@ import {
   Input,
   Loading,
   Modal,
-  Navbar,
   Radio,
   Select,
   Switch,
@@ -63,7 +62,6 @@ export function initialize (Vue) {
   Vue.use(Icon)
   Vue.use(Input)
   Vue.use(Modal)
-  Vue.use(Navbar)
   Vue.use(Loading)
   Vue.use(Radio)
   Vue.use(Select)
