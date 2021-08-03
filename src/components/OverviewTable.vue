@@ -2,10 +2,14 @@
   <ResourceCard :resource="table" :active-links="activeLinks" v-on="$listeners">
     <template v-slot:actions>
       <b-tooltip label="Hide">
-        <b-button type="is-light" icon-left="eye-slash" @click="$emit('hide', table)" />
+        <button class="button is-light" @click="$emit('hide', table)">
+          <EyeOffIcon class="icon" />
+        </button>
       </b-tooltip>
       <b-tooltip label="Explore">
-        <b-button type="is-light" icon-left="table" @click="$emit('explore', table)" />
+        <button class="button is-light" @click="$emit('explore', table)">
+          <TableIcon class="icon" />
+        </button>
       </b-tooltip>
     </template>
   </ResourceCard>
@@ -13,10 +17,12 @@
 
 <script>
 import ResourceCard from './ResourceCard.vue'
+import EyeOffIcon from './icons/EyeOffIcon.vue'
+import TableIcon from './icons/TableIcon.vue'
 
 export default {
   name: 'OverviewTable',
   props: ['table', 'activeLinks'],
-  components: { ResourceCard },
+  components: { EyeOffIcon, ResourceCard, TableIcon },
 }
 </script>

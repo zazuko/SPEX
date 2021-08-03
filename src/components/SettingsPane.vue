@@ -3,7 +3,9 @@
     <div class="card-header has-background-light">
       <h3 class="card-header-title">Options</h3>
       <p class="card-header-icon py-0 px-1">
-        <b-button icon-left="times" type="is-light" @click="onClose" class="button is-white" title="Close" />
+        <button class="button is-light" @click="onClose" title="Close">
+          <XIcon class="icon" />
+        </button>
       </p>
     </div>
     <form class="card-content" @submit.prevent="onSubmit">
@@ -36,11 +38,15 @@
         <div v-for="(prefix, index) in data.prefixes" :key="index" class="flex gap-1">
           <b-input v-model="prefix.prefix" placeholder="schema" class="w-24" required />
           <b-input v-model="prefix.url" placeholder="http://schema.org/" class="flex-grow" required />
-          <b-button type="is-white" icon-left="minus" title="Remove prefix" @click="removePrefix(index)" />
+          <button class="button is-white" title="Remove prefix" @click="removePrefix(index)">
+            <MinusSmIcon class="icon" />
+          </button>
         </div>
         <p v-if="data.prefixes.length === 0" class="has-text-grey">No custom prefix</p>
         <p>
-          <b-button type="is-white" icon-left="plus" title="Add prefix" @click="addPrefix" />
+          <button class="button is-white" title="Add prefix" @click="addPrefix">
+            <PlusSmIcon class="icon" />
+          </button>
         </p>
       </b-field>
       <b-field :addons="false">
@@ -52,7 +58,9 @@
           (if any). Use this option to force an introspection.
         </p>
       </b-field>
-      <b-field><button class="button is-primary" type="submit">Load</button></b-field>
+      <b-field>
+        <button class="button is-primary" type="submit">Load</button>
+      </b-field>
     </form>
   </div>
 </template>
@@ -60,12 +68,16 @@
 <script>
 import { Endpoint } from '@/endpoint'
 import cloneDeep from 'lodash.clonedeep'
+import MinusSmIcon from './icons/MinusSmIcon.vue'
+import PlusSmIcon from './icons/PlusSmIcon.vue'
+import XIcon from './icons/XIcon.vue'
 
 const graphsPageSize = 10
 
 export default {
   name: 'SettingsPane',
   props: ['settings'],
+  components: { MinusSmIcon, PlusSmIcon, XIcon },
 
   data () {
     return {

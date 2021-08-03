@@ -3,7 +3,9 @@
     <div class="card-header has-background-light">
       <h3 class="card-header-title">Classes</h3>
       <p class="card-header-icon py-0 px-1">
-        <b-button icon-left="times" type="is-light" @click="$emit('close')"></b-button>
+        <button class="button is-light" @click="$emit('close')">
+          <XIcon class="icon" />
+        </button>
       </p>
     </div>
     <div class="card-content px-0 py-1">
@@ -28,8 +30,11 @@
 </template>
 
 <script>
+import XIcon from './icons/XIcon.vue'
+
 export default {
   name: 'TablesList',
   props: ['datamodel'],
+  components: { XIcon },
 }
 </script>

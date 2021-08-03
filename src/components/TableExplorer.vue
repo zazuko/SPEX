@@ -6,7 +6,9 @@
         <span v-else>No table selected</span>
       </h3>
       <p class="card-header-icon py-0 px-1">
-        <b-button type="is-light" icon-left="times" @click="onClose" title="Close" />
+        <button class="button is-light" @click="onClose" title="Close">
+          <XIcon class="icon" />
+        </button>
       </p>
     </div>
     <div class="card-content p-0 overflow-auto">
@@ -53,14 +55,15 @@
 <script>
 import Term from './Term.vue'
 import TermExploreButton from './TermExploreButton.vue'
+import XIcon from './icons/XIcon.vue'
 
 export default {
   name: 'TableExplorer',
   props: ['table', 'tables', 'endpoint'],
-
   components: {
     Term,
     TermExploreButton,
+    XIcon,
   },
 
   async mounted () {

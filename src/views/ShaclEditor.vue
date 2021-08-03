@@ -8,7 +8,10 @@
           <option v-for="format in formats" :key="format" :value="format">{{ format }}</option>
         </b-select>
       </b-field>
-      <b-button type="is-primary" icon-left="sync" @click="loadShacl">Update</b-button>
+      <button class="button is-primary" @click="loadShacl">
+        <RefreshIcon class="icon" />
+        <span>Update</span>
+      </button>
     </Pane>
     <Pane>
       <Splitpanes horizontal>
@@ -52,6 +55,7 @@ import { tablesFromSHACL } from '@/shacl'
 import { rdf, sh } from '@/namespace'
 import GraphLayout from '@/components/GraphLayout.vue'
 import ResourceCard from '@/components/ResourceCard.vue'
+import RefreshIcon from '@/components/icons/RefreshIcon.vue'
 
 const formats = [...parsers.keys()]
 
@@ -65,6 +69,7 @@ export default {
     GraphLayout,
     Splitpanes,
     Pane,
+    RefreshIcon,
     ResourceCard,
   },
 

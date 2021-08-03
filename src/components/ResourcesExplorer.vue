@@ -5,7 +5,9 @@
         Resources explorer
       </h3>
       <p class="card-header-icon py-0 px-1">
-        <b-button type="is-light" icon-left="times" @click="$emit('close')" title="Close" />
+        <button class="button is-light" @click="$emit('close')" title="Close">
+          <XIcon class="icon" />
+        </button>
       </p>
     </div>
     <GraphLayout
@@ -28,12 +30,14 @@
         >
           <template v-slot:actions>
             <b-tooltip label="Open URI in new tab">
-              <a :href="node.id" target="_blank" rel="noopener noreferrer" class="button is-light flex items-baseline gap-2">
-                <b-icon icon="external-link-alt" class="w-5" />
+              <a :href="node.id" target="_blank" rel="noopener noreferrer" class="button is-light">
+                <ExternalLinkIcon class="icon" />
               </a>
             </b-tooltip>
             <b-tooltip label="Hide">
-              <b-button type="is-light" icon-left="eye-slash" @click="$emit('unexplore-resource', node)" />
+              <button class="button is-light" @click="$emit('unexplore-resource', node)">
+                <EyeOffIcon class="icon" />
+              </button>
             </b-tooltip>
           </template>
           <template v-slot:property-value="{ value }">
@@ -49,14 +53,17 @@
 </template>
 
 <script>
+import ExternalLinkIcon from '../components/icons/ExternalLinkIcon.vue'
+import EyeOffIcon from './icons/EyeOffIcon.vue'
 import GraphLayout from '../components/GraphLayout.vue'
 import ResourceCard from '../components/ResourceCard.vue'
 import Term from '../components/Term.vue'
 import TermExploreButton from '../components/TermExploreButton.vue'
+import XIcon from '../components/icons/XIcon.vue'
 
 export default {
   name: 'ResourcesExplorer',
-  components: { GraphLayout, ResourceCard, Term, TermExploreButton },
+  components: { ExternalLinkIcon, EyeOffIcon, GraphLayout, ResourceCard, Term, TermExploreButton, XIcon },
   props: ['resources', 'endpoint'],
 
   data () {

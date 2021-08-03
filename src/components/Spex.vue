@@ -4,15 +4,16 @@
       <Splitpanes horizontal class="h-full">
         <Pane class="flex flex-col">
           <div class="z-10 py-1 shadow-sm flex justify-between items-center">
-            <b-button type="is-white" icon-right="cog" title="Options" @click="showSettings">
+            <button class="button is-white flex items-center gap-1" title="Options" @click="showSettings">
               <h2>
                 <span v-if="endpoint">{{ endpoint.url }}</span>
                 <span v-else>No endpoint configured yet</span>
               </h2>
-            </b-button>
-            <b-button v-if="endpoint && !error" type="is-white" size="is-small" @click="showShacl">
+              <CogIcon class="icon" />
+            </button>
+            <button v-if="endpoint && !error" class="button is-white is-small" @click="showShacl">
               SHACL
-            </b-button>
+            </button>
           </div>
 
           <Splitpanes vertical v-if="datamodel" class="overflow-hidden">
@@ -25,9 +26,12 @@
               />
             </Pane>
             <Pane class="relative h-full">
-              <b-button v-show="!tablesListShown" icon-left="bars" class="z-10 absolute m-3" @click="showTablesList">
-                Classes
-              </b-button>
+              <div class="z-10 absolute m-3">
+                <button v-show="!tablesListShown" class="button" @click="showTablesList">
+                  <MenuIcon class="icon" />
+                  <span>Classes</span>
+                </button>
+              </div>
               <OverviewTables :datamodel="datamodel" @explore="exploreTable" @toggle-table="toggleTable" />
             </Pane>
           </Splitpanes>
@@ -85,12 +89,16 @@ import ResourcesExplorer from '@/components/ResourcesExplorer.vue'
 import SettingsPane from '@/components/SettingsPane.vue'
 import TableExplorer from '@/components/TableExplorer.vue'
 import TablesList from '@/components/TablesList.vue'
+import CogIcon from '@/components/icons/CogIcon.vue'
+import MenuIcon from '@/components/icons/MenuIcon.vue'
 import { Endpoint } from '@/endpoint'
 import { tablesToSHACL, tablesFromSHACL } from '@/shacl'
 
 export default {
   name: 'Spex',
   components: {
+    CogIcon,
+    MenuIcon,
     OverviewTables,
     Pane,
     ResourcesExplorer,

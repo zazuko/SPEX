@@ -2,7 +2,9 @@
   <div class="modal-card w-auto">
     <div class="modal-card-head flex justify-between py-4">
       <h3>Generated SHACL shapes</h3>
-      <b-button icon-left="upload" title="Load SHACL shapes" @click="load"></b-button>
+      <button class="button" title="Load SHACL shapes" @click="load">
+        <UploadIcon class="icon" />
+      </button>
     </div>
     <div class="modal-card-body overflow-y-hidden flex flex-col pb-0">
       <div class="flex justify-between">
@@ -16,7 +18,10 @@
             {{ format.label }}
           </b-radio-button>
         </b-field>
-        <b-button icon-left="clipboard" @click="copy">Copy</b-button>
+        <button class="button" @click="copy">
+          <ClipboardCopyIcon class="icon" />
+          <span>Copy</span>
+        </button>
       </div>
       <rdf-editor
         :value="shaclStr"
@@ -34,9 +39,12 @@
 <script>
 import '@rdfjs-elements/rdf-editor'
 import { ToastProgrammatic as Toast } from 'buefy'
+import ClipboardCopyIcon from './icons/ClipboardCopyIcon.vue'
+import UploadIcon from './icons/UploadIcon.vue'
 
 export default {
   name: 'ModalShacl',
+  components: { ClipboardCopyIcon, UploadIcon },
   props: ['shacl', 'loadShacl', 'endpoint'],
 
   data () {

@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import {
   Autocomplete,
-  Button,
   ConfigProgrammatic,
   Field,
   Icon,
@@ -57,7 +56,6 @@ export function initialize (Vue) {
   Vue.component('FontAwesomeIcon', FontAwesomeIcon)
 
   Vue.use(Autocomplete)
-  Vue.use(Button)
   Vue.use(Field)
   Vue.use(Icon)
   Vue.use(Input)
