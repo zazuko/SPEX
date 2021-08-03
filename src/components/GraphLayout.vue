@@ -1,7 +1,7 @@
 <template>
-  <div class="flex-grow bg-gray-50 relative overflow-hidden">
-    <div ref="layout" class="relative">
-      <div v-for="node in nodes" :key="node.id" class="node absolute">
+  <div class="graph-layout">
+    <div ref="layout" class="layout">
+      <div v-for="node in nodes" :key="node.id" class="node" :data-id="node.id">
         <slot name="node" :node="node">
           Missing slot
         </slot>
@@ -158,6 +158,8 @@ export default {
         .force('posY', null)
 
       function renderSimulation () {
+        const currentScale = d3.zoomTransform(containerSelection.node()).k
+
         // Update node positions
         node
           .join()
@@ -166,8 +168,8 @@ export default {
         // Update link positions
         const computeLinkPath = d3
           .linkHorizontal()
-          .source((d) => sourcePoint(d, container))
-          .target((d) => targetClosestAnchor(d, container))
+          .source((d) => sourcePoint(d, container, currentScale))
+          .target((d) => targetClosestAnchor(d, container, currentScale))
           .x(({ x }) => x)
           .y(({ y }) => y)
 
@@ -211,23 +213,38 @@ export default {
 /**
  * Property link source point
  */
-function sourcePoint (d, container) {
+function sourcePoint (d, container, scale) {
   const radius = 3
-  const sourceElt = container.querySelector(`[data-id="${d.source.id}${d.sourceProperty}"]`)
-  const offsetX = d.target.x > d.source.x ? (sourceElt.clientWidth + radius) : -radius
-  const magic = 60 // TODO: Don't know where this difference is coming from...
+  const sourceNodeElt = container.querySelector(`[data-id="${d.source.id}"]`)
+  const sourcePropertyElt = sourceNodeElt.querySelector(`[data-id="${d.sourceProperty}"]`)
+
+  const sourceElt = sourcePropertyElt ?? sourceNodeElt
+  const offsetX = d.target.x > d.source.x
+    ? (sourceElt.clientWidth + radius)
+    : -radius
+
+  const offsetY = sourcePropertyElt
+    ? (
+        (
+          (sourcePropertyElt.getBoundingClientRect().y / scale) -
+          (sourceNodeElt.getBoundingClientRect().y / scale)
+        ) +
+        (sourcePropertyElt.clientHeight / 2)
+      )
+    : sourceNodeElt.clientHeight / 2
+
   return {
     x: d.source.x + offsetX,
-    y: d.source.y + sourceElt.offsetTop + magic,
+    y: d.source.y + offsetY,
   }
 }
 
 /**
  * Find closest point to link to target node
  */
-function targetClosestAnchor (d, container) {
+function targetClosestAnchor (d, container, scale) {
   const targetElt = container.querySelector(`[data-id="${d.target.id}"]`)
-  const source = sourcePoint(d, container)
+  const source = sourcePoint(d, container, scale)
   return nearestPointOnPerimeter(source, d.target, targetElt.clientWidth, targetElt.clientHeight)
 }
 
@@ -329,6 +346,21 @@ function setupZoomArrowKeys (container, zoom) {
 </script>
 
 <style scoped>
+.graph-layout {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+}
+
+.layout {
+  position: relative;
+}
+
+.node {
+  position: absolute;
+}
+
 .links {
   flex-grow: 1;
   flex-basis: 100%;

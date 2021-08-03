@@ -1,5 +1,5 @@
 <template>
-  <div class="absolute border rounded shadow-md bg-white opacity-90 text-sm" :class="{ active: isActive }" :data-id="resource.id">
+  <div class="border rounded shadow-md bg-white opacity-90 text-sm" :class="{ active: isActive }">
     <header
       class="bg-gray-100 flex items-center gap-4 justify-between px-3 py-2"
       @mouseenter="$emit('hover-title', resource)"
@@ -18,7 +18,7 @@
       <tr
         v-for="(property, index) in resource.properties"
         :key="index"
-        :data-id="resource.id + property.id"
+        :data-id="property.id"
         :class="{ active: isPropertyActive(property) }"
         @mouseenter="$emit('hover-property', resource, property)"
         @mouseleave="$emit('unhover-property', resource, property)"
