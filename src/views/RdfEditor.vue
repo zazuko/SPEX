@@ -3,9 +3,13 @@
     <Pane size="40">
       <header class="px-4 py-2 bg-gray-200 flex items-center justify-between">
         <h2 class="font-bold text-lg">RDF editor</h2>
-        <b-select v-model="format">
-          <option v-for="format in formats" :key="format" :value="format">{{ format }}</option>
-        </b-select>
+        <div class="select">
+          <select v-model="format">
+            <option v-for="format in formats" :key="format" :value="format">
+              {{ format }}
+            </option>
+          </select>
+        </div>
       </header>
       <rdf-editor
         class="w-full h-full overflow-hidden"

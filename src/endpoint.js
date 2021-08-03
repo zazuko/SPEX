@@ -97,6 +97,8 @@ export class Endpoint {
       : null
 
     const viewports = dataset.out(spex.viewport).map(viewport => ({
+      id: viewport.term.value,
+      term: viewport.term,
       name: viewport.out(schema.name, { language: displayLanguage }).value,
       tables: new Set(viewport.out(spex.includes).terms.map(({ value }) => value)),
     }))

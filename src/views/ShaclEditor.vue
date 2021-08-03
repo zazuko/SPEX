@@ -5,9 +5,13 @@
       <rdf-editor class="w-full h-full overflow-hidden" :format="format" :value="shacl" ref="shaclEditor" />
       <div class="field">
         <label class="label" for="format">Format</label>
-        <b-select id="format" v-model="format">
-          <option v-for="format in formats" :key="format" :value="format">{{ format }}</option>
-        </b-select>
+        <div class="select">
+          <select id="format" v-model="format">
+            <option v-for="format in formats" :key="format" :value="format">
+              {{ format }}
+            </option>
+          </select>
+        </div>
       </div>
       <button class="button is-primary" @click="loadShacl">
         <RefreshIcon class="icon" />

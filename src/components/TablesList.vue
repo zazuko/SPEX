@@ -11,14 +11,16 @@
     <div class="card-content px-0 py-1">
       <div v-show="datamodel.viewports.length > 0" class="field m-0 px-2 py-2 border-b">
         <label class="label" for="predefined-views">Predefined views</label>
-        <b-select id="predefined-views" @input="$emit('select-viewport', $event)">
-          <option :value="null">-</option>
-          <option
-            v-for="(viewport, index) in datamodel.viewports"
-            :key="index"
-            :value="viewport"
-          >{{ viewport.name }}</option>
-        </b-select>
+        <div class="select">
+          <select id="predefined-views" @input="selectViewport">
+            <option value="">-</option>
+            <option
+              v-for="viewport in datamodel.viewports"
+              :key="viewport.id"
+              :value="viewport.id"
+            >{{ viewport.name }}</option>
+          </select>
+        </div>
       </div>
       <ul>
         <li v-for="table in datamodel.tables" :key="table.id" class="panel-block is-justify-content-space-between pr-0">
@@ -37,5 +39,14 @@ export default {
   name: 'TablesList',
   props: ['datamodel'],
   components: { XIcon },
+
+  methods: {
+    selectViewport (event) {
+      const id = event.target.value
+      const viewport = this.datamodel.viewports.find(viewport => viewport.id === id) ?? null
+
+      this.$emit('select-viewport', viewport)
+    },
+  },
 }
 </script>
