@@ -36,8 +36,8 @@
             </Pane>
           </Splitpanes>
 
-          <div class="section relative" v-if="isLoading">
-            <b-loading active :is-full-page="false" />
+          <div class="m-auto" v-if="isLoading">
+            <loading-spinner />
           </div>
 
           <div class="section" v-if="error">
@@ -90,6 +90,7 @@ import SettingsPane from '@/components/SettingsPane.vue'
 import TableExplorer from '@/components/TableExplorer.vue'
 import TablesList from '@/components/TablesList.vue'
 import CogIcon from '@/components/icons/CogIcon.vue'
+import LoadingSpinner from '@/components/LoadingSpinner.vue'
 import MenuIcon from '@/components/icons/MenuIcon.vue'
 import { Endpoint } from '@/endpoint'
 import { tablesToSHACL, tablesFromSHACL } from '@/shacl'
@@ -98,6 +99,7 @@ export default {
   name: 'Spex',
   components: {
     CogIcon,
+    LoadingSpinner,
     MenuIcon,
     OverviewTables,
     Pane,

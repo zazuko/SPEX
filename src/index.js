@@ -5,7 +5,6 @@ import {
   Field,
   Icon,
   Input,
-  Loading,
   Modal,
   Radio,
   Select,
@@ -60,7 +59,6 @@ export function initialize (Vue) {
   Vue.use(Icon)
   Vue.use(Input)
   Vue.use(Modal)
-  Vue.use(Loading)
   Vue.use(Radio)
   Vue.use(Select)
   Vue.use(Switch)

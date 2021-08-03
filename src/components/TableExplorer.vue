@@ -40,8 +40,8 @@
       </table>
     </div>
 
-    <div class="section relative" v-if="isLoading">
-      <b-loading active :is-full-page="false" />
+    <div class="m-auto" v-if="isLoading">
+      <loading-spinner />
     </div>
 
     <div class="message is-danger" v-if="error">
@@ -53,6 +53,7 @@
 </template>
 
 <script>
+import LoadingSpinner from './LoadingSpinner.vue'
 import Term from './Term.vue'
 import TermExploreButton from './TermExploreButton.vue'
 import XIcon from './icons/XIcon.vue'
@@ -61,6 +62,7 @@ export default {
   name: 'TableExplorer',
   props: ['table', 'tables', 'endpoint'],
   components: {
+    LoadingSpinner,
     Term,
     TermExploreButton,
     XIcon,
