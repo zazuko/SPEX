@@ -5,7 +5,6 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint",
     "deploy": "./scripts/deploy.sh",
     "build-lib": "vue-cli-service build --target lib --formats umd,umd-min --inline-vue --name spex ./src/index.js",
@@ -50,10 +49,8 @@
     "@vue/cli-plugin-eslint": "^5.0.0-beta.0",
     "@vue/cli-plugin-pwa": "~4.5.12",
     "@vue/cli-plugin-router": "~4.5.12",
-    "@vue/cli-plugin-unit-jest": "~4.5.12",
     "@vue/cli-service": "~4.5.12",
     "@vue/eslint-config-standard": "^6.0.0",
-    "@vue/test-utils": "^1.2.0",
     "eslint": "^7.25.0",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-node": "^11.1.0",
@@ -78,27 +75,13 @@
       "no-unused-vars": "warn",
       "padded-blocks": "warn",
       "comma-dangle": "off"
-    },
-    "overrides": [
-      {
-        "files": [
-          "**/__tests__/*.{j,t}s?(x)",
-          "**/tests/unit/**/*.spec.{j,t}s?(x)"
-        ],
-        "env": {
-          "jest": true
-        }
-      }
-    ]
+    }
   },
   "browserslist": [
     "> 1%",
     "last 2 versions",
     "not dead"
   ],
-  "jest": {
-    "preset": "@vue/cli-plugin-unit-jest"
-  },
   "license": "MIT",
   "repository": {
     "type": "git",
