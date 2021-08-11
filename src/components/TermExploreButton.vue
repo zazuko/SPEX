@@ -1,18 +1,19 @@
 <template>
-  <b-tooltip v-if="canExplore" label="Explore">
+  <Tooltip v-if="canExplore" label="Explore">
     <button class="button is-white is-small" @click="$emit('explore-resource', resource)">
       <EyeIcon class="icon" />
     </button>
-  </b-tooltip>
+  </Tooltip>
 </template>
 
 <script>
 import EyeIcon from './icons/EyeIcon.vue'
+import Tooltip from './Tooltip.vue'
 
 export default {
   name: 'TermExploreButton',
   props: ['term', 'endpoint'],
-  components: { EyeIcon },
+  components: { EyeIcon, Tooltip },
 
   computed: {
     canExplore () {

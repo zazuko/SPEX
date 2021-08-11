@@ -29,16 +29,16 @@
           @unhover-property="onUnhover"
         >
           <template v-slot:actions>
-            <b-tooltip label="Open URI in new tab">
+            <Tooltip label="Open URI in new tab">
               <a :href="node.id" target="_blank" rel="noopener noreferrer" class="button is-light">
                 <ExternalLinkIcon class="icon" />
               </a>
-            </b-tooltip>
-            <b-tooltip label="Hide">
+            </Tooltip>
+            <Tooltip label="Hide">
               <button class="button is-light" @click="$emit('unexplore-resource', node)">
                 <EyeOffIcon class="icon" />
               </button>
-            </b-tooltip>
+            </Tooltip>
           </template>
           <template v-slot:property-value="{ value }">
             <div class="flex items-center">
@@ -59,11 +59,12 @@ import GraphLayout from '../components/GraphLayout.vue'
 import ResourceCard from '../components/ResourceCard.vue'
 import Term from '../components/Term.vue'
 import TermExploreButton from '../components/TermExploreButton.vue'
+import Tooltip from './Tooltip.vue'
 import XIcon from '../components/icons/XIcon.vue'
 
 export default {
   name: 'ResourcesExplorer',
-  components: { ExternalLinkIcon, EyeOffIcon, GraphLayout, ResourceCard, Term, TermExploreButton, XIcon },
+  components: { ExternalLinkIcon, EyeOffIcon, GraphLayout, ResourceCard, Term, TermExploreButton, Tooltip, XIcon },
   props: ['resources', 'endpoint'],
 
   data () {
