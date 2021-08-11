@@ -1,4 +1,4 @@
-@import '~buefy/dist/buefy.css';
+@import '~bulma/css/bulma.css';
 
 @tailwind base;
 @tailwind components;

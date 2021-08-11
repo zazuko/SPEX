@@ -17,9 +17,6 @@
     "/dist/spex.umd.min.js"
   ],
   "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^1.2.35",
-    "@fortawesome/free-solid-svg-icons": "^5.15.3",
-    "@fortawesome/vue-fontawesome": "^2.0.2",
     "@headlessui/vue": "^1.4.0",
     "@rdfjs-elements/rdf-editor": "^0.4.1",
     "@rdfjs/dataset": "^1.1.0",
@@ -28,7 +25,7 @@
     "@rdfjs/term-set": "^1.0.2",
     "@tpluscode/rdf-string": "^0.2.23",
     "@zazuko/rdf-vocabularies": "^2021.5.3",
-    "buefy": "^0.9.7",
+    "bulma": "^0.9.3",
     "clownface": "^1.2.0",
     "core-js": "^3.11.2",
     "d3": "~7.0.0",
