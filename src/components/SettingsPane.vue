@@ -1,5 +1,5 @@
 <template>
-  <div class="card is-shadowless overflow-y-auto">
+  <div class="card is-shadowless h-full overflow-y-auto">
     <div class="card-header has-background-light">
       <h3 class="card-header-title">Options</h3>
       <p class="card-header-icon py-0 px-1">
@@ -23,19 +23,14 @@
       </div>
       <div class="field" :class="fetchError ? 'is-danger' : ''">
         <label class="label" for="graph">Graph</label>
-        <b-autocomplete
+        <SelectGraph
           id="graph"
-          :data="graphs"
-          :loading="loadingGraphs"
-          placeholder="DEFAULT"
           v-model="data.graph"
-          @infinite-scroll="fetchMoreGraphs"
-          icon-right="angle-down"
-          expanded
-          check-infinite-scroll
-          open-on-focus
-          clearable
-        ></b-autocomplete>
+          :graphs="graphs"
+          :loading="loadingGraphs"
+          :has-more-graphs="hasMoreGraphs"
+          @fetch-more="fetchMoreGraphs"
+        />
       </div>
       <div class="field">
         <div class="message is-danger" v-if="fetchError">
@@ -65,9 +60,10 @@
         </div>
       </div>
       <div class="field">
-        <b-switch v-model="data.forceIntrospection">
+        <label class="label flex items-center gap-2">
+          <Switch v-model="data.forceIntrospection" />
           Force introspection
-        </b-switch>
+        </label>
         <p class="help">
           By default, the explorer will use the endpoint schema provided at <code>endpoint/.well-known/void</code>
           (if any). Use this option to force an introspection.
@@ -86,18 +82,22 @@ import cloneDeep from 'lodash.clonedeep'
 import MinusSmIcon from './icons/MinusSmIcon.vue'
 import PlusSmIcon from './icons/PlusSmIcon.vue'
 import XIcon from './icons/XIcon.vue'
+import SelectGraph from './SelectGraph.vue'
+import Switch from './Switch.vue'
 
 const graphsPageSize = 10
 
 export default {
   name: 'SettingsPane',
   props: ['settings'],
-  components: { MinusSmIcon, PlusSmIcon, XIcon },
+  components: { MinusSmIcon, SelectGraph, PlusSmIcon, Switch, XIcon },
+  emits: ['change', 'close'],
 
   data () {
     return {
       endpoint: null,
       graphs: [],
+      hasMoreGraphs: false,
       loadingGraphs: false,
       fetchError: null,
       graphsOffset: 0,
@@ -136,8 +136,10 @@ export default {
 
       try {
         const page = { offset: this.graphsOffset, limit: graphsPageSize }
+        const graphs = await this.endpoint.fetchGraphs(page)
         this.graphsOffset = this.graphsOffset + graphsPageSize
-        return await this.endpoint.fetchGraphs(page)
+        this.hasMoreGraphs = graphs.length >= graphsPageSize
+        return graphs
       } catch (e) {
         this.fetchError = e.toString()
         return []

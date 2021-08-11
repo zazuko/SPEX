@@ -23,9 +23,12 @@
         </div>
       </div>
       <ul>
-        <li v-for="table in datamodel.tables" :key="table.id" class="panel-block is-justify-content-space-between pr-0">
+        <li v-for="table in datamodel.tables" :key="table.id" class="panel-block is-justify-content-space-between">
           <span>{{ table.name }}</span>
-          <b-switch type="is-primary" :value="table.isShown" @input="$emit('toggle-table', table, $event)" />
+          <Switch
+            :modelValue="table.isShown"
+            @update:modelValue="$emit('toggle-table', table, $event)"
+          />
         </li>
       </ul>
     </div>
@@ -34,11 +37,12 @@
 
 <script>
 import XIcon from './icons/XIcon.vue'
+import Switch from './Switch.vue'
 
 export default {
   name: 'TablesList',
   props: ['datamodel'],
-  components: { XIcon },
+  components: { Switch, XIcon },
 
   methods: {
     selectViewport (event) {
