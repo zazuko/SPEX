@@ -6,9 +6,9 @@
       @mouseleave="$emit('unhover-title', resource)"
     >
       <h3 class="font-bold">
-        <TermTooltip :label="resource.id">
+        <Tooltip :label="resource.id">
           {{ resource.name }}
-        </TermTooltip>
+        </Tooltip>
       </h3>
       <span class="flex flex-nowrap">
         <slot name="actions" />
@@ -24,16 +24,16 @@
         @mouseleave="$emit('unhover-property', resource, property)"
       >
         <th class="border-b px-3 py-2">
-          <TermTooltip :label="property.id">
+          <Tooltip :label="property.id">
             {{ property.name }}
-          </TermTooltip>
+          </Tooltip>
         </th>
         <td class="border-b px-3 py-2">
           <div v-for="value in property.values" :key="value.id">
             <slot name="property-value" :value="value">
-              <TermTooltip :label="value.id">
+              <Tooltip :label="value.id">
                 {{ value.name }}
-              </TermTooltip>
+              </Tooltip>
             </slot>
           </div>
         </td>
@@ -43,7 +43,7 @@
 </template>
 
 <script>
-import TermTooltip from './TermTooltip.vue'
+import Tooltip from './Tooltip.vue'
 
 export default {
   name: 'ResourceCard',
@@ -52,7 +52,7 @@ export default {
     'activeLinks',
   ],
 
-  components: { TermTooltip },
+  components: { Tooltip },
 
   data () {
     return {}

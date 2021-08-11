@@ -1,17 +1,17 @@
 <template>
-  <TermTooltip :label="tooltip">
+  <Tooltip :label="tooltip">
     {{ displayValue }}<small v-if="language" class="has-text-grey">@{{ language }}</small>
-  </TermTooltip>
+  </Tooltip>
 </template>
 
 <script>
-import TermTooltip from './TermTooltip.vue'
+import Tooltip from './Tooltip.vue'
 
 export default {
   name: 'Term',
   props: ['term', 'endpoint'],
 
-  components: { TermTooltip },
+  components: { Tooltip },
 
   data () {
     const displayValue = termValue(this.endpoint, this.term)

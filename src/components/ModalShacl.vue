@@ -3,12 +3,16 @@
     <div class="modal-card-head flex justify-between py-4">
       <h3>Generated SHACL shapes</h3>
       <div>
-        <button class="button mr-4" title="Load SHACL shapes" @click="load">
-          <UploadIcon class="icon" />
-        </button>
-        <button class="button is-light" title="Close" @click="$emit('close')">
-          <XIcon class="icon" />
-        </button>
+        <Tooltip label="Load SHACL shapes">
+          <button class="button mr-4" @click="load">
+            <UploadIcon class="icon" />
+          </button>
+        </Tooltip>
+        <Tooltip label="Close">
+          <button class="button is-light" @click="$emit('close')">
+            <XIcon class="icon" />
+          </button>
+        </Tooltip>
       </div>
     </div>
     <div class="modal-card-body overflow-y-hidden flex flex-col pb-0">
@@ -49,10 +53,11 @@ import '@rdfjs-elements/rdf-editor'
 import { RadioGroup, RadioGroupOption } from '@headlessui/vue'
 import { ClipboardCopyIcon, UploadIcon, XIcon } from '@heroicons/vue/solid'
 import Dialog from './Dialog.vue'
+import Tooltip from './Tooltip.vue'
 
 export default {
   name: 'ModalShacl',
-  components: { ClipboardCopyIcon, Dialog, RadioGroup, RadioGroupOption, UploadIcon, XIcon },
+  components: { ClipboardCopyIcon, Dialog, RadioGroup, RadioGroupOption, Tooltip, UploadIcon, XIcon },
   props: ['datamodel', 'loadShacl', 'endpoint'],
   emits: ['close', 'open-load-shacl'],
 
