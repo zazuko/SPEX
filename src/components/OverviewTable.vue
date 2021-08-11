@@ -16,9 +16,8 @@
 </template>
 
 <script>
+import { EyeOffIcon, TableIcon } from '@heroicons/vue/solid'
 import ResourceCard from './ResourceCard.vue'
-import EyeOffIcon from './icons/EyeOffIcon.vue'
-import TableIcon from './icons/TableIcon.vue'
 import Tooltip from './Tooltip.vue'
 
 export default {

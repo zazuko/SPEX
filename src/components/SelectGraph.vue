@@ -58,8 +58,8 @@ import {
   ListboxOptions,
   ListboxOption,
 } from '@headlessui/vue'
+import { RefreshIcon } from '@heroicons/vue/solid'
 import LoadingSpinner from './LoadingSpinner.vue'
-import RefreshIcon from './icons/RefreshIcon.vue'
 
 export default defineComponent({
   name: 'SelectGraph',

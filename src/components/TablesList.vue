@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import XIcon from './icons/XIcon.vue'
+import { XIcon } from '@heroicons/vue/solid'
 import Switch from './Switch.vue'
 
 export default {

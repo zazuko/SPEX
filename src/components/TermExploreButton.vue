@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import EyeIcon from './icons/EyeIcon.vue'
+import { EyeIcon } from '@heroicons/vue/solid'
 import Tooltip from './Tooltip.vue'
 
 export default {

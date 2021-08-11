@@ -18,6 +18,7 @@
   ],
   "dependencies": {
     "@headlessui/vue": "^1.4.0",
+    "@heroicons/vue": "^1.0.3",
     "@rdfjs-elements/rdf-editor": "^0.4.1",
     "@rdfjs/dataset": "^1.1.0",
     "@rdfjs/namespace": "^1.1.0",

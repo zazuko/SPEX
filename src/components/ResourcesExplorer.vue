@@ -53,14 +53,12 @@
 </template>
 
 <script>
-import ExternalLinkIcon from '../components/icons/ExternalLinkIcon.vue'
-import EyeOffIcon from './icons/EyeOffIcon.vue'
-import GraphLayout from '../components/GraphLayout.vue'
-import ResourceCard from '../components/ResourceCard.vue'
-import Term from '../components/Term.vue'
-import TermExploreButton from '../components/TermExploreButton.vue'
+import { ExternalLinkIcon, EyeOffIcon, XIcon } from '@heroicons/vue/solid'
+import GraphLayout from './GraphLayout.vue'
+import ResourceCard from './ResourceCard.vue'
+import Term from './Term.vue'
+import TermExploreButton from './TermExploreButton.vue'
 import Tooltip from './Tooltip.vue'
-import XIcon from '../components/icons/XIcon.vue'
 
 export default {
   name: 'ResourcesExplorer',

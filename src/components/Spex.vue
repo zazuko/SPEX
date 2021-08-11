@@ -84,20 +84,19 @@
 </template>
 
 <script>
+import { CogIcon, MenuIcon } from '@heroicons/vue/solid'
 import { Splitpanes, Pane } from 'splitpanes'
 import 'splitpanes/dist/splitpanes.css'
-import ModalShacl from '@/components/ModalShacl.vue'
-import ModalShaclLoad from '@/components/ModalShaclLoad.vue'
-import OverviewTables from '@/components/OverviewTables.vue'
-import ResourcesExplorer from '@/components/ResourcesExplorer.vue'
-import SettingsPane from '@/components/SettingsPane.vue'
-import TableExplorer from '@/components/TableExplorer.vue'
-import TablesList from '@/components/TablesList.vue'
-import CogIcon from '@/components/icons/CogIcon.vue'
-import LoadingSpinner from '@/components/LoadingSpinner.vue'
-import MenuIcon from '@/components/icons/MenuIcon.vue'
 import { Endpoint } from '@/endpoint'
 import { tablesToSHACL, tablesFromSHACL } from '@/shacl'
+import ModalShacl from './ModalShacl.vue'
+import ModalShaclLoad from './ModalShaclLoad.vue'
+import OverviewTables from './OverviewTables.vue'
+import ResourcesExplorer from './ResourcesExplorer.vue'
+import SettingsPane from './SettingsPane.vue'
+import TableExplorer from './TableExplorer.vue'
+import TablesList from './TablesList.vue'
+import LoadingSpinner from './LoadingSpinner.vue'
 
 export default {
   name: 'Spex',

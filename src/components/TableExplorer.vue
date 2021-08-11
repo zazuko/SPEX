@@ -53,10 +53,10 @@
 </template>
 
 <script>
+import { XIcon } from '@heroicons/vue/solid'
 import LoadingSpinner from './LoadingSpinner.vue'
 import Term from './Term.vue'
 import TermExploreButton from './TermExploreButton.vue'
-import XIcon from './icons/XIcon.vue'
 
 export default {
   name: 'TableExplorer',

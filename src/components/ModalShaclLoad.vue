@@ -26,10 +26,10 @@
 </template>
 
 <script>
+import { XIcon } from '@heroicons/vue/solid'
 import RDF from '@rdfjs/dataset'
 import * as N3 from 'n3'
 import Dialog from './Dialog.vue'
-import XIcon from './icons/XIcon.vue'
 
 export default {
   name: 'ModalShaclLoad',

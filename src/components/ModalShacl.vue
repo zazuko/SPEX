@@ -48,10 +48,8 @@
 import { computed, ref, toRefs } from 'vue'
 import '@rdfjs-elements/rdf-editor'
 import { RadioGroup, RadioGroupOption } from '@headlessui/vue'
+import { ClipboardCopyIcon, UploadIcon, XIcon } from '@heroicons/vue/solid'
 import Dialog from './Dialog.vue'
-import ClipboardCopyIcon from './icons/ClipboardCopyIcon.vue'
-import UploadIcon from './icons/UploadIcon.vue'
-import XIcon from './icons/XIcon.vue'
 
 export default {
   name: 'ModalShacl',

@@ -49,6 +49,7 @@
 </template>
 
 <script>
+import { RefreshIcon } from '@heroicons/vue/solid'
 import RDF from '@rdfjs/dataset'
 import { shrink } from '@zazuko/rdf-vocabularies/shrink'
 import { Splitpanes, Pane } from 'splitpanes'
@@ -60,7 +61,6 @@ import { tablesFromSHACL } from '@/shacl'
 import { rdf, sh } from '@/namespace'
 import GraphLayout from '@/components/GraphLayout.vue'
 import ResourceCard from '@/components/ResourceCard.vue'
-import RefreshIcon from '@/components/icons/RefreshIcon.vue'
 
 const formats = [...parsers.keys()]
 

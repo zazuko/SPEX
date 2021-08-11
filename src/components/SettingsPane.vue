@@ -77,11 +77,9 @@
 </template>
 
 <script>
+import { MinusSmIcon, PlusSmIcon, XIcon } from '@heroicons/vue/solid'
 import { Endpoint } from '@/endpoint'
 import cloneDeep from 'lodash.clonedeep'
-import MinusSmIcon from './icons/MinusSmIcon.vue'
-import PlusSmIcon from './icons/PlusSmIcon.vue'
-import XIcon from './icons/XIcon.vue'
 import SelectGraph from './SelectGraph.vue'
 import Switch from './Switch.vue'
 
