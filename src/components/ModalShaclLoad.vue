@@ -1,6 +1,11 @@
 <template>
-  <div class="modal-card w-auto">
-    <div class="modal-card-head">Load SHACL shapes</div>
+  <Dialog @close="$emit('close')">
+    <div class="modal-card-head flex justify-between py-4">
+      <h3>Load SHACL shapes</h3>
+      <button class="button is-light" title="Close" @click="$emit('close')">
+        <XIcon class="icon" />
+      </button>
+    </div>
     <div class="modal-card-body">
       <form @submit.prevent="onSubmit">
         <div class="field">
@@ -17,16 +22,20 @@
         </div>
       </form>
     </div>
-  </div>
+  </Dialog>
 </template>
 
 <script>
 import RDF from '@rdfjs/dataset'
 import * as N3 from 'n3'
+import Dialog from './Dialog.vue'
+import XIcon from './icons/XIcon.vue'
 
 export default {
   name: 'ModalShaclLoad',
   props: ['load'],
+  emits: ['close'],
+  components: { Dialog, XIcon },
 
   data () {
     return {

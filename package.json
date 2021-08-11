@@ -20,6 +20,7 @@
     "@fortawesome/fontawesome-svg-core": "^1.2.35",
     "@fortawesome/free-solid-svg-icons": "^5.15.3",
     "@fortawesome/vue-fontawesome": "^2.0.2",
+    "@headlessui/vue": "^1.4.0",
     "@rdfjs-elements/rdf-editor": "^0.4.1",
     "@rdfjs/dataset": "^1.1.0",
     "@rdfjs/namespace": "^1.1.0",

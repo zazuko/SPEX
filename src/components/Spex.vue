@@ -75,13 +75,17 @@
     <Pane v-if="settingsShown" size="30">
       <SettingsPane :settings="settings" @change="loadEndpoint" @close="hideSettings" />
     </Pane>
+
+    <div v-if="endpoint">
+      <ModalShacl :open="shaclModalShown" @close="hideShaclModal" :endpoint="endpoint" :shacl="generatedShacl" @open-load-shacl="showLoadShacl" />
+      <ModalShaclLoad :open="shaclLoadModalShown" @close="hideShaclLoadModal" :endpoint="endpoint" :load="loadShacl" />
+    </div>
   </Splitpanes>
 </template>
 
 <script>
 import { Splitpanes, Pane } from 'splitpanes'
 import 'splitpanes/dist/splitpanes.css'
-import { ModalProgrammatic as Modal } from 'buefy'
 import ModalShacl from '@/components/ModalShacl.vue'
 import ModalShaclLoad from '@/components/ModalShaclLoad.vue'
 import OverviewTables from '@/components/OverviewTables.vue'
@@ -101,6 +105,8 @@ export default {
     CogIcon,
     LoadingSpinner,
     MenuIcon,
+    ModalShacl,
+    ModalShaclLoad,
     OverviewTables,
     Pane,
     ResourcesExplorer,
@@ -119,6 +125,9 @@ export default {
       tableExplorerShown: false,
       tablesListShown: false,
       listShown: false,
+      shaclModalShown: false,
+      shaclLoadModalShown: false,
+      generatedShacl: null,
       exploredTable: null,
       exploredResources: [],
       datamodel: null,
@@ -232,38 +241,25 @@ export default {
     },
 
     showShacl () {
-      const shacl = tablesToSHACL(this.datamodel.tables, this.endpoint)
-      Modal.open({
-        parent: this,
-        component: ModalShacl,
-        props: {
-          shacl,
-          loadShacl: this.loadShacl,
-          endpoint: this.endpoint,
-        },
-        hasModalCard: true,
-        trapFocus: true,
-      })
+      this.generatedShacl = tablesToSHACL(this.datamodel.tables, this.endpoint)
+      this.shaclModalShown = true
     },
 
-    loadShacl () {
-      const modal = Modal.open({
-        parent: this,
-        component: ModalShaclLoad,
-        props: {
-          load: (dataset) => {
-            modal.close()
-            try {
-              this.datamodel = tablesFromSHACL(dataset, this.endpoint)
-            } catch (e) {
-              console.error(e)
-            }
-          }
-        },
-        hasModalCard: true,
-        trapFocus: true,
-      })
-    }
+    showLoadShacl () {
+      this.shaclLoadModalShown = true
+    },
+
+    loadShacl (dataset) {
+      this.datamodel = tablesFromSHACL(dataset, this.endpoint)
+    },
+
+    hideShaclModal () {
+      this.shaclModalShown = false
+    },
+
+    hideShaclLoadModal () {
+      this.shaclLoadModalShown = false
+    },
   }
 }
 </script>
