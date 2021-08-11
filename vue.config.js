@@ -1,8 +1,25 @@
+const webpack = require('webpack')
+
 module.exports = {
   transpileDependencies: [
     '@rdfjs-elements/rdf-editor',
     '@rdfjs-elements/rdf-snippet',
   ],
+
+  configureWebpack: config => {
+    // Webpack 5 doesn't provide polyfills so we need to do it manually
+    config.resolve.fallback = {
+      crypto: false,
+      stream: require.resolve('stream-browserify'),
+    }
+
+    config.plugins.push(
+      new webpack.ProvidePlugin({
+        process: 'process/browser',
+        Buffer: ['buffer', 'Buffer'],
+      }),
+    )
+  },
 
   chainWebpack: config => {
     config.module
