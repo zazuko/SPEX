@@ -6,7 +6,7 @@
         <span v-else>No table selected</span>
       </h3>
       <p class="card-header-icon py-0 px-1">
-        <button class="button is-light" @click="onClose" title="Close">
+        <button class="button is-light" @click="$emit('close')" title="Close">
           <XIcon class="icon" />
         </button>
       </p>
@@ -53,14 +53,16 @@
 </template>
 
 <script>
+import { defineComponent, onMounted, ref, toRefs, watch } from 'vue'
 import { XIcon } from '@heroicons/vue/solid'
 import LoadingSpinner from './LoadingSpinner.vue'
 import Term from './Term.vue'
 import TermExploreButton from './TermExploreButton.vue'
 
-export default {
+export default defineComponent({
   name: 'TableExplorer',
   props: ['table', 'tables', 'endpoint'],
+  emits: ['close', 'explore-resource'],
   components: {
     LoadingSpinner,
     Term,
@@ -68,46 +70,37 @@ export default {
     XIcon,
   },
 
-  async mounted () {
-    await this.loadData()
-  },
+  setup (props) {
+    const { endpoint, table } = toRefs(props)
 
-  data () {
-    return {
-      data: [],
-      error: null,
-      isLoading: false,
-    }
-  },
+    const data = ref([])
+    const error = ref(null)
+    const isLoading = ref(false)
 
-  methods: {
-    onClose () {
-      this.$emit('close')
-    },
-    async loadData () {
-      this.data = []
-      this.error = null
+    const loadData = async () => {
+      data.value = []
+      error.value = null
 
-      if (!this.table) {
-        return
-      }
+      if (!table.value) return
 
-      this.isLoading = true
+      isLoading.value = true
       try {
-        this.data = await this.endpoint.fetchTableData(this.table)
+        data.value = await endpoint.value.fetchTableData(table.value)
       } catch (e) {
-        this.error = e
+        error.value = e
         console.error(e)
       } finally {
-        this.isLoading = false
+        isLoading.value = false
       }
-    },
-  },
-
-  watch: {
-    async table () {
-      await this.loadData()
     }
-  }
-}
+    onMounted(loadData)
+    watch(table, loadData)
+
+    return {
+      data,
+      error,
+      isLoading,
+    }
+  },
+})
 </script>
