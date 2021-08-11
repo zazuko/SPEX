@@ -76,10 +76,21 @@
       <SettingsPane :settings="settings" @change="loadEndpoint" @close="hideSettings" />
     </Pane>
 
-    <div v-if="endpoint">
-      <ModalShacl :open="shaclModalShown" @close="hideShaclModal" :endpoint="endpoint" :shacl="generatedShacl" @open-load-shacl="showLoadShacl" />
-      <ModalShaclLoad :open="shaclLoadModalShown" @close="hideShaclLoadModal" :endpoint="endpoint" :load="loadShacl" />
-    </div>
+    <ModalShacl
+      v-if="shaclModalShown"
+      :open="shaclModalShown"
+      @close="hideShaclModal"
+      :endpoint="endpoint"
+      :datamodel="datamodel"
+      @open-load-shacl="showLoadShacl"
+    />
+    <ModalShaclLoad
+      v-if="shaclLoadModalShown"
+      :open="shaclLoadModalShown"
+      @close="hideShaclLoadModal"
+      :endpoint="endpoint"
+      :load="loadShacl"
+    />
   </Splitpanes>
 </template>
 
@@ -88,7 +99,6 @@ import { CogIcon, MenuIcon } from '@heroicons/vue/solid'
 import { Splitpanes, Pane } from 'splitpanes'
 import 'splitpanes/dist/splitpanes.css'
 import { Endpoint } from '@/endpoint'
-import { tablesToSHACL, tablesFromSHACL } from '@/shacl'
 import ModalShacl from './ModalShacl.vue'
 import ModalShaclLoad from './ModalShaclLoad.vue'
 import OverviewTables from './OverviewTables.vue'
@@ -126,7 +136,6 @@ export default {
       listShown: false,
       shaclModalShown: false,
       shaclLoadModalShown: false,
-      generatedShacl: null,
       exploredTable: null,
       exploredResources: [],
       datamodel: null,
@@ -240,7 +249,6 @@ export default {
     },
 
     showShacl () {
-      this.generatedShacl = tablesToSHACL(this.datamodel.tables, this.endpoint)
       this.shaclModalShown = true
     },
 
@@ -248,8 +256,8 @@ export default {
       this.shaclLoadModalShown = true
     },
 
-    loadShacl (dataset) {
-      this.datamodel = tablesFromSHACL(dataset, this.endpoint)
+    loadShacl (datamodel) {
+      this.datamodel = datamodel
     },
 
     hideShaclModal () {

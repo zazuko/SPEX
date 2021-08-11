@@ -1,58 +1,34 @@
-import { sh, prefixes } from './namespace'
+import clownface from 'clownface'
+import RDF from '@rdfjs/dataset'
+import { rdf, schema, sh, spex } from './namespace'
 
 /**
- * Serializes a list of a tables as a SHACL graph.
+ * Extracts a SPEX datamodel from a given dataset SHACL description.
  *
- * @param {Array} tables - List of tables
- * @param {Endpoint} endpoint
- * @returns Object - JSON-LD SHACL
+ * @param {Clownface} dataset - Pointer to the dataset description
+ * @returns {Object} SPEX datamodel
  */
-export function tablesToSHACL (tables, endpoint) {
-  const customPrefixes = endpoint.prefixes.reduce((acc, { prefix, url }) => ({ ...acc, [prefix]: url }), {})
-  const context = { ...prefixes, ...customPrefixes }
+export function datamodelFromSHACL (dataset, language, shrink) {
+  const defaultShapes = dataset.out(spex.shape).has(rdf.type, spex.DefaultShapes)
+  const tables = defaultShapes.term
+    ? tablesFromSHACL(defaultShapes.out(schema.hasPart), shrink)
+    : null
 
-  const graph = tables.map((table) => {
-    return {
-      '@type': 'sh:NodeShape',
-      'sh:targetClass': { '@id': endpoint.shrink(table.id) },
-      'sh:property': table.properties.map((property) => {
-        const typeProp = (type) => type.termType === 'NamedNode'
-          ? { 'sh:class': { '@id': endpoint.shrink(type.id) } }
-          : { 'sh:datatype': { '@id': endpoint.shrink(type.id) } }
-
-        let type = {}
-        if (property.values.length === 1) {
-          type = typeProp(property.values[0])
-        } else if (property.values.length > 1) {
-          type['sh:or'] = { '@list': property.values.map(typeProp) }
-        }
-
-        return {
-          '@type': 'sh:PropertyShape',
-          'sh:path': { '@id': endpoint.shrink(property.id) },
-          ...type,
-        }
-      }),
-    }
-  })
+  const viewports = dataset.out(spex.viewport).map(viewport => ({
+    id: viewport.term.value,
+    term: viewport.term,
+    name: viewport.out(schema.name, { language }).value,
+    tables: new Set(viewport.out(spex.includes).terms.map(({ value }) => value)),
+  }))
 
   return {
-    '@context': context,
-    '@graph': {
-      '@type': 'spex:DefaultShapes',
-      'schema:hasPart': graph,
-    },
+    tables,
+    viewports,
+    isIntrospected: false,
   }
 }
 
-/**
- * Extracts a list of tables from an RDF graph.
- *
- * @param {Clownface} shapes - Pointer to node shapes
- * @param {Endpoint} endpoint
- * @returns
- */
-export function tablesFromSHACL (shapes, endpoint) {
+export function tablesFromSHACL (shapes, shrink) {
   return shapes
     .toArray()
     .map((shape) => {
@@ -69,11 +45,11 @@ export function tablesFromSHACL (shapes, endpoint) {
           if (!path) return null
 
           const id = path.value
-          const values = propertyTypes(property, endpoint)
+          const values = propertyTypes(property, shrink)
 
           return {
             id,
-            name: endpoint.shrink(id),
+            name: shrink(id),
             values,
           }
         })
@@ -81,7 +57,7 @@ export function tablesFromSHACL (shapes, endpoint) {
 
       return {
         id,
-        name: endpoint.shrink(id),
+        name: shrink(id),
         properties,
         isShown: true,
       }
@@ -89,18 +65,65 @@ export function tablesFromSHACL (shapes, endpoint) {
     .filter(Boolean)
 }
 
-function propertyTypes (property, endpoint) {
+function propertyTypes (property, shrink) {
   return [
-    ...property.out(sh.datatype).terms.map((datatype) => typeFromTerm(datatype, 'Literal', endpoint)),
-    ...property.out(sh.class).terms.map((cls) => typeFromTerm(cls, 'NamedNode', endpoint)),
-    ...[...property.out(sh.or).list()].flatMap((conditionalProp) => propertyTypes(conditionalProp, endpoint)),
+    ...property.out(sh.datatype).terms.map((datatype) => typeFromTerm(datatype, 'Literal', shrink)),
+    ...property.out(sh.class).terms.map((cls) => typeFromTerm(cls, 'NamedNode', shrink)),
+    ...[...property.out(sh.or).list()].flatMap((conditionalProp) => propertyTypes(conditionalProp, shrink)),
   ]
 }
 
-function typeFromTerm (term, termType, endpoint) {
+function typeFromTerm (term, termType, shrink) {
   return {
     id: term.value,
-    name: endpoint.shrink(term.value),
+    name: shrink(term.value),
     termType,
   }
+}
+
+/**
+ * Serializes the datamodel as a SHACL description.
+ *
+ * @param {Object} datamodel - SPEX datamodel
+ * @param {string} datasetURI - URI of the dataset (.well-known/void)
+ * @returns {Clownface} - Pointer to the dataset description
+ */
+export function datamodelToSHACL (datamodel, datasetURI) {
+  const dataset = clownface({
+    dataset: RDF.dataset(),
+    term: RDF.namedNode(datasetURI)
+  })
+
+  dataset.addOut(spex.shape, defaultShapes => {
+    defaultShapes.addOut(rdf.type, spex.DefaultShapes)
+
+    datamodel.tables.forEach(table => {
+      defaultShapes.addOut(schema.hasPart, shape => {
+        shape
+          .addOut(rdf.type, sh.NodeShape)
+          .addOut(sh.targetClass, RDF.namedNode(table.id))
+
+        table.properties.forEach(property => {
+          shape.addOut(sh.property, propertyShape => {
+            propertyShape
+              .addOut(rdf.type, sh.PropertyShape)
+              .addOut(sh.path, RDF.namedNode(property.id))
+
+            const typeProp = (type) => type.termType === 'NamedNode'
+              ? [sh.class, RDF.namedNode(type.id)]
+              : [sh.datatype, RDF.namedNode(type.id)]
+
+            if (property.values.length === 1) {
+              propertyShape.addOut(...typeProp(property.values[0]))
+            } else if (property.values.length > 1) {
+              propertyShape.addList(sh.or, property.values.map(value =>
+                propertyShape.blankNode().addOut(...typeProp(value))))
+            }
+          })
+        })
+      })
+    })
+  })
+
+  return dataset
 }

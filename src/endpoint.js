@@ -3,8 +3,8 @@ import RDF from '@rdfjs/dataset'
 import ParsingClient from 'sparql-http-client/ParsingClient'
 import TermSet from '@rdfjs/term-set'
 import { shrink } from '@zazuko/rdf-vocabularies/shrink'
-import { tablesFromSHACL } from '@/shacl'
-import { rdf, schema, spex, prefixes as _prefixes } from './namespace'
+import { datamodelFromSHACL, datamodelToSHACL } from '@/shacl'
+import { prefixes as _prefixes } from './namespace'
 
 const SCHEMA_URI = '.well-known/void'
 
@@ -74,40 +74,35 @@ export class Endpoint {
       : this.fetchIntrospectDatamodel()
   }
 
+  get datasetURI () {
+    return this.url.replace(/query\/?$/, SCHEMA_URI)
+  }
+
   /**
    * Fetch data model from pre-defined SHACL definition
    */
   async fetchPredefinedDatamodel () {
-    const schemaURI = this.url.replace(/query\/?$/, SCHEMA_URI)
     const fromClause = this.graph ? `FROM <${this.graph}>` : ''
     const query = `
       #pragma describe.strategy cbd
-      DESCRIBE <${schemaURI}>
+      DESCRIBE <${this.datasetURI}>
       ${fromClause}
     `
     const quads = await this.client.query.construct(query)
     const dataset = clownface({
       dataset: RDF.dataset(quads),
-      term: RDF.namedNode(schemaURI),
+      term: RDF.namedNode(this.datasetURI),
     })
 
-    const defaultShapes = dataset.out(spex.shape).has(rdf.type, spex.DefaultShapes)
-    const tables = defaultShapes.term
-      ? tablesFromSHACL(defaultShapes.out(schema.hasPart), this)
-      : null
+    return this.datamodelFromSHACL(dataset)
+  }
 
-    const viewports = dataset.out(spex.viewport).map(viewport => ({
-      id: viewport.term.value,
-      term: viewport.term,
-      name: viewport.out(schema.name, { language: displayLanguage }).value,
-      tables: new Set(viewport.out(spex.includes).terms.map(({ value }) => value)),
-    }))
+  datamodelFromSHACL (dataset) {
+    return datamodelFromSHACL(dataset, displayLanguage, this.shrink)
+  }
 
-    return {
-      tables,
-      viewports,
-      isIntrospected: false,
-    }
+  datamodelToSHACL (datamodel) {
+    return datamodelToSHACL(datamodel, this.datasetURI)
   }
 
   /**

@@ -28,12 +28,14 @@
 <script>
 import { XIcon } from '@heroicons/vue/solid'
 import RDF from '@rdfjs/dataset'
+import clownface from 'clownface'
 import * as N3 from 'n3'
+import { rdf, spex } from '../namespace'
 import Dialog from './Dialog.vue'
 
 export default {
   name: 'ModalShaclLoad',
-  props: ['load'],
+  props: ['load', 'endpoint'],
   emits: ['close'],
   components: { Dialog, XIcon },
 
@@ -54,7 +56,17 @@ export default {
       try {
         const quads = parser.parse(this.data)
         const dataset = RDF.dataset(quads)
-        this.load(dataset)
+        const pointer = clownface({ dataset, term: spex.DefaultShapes })
+          .in(rdf.type)
+          .in(spex.shape)
+
+        if (!pointer.term) {
+          throw new Error('No node with spex:shape pointing to a spex:DefaultShapes found')
+        }
+
+        const datamodel = this.endpoint.datamodelFromSHACL(pointer)
+        this.load(datamodel)
+        this.$emit('close')
       } catch (e) {
         this.error = e.toString()
       }

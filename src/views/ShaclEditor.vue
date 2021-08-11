@@ -51,7 +51,7 @@
 <script>
 import { RefreshIcon } from '@heroicons/vue/solid'
 import RDF from '@rdfjs/dataset'
-import { shrink } from '@zazuko/rdf-vocabularies/shrink'
+import { shrink as _shrink } from '@zazuko/rdf-vocabularies/shrink'
 import { Splitpanes, Pane } from 'splitpanes'
 import 'splitpanes/dist/splitpanes.css'
 import '@rdfjs-elements/rdf-editor'
@@ -120,17 +120,13 @@ export default {
       this.error = null
       this.datamodel.tables = []
 
-      const endpoint = {
-        shrink (uri) {
-          return shrink(uri) || uri
-        }
-      }
+      const shrink = (uri) => _shrink(uri) || uri
 
       try {
         const quads = await editor.quads
         const dataset = RDF.dataset(quads)
         const shapes = clownface({ dataset }).has(rdf.type, sh.NodeShape)
-        this.datamodel.tables = tablesFromSHACL(shapes, endpoint)
+        this.datamodel.tables = tablesFromSHACL(shapes, shrink)
       } catch (e) {
         this.error = e.toString()
       }

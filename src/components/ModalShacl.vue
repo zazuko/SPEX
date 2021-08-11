@@ -32,12 +32,11 @@
         </div>
       </div>
       <rdf-editor
-        :value="shaclStr"
         :format="selectedFormat"
+        :quads.prop="shacl"
         :prefixes.prop="prefixes"
         :customPrefixes.prop="customPrefixes"
         ref="snippet"
-        readonly
         class="overflow-y-auto"
       />
     </div>
@@ -54,22 +53,22 @@ import Dialog from './Dialog.vue'
 export default {
   name: 'ModalShacl',
   components: { ClipboardCopyIcon, Dialog, RadioGroup, RadioGroupOption, UploadIcon, XIcon },
-  props: ['shacl', 'loadShacl', 'endpoint'],
+  props: ['datamodel', 'loadShacl', 'endpoint'],
   emits: ['close', 'open-load-shacl'],
 
   setup (props) {
-    const { shacl, endpoint } = toRefs(props)
+    const { datamodel, endpoint } = toRefs(props)
 
     const customPrefixes = computed(() => endpoint.value
       .prefixes.reduce((acc, { prefix, url }) => ({ ...acc, [prefix]: url }), {}))
 
-    const shaclStr = computed(() => JSON.stringify(shacl.value, null, 2))
+    const shacl = computed(() => [...endpoint.value.datamodelToSHACL(datamodel.value).dataset])
 
     const copiedMessage = ref(null)
 
     return {
       customPrefixes,
-      shaclStr,
+      shacl,
       copiedMessage,
     }
   },
