@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import { isNavigationFailure, NavigationFailureType } from 'vue-router/src/util/errors'
+import { isNavigationFailure, NavigationFailureType } from 'vue-router'
 import Spex from '@/components/Spex.vue'
 import config from '@/config'
 

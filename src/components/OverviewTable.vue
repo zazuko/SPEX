@@ -1,5 +1,5 @@
 <template>
-  <ResourceCard :resource="table" :active-links="activeLinks" v-on="$listeners">
+  <ResourceCard :resource="table" :active-links="activeLinks">
     <template v-slot:actions>
       <b-tooltip label="Hide">
         <button class="button is-light" @click="$emit('hide', table)">

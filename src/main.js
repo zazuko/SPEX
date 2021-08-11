@@ -1,12 +1,11 @@
-import Vue from 'vue'
+import { createApp } from 'vue'
 import { initialize } from '.'
 import App from './App.vue'
 import router from './router'
 import './registerServiceWorker'
+import './styles/index.css'
 
-initialize(Vue)
+const app = createApp(App)
+initialize(app)
 
-new Vue({
-  router,
-  render: h => h(App),
-}).$mount('#app')
+app.use(router).mount('#app')

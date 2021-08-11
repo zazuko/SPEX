@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import { createApp } from 'vue'
 import {
   Autocomplete,
   ConfigProgrammatic,
@@ -31,7 +31,6 @@ import './styles/index.css'
 export { default as Spex } from './components/Spex.vue'
 
 export function initialize (Vue) {
-  Vue.config.productionTip = false
 
   iconsLibrary.add(
     faBars,
@@ -67,9 +66,8 @@ export function initialize (Vue) {
 }
 
 export function render (selector, settings) {
-  initialize(Vue)
+  const app = createApp(Spex, { settings })
+  initialize(app)
 
-  new Vue({
-    render: h => h(Spex, { props: { settings } }),
-  }).$mount(selector)
+  app.mount(selector)
 }

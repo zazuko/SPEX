@@ -1,11 +1,8 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 import Overview from '../views/Overview.vue'
 
 const ShaclEditor = () => import('../views/ShaclEditor.vue')
 const RdfEditor = () => import('../views/RdfEditor.vue')
-
-Vue.use(VueRouter)
 
 const routes = [
   {
@@ -25,9 +22,8 @@ const routes = [
   }
 ]
 
-const router = new VueRouter({
-  mode: 'hash',
-  base: process.env.BASE_URL,
+const router = createRouter({
+  history: createWebHashHistory(process.env.BASE_URL),
   routes
 })
 
