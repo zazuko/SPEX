@@ -11,7 +11,7 @@
         </button>
       </p>
     </div>
-    <div class="card-content p-0 overflow-auto">
+    <div class="card-content h-full p-0 overflow-auto">
       <table class="table is-fullwidth" v-if="table">
         <thead>
           <tr>
@@ -21,7 +21,7 @@
             </th>
           </tr>
         </thead>
-        <tbody>
+        <tbody class="border-b">
           <tr v-for="(row, index) in data" :key="index">
             <td>
               <p class="flex items-center">
