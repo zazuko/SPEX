@@ -11,8 +11,8 @@
         </button>
       </p>
     </div>
-    <div class="card-content h-full p-0 overflow-auto">
-      <table class="table is-fullwidth" v-if="table">
+    <div class="card-content h-full p-0 overflow-auto flex flex-col">
+      <table class="table is-fullwidth mb-0" v-if="table">
         <thead>
           <tr>
             <th>URI</th>
@@ -38,15 +38,15 @@
           </tr>
         </tbody>
       </table>
-    </div>
 
-    <div class="m-auto" v-if="isLoading">
-      <loading-spinner />
-    </div>
+      <div class="flex-grow flex justify-center items-center" v-if="isLoading">
+        <loading-spinner />
+      </div>
 
-    <div class="message is-danger" v-if="error">
-      <div class="message-body">
-        Error loading data: {{ error }}
+      <div class="message is-danger" v-if="error">
+        <div class="message-body">
+          Error loading data: {{ error }}
+        </div>
       </div>
     </div>
   </div>
