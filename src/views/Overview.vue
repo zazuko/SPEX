@@ -5,7 +5,7 @@
 <script>
 import { isNavigationFailure, NavigationFailureType } from 'vue-router'
 import Spex from '@/components/Spex.vue'
-import config from '@/config'
+import defaultConfig from '@/config'
 
 export default {
   components: { Spex },
@@ -13,7 +13,16 @@ export default {
   data () {
     const urlSettings = settingsFromURL(this.$route.query)
     const localSettings = settingsFromLocalStorage()
-    const settings = { ...config, ...localSettings, ...urlSettings }
+
+    let settings = defaultConfig
+    if (localSettings.url) settings = localSettings
+    if (urlSettings.url) settings = urlSettings
+
+    // Since we don't put user/password in the URL, get them from localStorage if the endpoint URL is the same
+    if (localSettings.url && urlSettings.url && localSettings.url === urlSettings.url) {
+      settings.user = localSettings.user
+      settings.password = localSettings.user
+    }
 
     return {
       settings,
