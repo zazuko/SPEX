@@ -14,11 +14,11 @@ const displayLanguage = ['en', '*']
 export class Endpoint {
   constructor ({ url, user = null, password = null, prefixes = [], graph = '', forceIntrospection = false }) {
     this.url = url
-    this.user = user
-    this.password = password
+    this.user = user || null
+    this.password = password || null
     this.prefixes = prefixes
     this.graph = graph
-    this.client = new ParsingClient({ endpointUrl: url, user, password })
+    this.client = new ParsingClient({ endpointUrl: this.url, user: this.user, password: this.password })
     this.forceIntrospection = forceIntrospection
 
     // Reinitialize prefixes
