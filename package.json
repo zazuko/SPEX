@@ -62,24 +62,6 @@
     "postcss": "^8.3.6",
     "tailwindcss": "^2.2.7"
   },
-  "eslintConfig": {
-    "root": true,
-    "env": {
-      "node": true
-    },
-    "extends": [
-      "plugin:vue/vue3-essential",
-      "@vue/standard"
-    ],
-    "parserOptions": {
-      "parser": "@babel/eslint-parser"
-    },
-    "rules": {
-      "no-unused-vars": "warn",
-      "padded-blocks": "warn",
-      "comma-dangle": "off"
-    }
-  },
   "browserslist": [
     "> 1%",
     "last 2 versions",
