@@ -55,6 +55,7 @@
 </template>
 
 <script>
+import { nextTick } from 'vue'
 import * as d3 from 'd3'
 import dagre from 'dagre'
 
@@ -73,25 +74,21 @@ export default {
   emits: ['link-enter', 'link-out'],
 
   mounted () {
-    this.$nextTick(() => {
-      this.renderGraph()
-    })
+    this.renderGraph()
   },
 
   watch: {
     nodes () {
-      if (this.nodes.length === 0) {
-        return
-      }
-
-      this.$nextTick(() => {
-        this.renderGraph()
-      })
+      this.renderGraph()
     }
   },
 
   methods: {
-    renderGraph () {
+    async renderGraph () {
+      if (this.nodes.length === 0) return
+
+      await nextTick()
+
       const container = this.$el
       const containerSelection = d3.select(container)
       const root = d3.select(this.$refs.layout)
@@ -118,7 +115,10 @@ export default {
       const initScale = Math.min(initScaleX, initScaleY, 1)
       const initX = Math.max((container.clientWidth - (layout.width * initScale)) / 2, 0)
       const initY = Math.max((container.clientHeight - (layout.height * initScale)) / 2, 0)
-      const zoom = d3.zoom().scaleExtent([0.1, 1.2]).on('zoom', onZoom)
+      const zoom = d3.zoom().scaleExtent([0.1, 1.2]).on('zoom', ({ transform }) => {
+        root.style('transform', `translate(${transform.x}px, ${transform.y}px) scale(${transform.k})`)
+        root.style('transform-origin', '0 0')
+      })
       containerSelection.call(zoom)
       setupZoomArrowKeys(containerSelection, zoom)
       if (this.autoZoom) {
@@ -128,7 +128,7 @@ export default {
       // Draw lines for links
       const linkFromGraphLink = (graphLink) =>
         this.links.find(({ source, target }) => source === graphLink.source.id && target === graphLink.target.id)
-      const link = root
+      const linksSelection = root
         .select('.links')
         .selectAll('.link')
         .data(links)
@@ -141,74 +141,73 @@ export default {
           this.$emit('link-out', link)
         })
 
-      // draw circles for the nodes
-      const node = root.selectAll('.node')
+      const render = () => renderSimulation(nodesSelection, linksSelection, containerSelection)
+
+      // Enable nodes drag & drop
+      const nodesSelection = root.selectAll('.node')
         .data(nodes)
-        .call(drag(simulation))
+        .call(drag(simulation, render))
 
       // Run simulation for a defined number of steps
       // See https://github.com/d3/d3-force/blob/master/README.md#simulation_tick
       for (let i = 0, n = Math.ceil(Math.log(simulation.alphaMin()) / Math.log(1 - simulation.alphaDecay())); i < n; ++i) {
         simulation.tick()
       }
-      renderSimulation()
+      render()
 
       // Remove all forces after simulation is finished to allow dragging nodes around without affecting the other nodes
       simulation
         .force('posX', null)
         .force('posY', null)
-
-      function renderSimulation () {
-        const currentScale = d3.zoomTransform(containerSelection.node()).k
-
-        // Update node positions
-        node
-          .join()
-          .attr('style', (d) => `left: ${d.x}px; top: ${d.y}px`)
-
-        // Update link positions
-        const computeLinkPath = d3
-          .linkHorizontal()
-          .source((d) => sourcePoint(d, container, currentScale))
-          .target((d) => targetClosestAnchor(d, container, currentScale))
-          .x(({ x }) => x)
-          .y(({ y }) => y)
-
-        link.attr('d', computeLinkPath)
-      }
-
-      function drag (simulation) {
-        function dragstarted (event, d) {
-          if (!event.active) simulation.alphaTarget(0.3).restart()
-          d.fx = d.x
-          d.fy = d.y
-        }
-
-        function dragged (event, d) {
-          d.fx = event.x
-          d.fy = event.y
-          renderSimulation()
-        }
-
-        function dragended (event, d) {
-          if (!event.active) simulation.alphaTarget(0)
-          d.fx = null
-          d.fy = null
-          renderSimulation()
-        }
-
-        return d3.drag()
-          .on('start', dragstarted)
-          .on('drag', dragged)
-          .on('end', dragended)
-      }
-
-      function onZoom ({ transform }) {
-        root.style('transform', `translate(${transform.x}px, ${transform.y}px) scale(${transform.k})`)
-        root.style('transform-origin', '0 0')
-      }
     },
   },
+}
+
+function renderSimulation (nodes, links, container) {
+  const containerElt = container.node()
+  const currentScale = d3.zoomTransform(containerElt).k
+
+  // Update node positions
+  nodes
+    .join()
+    .attr('style', (d) => `left: ${d.x}px; top: ${d.y}px`)
+
+  // Update link positions
+  const computeLinkPath = d3
+    .linkHorizontal()
+    .source((d) => sourcePoint(d, containerElt, currentScale))
+    .target((d) => targetClosestAnchor(d, containerElt, currentScale))
+    .x(({ x }) => x)
+    .y(({ y }) => y)
+
+  links.attr('d', computeLinkPath)
+}
+
+// Setup drag & drop
+function drag (simulation, renderSimulation) {
+  function dragstarted (event, d) {
+    if (!event.active) simulation.alphaTarget(0.3).restart()
+    d.fx = d.x
+    d.fy = d.y
+  }
+
+  function dragged (event, d) {
+    d.fx = event.x
+    d.fy = event.y
+    renderSimulation()
+  }
+
+  function dragended (event, d) {
+    if (!event.active) simulation.alphaTarget(0)
+    d.fx = null
+    d.fy = null
+    renderSimulation()
+  }
+
+  return d3.drag()
+    .on('start', dragstarted)
+    .on('drag', dragged)
+    .on('end', dragended)
 }
 
 /**
