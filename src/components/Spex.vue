@@ -124,8 +124,8 @@ export default {
     TableExplorer,
     TablesList,
   },
-
   props: ['settings'],
+  emits: ['settings-change'],
 
   data () {
     return {

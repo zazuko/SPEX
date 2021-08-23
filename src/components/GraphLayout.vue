@@ -70,6 +70,7 @@ export default {
     // Adjust zoom level when nodes change
     autoZoom: { default: true },
   },
+  emits: ['link-enter', 'link-out'],
 
   mounted () {
     this.$nextTick(() => {

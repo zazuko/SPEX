@@ -51,7 +51,7 @@ export default {
     'resource',
     'activeLinks',
   ],
-
+  emits: ['hover-title', 'unhover-title', 'hover-property', 'unhover-property'],
   components: { Tooltip },
 
   data () {

@@ -23,6 +23,7 @@ import Tooltip from './Tooltip.vue'
 export default {
   name: 'OverviewTable',
   props: ['table', 'activeLinks'],
+  emits: ['hide', 'explore'],
   components: { EyeOffIcon, ResourceCard, TableIcon, Tooltip },
 }
 </script>

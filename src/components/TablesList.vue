@@ -42,6 +42,7 @@ import Switch from './Switch.vue'
 export default {
   name: 'TablesList',
   props: ['datamodel'],
+  emits: ['toggle-table', 'select-viewport', 'close'],
   components: { Switch, XIcon },
 
   methods: {

@@ -13,6 +13,7 @@ import Tooltip from './Tooltip.vue'
 export default {
   name: 'TermExploreButton',
   props: ['term', 'endpoint'],
+  emits: ['explore-resource'],
   components: { EyeIcon, Tooltip },
 
   computed: {

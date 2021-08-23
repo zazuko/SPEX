@@ -39,6 +39,7 @@ export default {
   name: 'OverviewTables',
   components: { GraphLayout, OverviewTable },
   props: ['datamodel'],
+  emits: ['explore', 'toggle-table'],
 
   data () {
     return {

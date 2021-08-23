@@ -64,6 +64,7 @@ export default {
   name: 'ResourcesExplorer',
   components: { ExternalLinkIcon, EyeOffIcon, GraphLayout, ResourceCard, Term, TermExploreButton, Tooltip, XIcon },
   props: ['resources', 'endpoint'],
+  emits: ['explore-resource', 'unexplore-resource', 'close'],
 
   data () {
     return {
