@@ -53,6 +53,7 @@
 </template>
 
 <script>
+import { computed, onMounted, ref, toRefs, watch } from 'vue'
 import { ExternalLinkIcon, EyeOffIcon, XIcon } from '@heroicons/vue/solid'
 import GraphLayout from './GraphLayout.vue'
 import ResourceCard from './ResourceCard.vue'
@@ -62,38 +63,26 @@ import Tooltip from './Tooltip.vue'
 
 export default {
   name: 'ResourcesExplorer',
-  components: { ExternalLinkIcon, EyeOffIcon, GraphLayout, ResourceCard, Term, TermExploreButton, Tooltip, XIcon },
   props: ['resources', 'endpoint'],
   emits: ['explore-resource', 'unexplore-resource', 'close'],
-
-  data () {
-    return {
-      activeLinks: [],
-    }
+  components: {
+    ExternalLinkIcon,
+    EyeOffIcon,
+    GraphLayout,
+    ResourceCard,
+    Term,
+    TermExploreButton,
+    Tooltip,
+    XIcon,
   },
 
-  async mounted () {
-    this.fetchResources()
-  },
+  setup (props, context) {
+    const { endpoint, resources } = toRefs(props)
 
-  watch: {
-    endpoint () {
-      this.fetchResources()
-    },
+    const links = computed(() => {
+      const resourceIds = new Set(resources.value.map(({ id }) => id))
 
-    resources () {
-      this.fetchResources()
-    },
-  },
-
-  computed: {
-    uri () {
-      return this.$route.params.uri
-    },
-
-    links () {
-      const resourceIds = new Set(this.resources.map(({ id }) => id))
-      return this.resources
+      return resources.value
         .filter(resource => resource.properties)
         .flatMap(resource => resource.properties.map((property) => ({ ...property, resource })))
         .reduce((acc, property) => {
@@ -107,44 +96,52 @@ export default {
 
           return acc
         }, [])
-    },
-  },
+    })
 
-  methods: {
-    async fetchResources () {
-      if (!this.endpoint) return
-
-      this.resources.forEach(async (resource) => {
-        if (resource.isFetched) return
-
-        try {
-          const responseResource = await this.endpoint.fetchResource(resource.id)
-          const fetchedResource = { ...responseResource, isFetched: true }
-          this.$emit('explore-resource', fetchedResource)
-        } catch (e) {
-          const fetchedResource = { ...resource, isFetched: true }
-          this.$emit('explore-resource', fetchedResource)
-        }
-      })
-    },
-
-    onLinkHover (link) {
-      this.activeLinks.push(link)
-    },
-
-    onUnhover () {
-      this.activeLinks = []
-    },
-
-    onHoverResource (resource) {
-      this.activeLinks = this.links.filter((link) => link.source === resource.id)
-    },
-
-    onHoverProperty (resource, property) {
-      this.activeLinks = this.links.filter((link) => (
+    const activeLinks = ref([])
+    const onLinkHover = (link) => { activeLinks.value.push(link) }
+    const onUnhover = () => { activeLinks.value = [] }
+    const onHoverResource = (resource) => { activeLinks.value = links.value.filter((link) => link.source === resource.id) }
+    const onHoverProperty = (resource, property) => {
+      activeLinks.value = links.value.filter((link) => (
         link.source === resource.id &&
         link.sourceProperty === property.id
       ))
+    }
+
+    const fetchResources = async () => {
+      if (!endpoint.value) return
+
+      resources.value.forEach(async (resource) => {
+        if (resource.isFetched) return
+
+        try {
+          const responseResource = await endpoint.value.fetchResource(resource.id)
+          const fetchedResource = { ...responseResource, isFetched: true }
+          context.emit('explore-resource', fetchedResource)
+        } catch (e) {
+          const fetchedResource = { ...resource, isFetched: true }
+          context.emit('explore-resource', fetchedResource)
+        }
+      })
+    }
+    onMounted(fetchResources)
+    watch(endpoint, fetchResources)
+    watch(resources, fetchResources)
+
+    return {
+      links,
+      activeLinks,
+      onLinkHover,
+      onUnhover,
+      onHoverResource,
+      onHoverProperty,
+    }
+  },
+
+  computed: {
+    uri () {
+      return this.$route.params.uri
     },
   },
 }

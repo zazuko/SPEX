@@ -214,12 +214,12 @@ export class Endpoint {
           id: predicate.value,
           term: predicate,
           name: this.shrink(predicate.value),
-          values: [],
+          values: new TermSet(),
         }
         acc.set(predicate.value, property)
       }
 
-      acc.get(predicate.value).values.push(object)
+      acc.get(predicate.value).values.add(object)
 
       return acc
     }, new Map())
