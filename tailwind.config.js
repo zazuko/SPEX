@@ -12,6 +12,9 @@ module.exports = {
         ...colors,
         primary: colors.orange,
       },
+      fontFamily: {
+        title: ['Playfair Display', 'serif'],
+      },
     },
   },
   variants: {
