@@ -7,6 +7,7 @@
         class="input"
         :value="modelValue"
         @input="$emit('update:modelValue', $event.target.value)"
+        autocomplete="off"
       />
       <loading-spinner v-show="loading" class="absolute top-2 right-2" />
     </ListboxButton>
