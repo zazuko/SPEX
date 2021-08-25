@@ -3,7 +3,7 @@
     <div class="card-header has-background-light">
       <h3 class="card-header-title">Options</h3>
       <p class="card-header-icon py-0 px-1">
-        <button class="button is-light" @click="onClose" title="Close">
+        <button type="button" class="button is-light" @click="onClose" title="Close">
           <XIcon class="icon" />
         </button>
       </p>
@@ -45,7 +45,7 @@
           <div v-for="(prefix, index) in data.prefixes" :key="index" class="flex gap-1">
             <input type="text" v-model="prefix.prefix" placeholder="schema" class="input w-24" required />
             <input type="text" v-model="prefix.url" placeholder="http://schema.org/" class="input flex-grow" required />
-            <button class="button is-white" title="Remove prefix" @click="removePrefix(index)">
+            <button type="button" class="button is-white" title="Remove prefix" @click="removePrefix(index)">
               <MinusSmIcon class="icon" />
             </button>
           </div>
@@ -53,7 +53,7 @@
             No custom prefix
           </p>
           <p>
-            <button class="button is-white" title="Add prefix" @click="addPrefix">
+            <button type="button" class="button is-white" title="Add prefix" @click="addPrefix">
               <PlusSmIcon class="icon" />
             </button>
           </p>
