@@ -1,16 +1,22 @@
-const colors = require('tailwindcss/colors')
-
 module.exports = {
   mode: 'jit',
-  purge: [
-    './src/**/*.{css,js,vue}',
-  ],
+  purge: ['public/index.html', './src/**/*.{css,js,vue}'],
   darkMode: false, // or 'media' or 'class'
   theme: {
     extend: {
       colors: {
-        ...colors,
-        primary: colors.orange,
+        primary: {
+          50: 'var(--color-primary-50)',
+          100: 'var(--color-primary-100)',
+          200: 'var(--color-primary-200)',
+          300: 'var(--color-primary-300)',
+          400: 'var(--color-primary-400)',
+          500: 'var(--color-primary-500)',
+          600: 'var(--color-primary-600)',
+          700: 'var(--color-primary-700)',
+          800: 'var(--color-primary-800)',
+          900: 'var(--color-primary-900)',
+        },
       },
       fontFamily: {
         title: ['Playfair Display', 'serif'],
