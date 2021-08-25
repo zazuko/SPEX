@@ -1,52 +1,13 @@
 @import 'https://fonts.googleapis.com/css?family=Playfair+Display:400,700';
-@import '~bulma/css/bulma.css';
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss/base';
+@import './base.css';
 
-@layer base {
-  :root {
-    --color-primary-50: #FFEFDE;
-    --color-primary-100: #FFE2C4;
-    --color-primary-200: #FFCA91;
-    --color-primary-300: #FFB15E;
-    --color-primary-400: #FF982B;
-    --color-primary-500: #F77F00;
-    --color-primary-600: #C46500;
-    --color-primary-700: #914B00;
-    --color-primary-800: #5E3000;
-    --color-primary-900: #2B1600;
+@import 'bulma/css/bulma.css';
 
-    font-size: 14px;
-    line-height: 20px;
-  }
-
-  a {
-    @apply text-primary-500 hover:text-primary-600 focus:text-primary-700 hover:underline focus:underline;
-  }
-}
-
-@layer components {
-  .button.is-primary {
-    @apply bg-primary-400 hover:bg-primary-500;
-  }
-
-  .button.is-white:focus {
-    @apply !ring-2;
-  }
-
-  .switch input[type=checkbox]:checked + .check.is-primary {
-    @apply bg-primary-400;
-  }
-
-  .switch:hover input[type=checkbox]:checked + .check.is-primary {
-    @apply bg-primary-300;
-  }
-
-  .has-text-primary {
-    @apply text-primary-400 !important;
-  }
-}
-
+@import 'tailwindcss/components';
+@import './components.css';
 @import './splitpanes.css';
+
+@import 'tailwindcss/utilities';
+
