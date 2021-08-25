@@ -17,12 +17,9 @@
     --color-primary-700: #914B00;
     --color-primary-800: #5E3000;
     --color-primary-900: #2B1600;
-  }
 
-  html, body, #app {
     font-size: 14px;
     line-height: 20px;
-    height: 100%;
   }
 
   a {
