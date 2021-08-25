@@ -22,6 +22,10 @@
     @apply bg-primary-400 hover:bg-primary-500;
   }
 
+  .button.is-white:focus {
+    @apply !ring-2;
+  }
+
   .switch input[type=checkbox]:checked + .check.is-primary {
     @apply bg-primary-400;
   }
