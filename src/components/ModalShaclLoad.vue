@@ -1,10 +1,12 @@
 <template>
   <Dialog @close="$emit('close')">
-    <div class="modal-card-head flex justify-between py-4">
+    <div class="modal-card-head py-4">
       <h3>Load SHACL shapes</h3>
-      <button class="button is-light" title="Close" @click="$emit('close')">
-        <XIcon class="icon" />
-      </button>
+      <div class="ml-auto">
+        <button class="button is-light" title="Close" @click="$emit('close')">
+          <XIcon class="icon" />
+        </button>
+      </div>
     </div>
     <div class="modal-card-body">
       <form @submit.prevent="onSubmit">

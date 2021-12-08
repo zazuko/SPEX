@@ -1,10 +1,10 @@
 <template>
   <Dialog @close="$emit('close')">
-    <div class="modal-card-head flex justify-between py-4">
+    <div class="modal-card-head py-4">
       <h3>Generated SHACL shapes</h3>
-      <div>
-        <Tooltip label="Load SHACL shapes">
-          <button class="button mr-4" @click="load">
+      <div class="ml-auto">
+        <Tooltip label="Load SHACL shapes" position="bottom" class="mr-4">
+          <button class="button" @click="load">
             <UploadIcon class="icon" />
           </button>
         </Tooltip>
