@@ -1,7 +1,5 @@
 module.exports = {
-  mode: 'jit',
-  purge: ['public/index.html', './src/**/*.{css,js,vue}'],
-  darkMode: false, // or 'media' or 'class'
+  content: ['public/index.html', './src/**/*.{css,js,vue}'],
   theme: {
     extend: {
       colors: {
@@ -22,9 +20,6 @@ module.exports = {
         title: ['Playfair Display', 'serif'],
       },
     },
-  },
-  variants: {
-    extend: {},
   },
   plugins: [],
 }

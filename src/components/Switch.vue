@@ -3,11 +3,11 @@
     :modelValue="modelValue"
     @update:modelValue="$emit('update:modelValue', $event)"
     :class="modelValue ? 'bg-primary-400' : 'bg-gray-300'"
-    class="relative inline-flex items-center h-6 w-10 rounded-full shadow-inner"
+    class="relative inline-flex shrink-0 items-center h-6 w-10 rounded-full shadow-inner"
   >
     <span
       :class="modelValue ? 'translate-x-5' : 'translate-x-1'"
-      class="inline-block w-4 h-4 bg-white rounded-full shadow transform transition duration-200 ease-in-out"
+      class="inline-block w-4 h-4 bg-white rounded-full shadow transition duration-200 ease-in-out"
     />
   </HSwitch>
 </template>

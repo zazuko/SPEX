@@ -13,11 +13,11 @@
     </ListboxButton>
     <transition
       enter-active-class="transition duration-100 ease-out"
-      enter-from-class="transform scale-95 opacity-0"
-      enter-to-class="transform scale-100 opacity-100"
+      enter-from-class="scale-95 opacity-0"
+      enter-to-class="scale-100 opacity-100"
       leave-active-class="transition duration-75 ease-out"
-      leave-from-class="transform scale-100 opacity-100"
-      leave-to-class="transform scale-95 opacity-0"
+      leave-from-class="scale-100 opacity-100"
+      leave-to-class="scale-95 opacity-0"
     >
       <ListboxOptions as="ul" class="bg-white border border-gray-100 shadow-md absolute w-full z-10 max-h-64 overflow-y-scroll">
         <ListboxOption
