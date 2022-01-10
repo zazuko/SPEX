@@ -29,10 +29,10 @@
 
 <script>
 import { XIcon } from '@heroicons/vue/solid'
-import RDF from '@rdfjs/dataset'
 import clownface from 'clownface'
 import * as N3 from 'n3'
 import { rdf, spex } from '../namespace'
+import RDF from '../rdf'
 import Dialog from './Dialog.vue'
 
 export default {

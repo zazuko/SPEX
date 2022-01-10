@@ -1,10 +1,9 @@
 import clownface from 'clownface'
-import RDF from '@rdfjs/dataset'
 import ParsingClient from 'sparql-http-client/ParsingClient'
-import TermSet from '@rdfjs/term-set'
 import { shrink } from '@zazuko/rdf-vocabularies/shrink'
 import { datamodelFromSHACL, datamodelToSHACL } from '@/shacl'
 import { prefixes as _prefixes } from './namespace'
+import RDF from './rdf'
 
 const SCHEMA_URI = '.well-known/void'
 
@@ -187,7 +186,7 @@ export class Endpoint {
       const row = acc.get(subject.value) || { id: subject.value, term: subject }
 
       if (!row[predicate]) {
-        row[predicate] = new TermSet()
+        row[predicate] = RDF.termSet()
       }
 
       row[predicate].add(object)
@@ -214,7 +213,7 @@ export class Endpoint {
           id: predicate.value,
           term: predicate,
           name: this.shrink(predicate.value),
-          values: new TermSet(),
+          values: RDF.termSet(),
         }
         acc.set(predicate.value, property)
       }

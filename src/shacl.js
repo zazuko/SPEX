@@ -1,6 +1,6 @@
 import clownface from 'clownface'
-import RDF from '@rdfjs/dataset'
 import { rdf, schema, sh, spex } from './namespace'
+import RDF from './rdf'
 
 /**
  * Extracts a SPEX datamodel from a given dataset SHACL description.
