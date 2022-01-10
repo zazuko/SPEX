@@ -29,10 +29,9 @@
 
 <script>
 import { XIcon } from '@heroicons/vue/solid'
-import clownface from 'clownface'
 import * as N3 from 'n3'
+import RDF from 'rdf-ext'
 import { rdf, spex } from '../namespace'
-import RDF from '../rdf'
 import Dialog from './Dialog.vue'
 
 export default {
@@ -58,7 +57,7 @@ export default {
       try {
         const quads = parser.parse(this.data)
         const dataset = RDF.dataset(quads)
-        const pointer = clownface({ dataset, term: spex.DefaultShapes })
+        const pointer = RDF.clownface({ dataset, term: spex.DefaultShapes })
           .in(rdf.type)
           .in(spex.shape)
 

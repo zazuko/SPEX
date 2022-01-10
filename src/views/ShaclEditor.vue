@@ -55,10 +55,9 @@ import { Splitpanes, Pane } from 'splitpanes'
 import 'splitpanes/dist/splitpanes.css'
 import '@rdfjs-elements/rdf-editor'
 import { parsers } from '@rdf-esm/formats-common'
-import clownface from 'clownface'
+import RDF from 'rdf-ext'
 import { tablesFromSHACL } from '@/shacl'
 import { rdf, sh } from '@/namespace'
-import RDF from '@/rdf'
 import GraphLayout from '@/components/GraphLayout.vue'
 import ResourceCard from '@/components/ResourceCard.vue'
 
@@ -125,7 +124,7 @@ export default {
       try {
         const quads = await editor.quads
         const dataset = RDF.dataset(quads)
-        const shapes = clownface({ dataset }).has(rdf.type, sh.NodeShape)
+        const shapes = RDF.clownface({ dataset }).has(rdf.type, sh.NodeShape)
         this.datamodel.tables = tablesFromSHACL(shapes, shrink)
       } catch (e) {
         this.error = e.toString()

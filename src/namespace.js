@@ -1,5 +1,5 @@
 import prefixes from '@zazuko/rdf-vocabularies/prefixes'
-import RDF from './rdf'
+import RDF from 'rdf-ext'
 
 prefixes.spex = 'https://described.at/spex/'
 

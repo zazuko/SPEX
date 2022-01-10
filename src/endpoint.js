@@ -1,9 +1,8 @@
-import clownface from 'clownface'
-import ParsingClient from 'sparql-http-client/ParsingClient'
 import { shrink } from '@zazuko/rdf-vocabularies/shrink'
+import RDF from 'rdf-ext'
+import ParsingClient from 'sparql-http-client/ParsingClient'
 import { datamodelFromSHACL, datamodelToSHACL } from '@/shacl'
 import { prefixes as _prefixes } from './namespace'
-import RDF from './rdf'
 
 const SCHEMA_URI = '.well-known/void'
 
@@ -88,7 +87,7 @@ export class Endpoint {
       ${fromClause}
     `
     const quads = await this.client.query.construct(query)
-    const dataset = clownface({
+    const dataset = RDF.clownface({
       dataset: RDF.dataset(quads),
       term: RDF.namedNode(this.datasetURI),
     })

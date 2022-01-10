@@ -1,6 +1,5 @@
-import clownface from 'clownface'
+import RDF from 'rdf-ext'
 import { rdf, schema, sh, spex } from './namespace'
-import RDF from './rdf'
 
 /**
  * Extracts a SPEX datamodel from a given dataset SHACL description.
@@ -89,7 +88,7 @@ function typeFromTerm (term, termType, shrink) {
  * @returns {Clownface} - Pointer to the dataset description
  */
 export function datamodelToSHACL (datamodel, datasetURI) {
-  const dataset = clownface({
+  const dataset = RDF.clownface({
     dataset: RDF.dataset(),
     term: RDF.namedNode(datasetURI)
   })
