@@ -2,6 +2,7 @@ import { shrink } from '@zazuko/rdf-vocabularies/shrink'
 import RDF from 'rdf-ext'
 import ParsingClient from 'sparql-http-client/ParsingClient'
 import { datamodelFromSHACL, datamodelToSHACL } from '@/shacl'
+import * as ns from './namespace'
 import { prefixes as _prefixes } from './namespace'
 
 const SCHEMA_URI = '.well-known/void'
@@ -164,7 +165,9 @@ export class Endpoint {
    * Fetch a sample of the data of a given table
    */
   async fetchTableData (table, opts = {}) {
-    const limit = opts.limit || 100
+    const type = RDF.namedNode(table.id)
+    const limit = opts.limit || 10
+    const offset = opts.offset || 0
     const graphClause = this.graph ? `GRAPH <${this.graph}>` : ''
     const query = `
       DESCRIBE ?subject {
@@ -176,13 +179,19 @@ export class Endpoint {
             }
           }
           LIMIT ${limit}
+          OFFSET ${offset}
         }
       }
     `
     const results = await this.client.query.construct(query)
+    const dataset = RDF.dataset(results)
+    const subjects = [...dataset.match(null, ns.rdf.type, type)]
+    const rows = RDF.termMap(subjects.map(({ subject }) => [subject, { id: subject.value, term: subject }]))
 
-    const rows = results.reduce((acc, { subject, predicate: { value: predicate }, object }) => {
-      const row = acc.get(subject.value) || { id: subject.value, term: subject }
+    results.forEach(({ subject, predicate: { value: predicate }, object }) => {
+      const row = rows.get(subject)
+
+      if (!row) return
 
       if (!row[predicate]) {
         row[predicate] = RDF.termSet()
@@ -190,9 +199,8 @@ export class Endpoint {
 
       row[predicate].add(object)
 
-      acc.set(subject.value, row)
-      return acc
-    }, new Map())
+      rows.set(subject, row)
+    })
 
     return [...rows.values()]
   }
