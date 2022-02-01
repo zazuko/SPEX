@@ -37,6 +37,21 @@
             </td>
           </tr>
         </tbody>
+        <tfoot class="sticky bottom-0" v-show="!isLoading">
+          <tr class="bg-gray-50">
+            <td :colspan="1 + table.properties.length">
+              <div class="flex items-center gap-2">
+                <button class="button px-2" :disabled="page === 1" @click="setPage(page - 1)">
+                  <ChevronLeftIcon class="w-5 h-5" />
+                </button>
+                <span>Page {{ page }}</span>
+                <button class="button px-2" @click="setPage(page + 1)">
+                  <ChevronRightIcon class="w-5 h-5" />
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tfoot>
       </table>
 
       <div class="flex-grow flex justify-center items-center" v-if="isLoading">
@@ -54,7 +69,7 @@
 
 <script>
 import { defineComponent, onMounted, ref, toRefs, watch } from 'vue'
-import { XIcon } from '@heroicons/vue/solid'
+import { ChevronLeftIcon, ChevronRightIcon, XIcon } from '@heroicons/vue/solid'
 import LoadingSpinner from './LoadingSpinner.vue'
 import Term from './Term.vue'
 import TermExploreButton from './TermExploreButton.vue'
@@ -64,6 +79,8 @@ export default defineComponent({
   props: ['table', 'tables', 'endpoint'],
   emits: ['close', 'explore-resource'],
   components: {
+    ChevronLeftIcon,
+    ChevronRightIcon,
     LoadingSpinner,
     Term,
     TermExploreButton,
@@ -77,15 +94,21 @@ export default defineComponent({
     const error = ref(null)
     const isLoading = ref(false)
 
+    const pageSize = 10
+    const page = ref(1)
+
     const loadData = async () => {
       data.value = []
       error.value = null
 
       if (!table.value) return
 
+      const offset = (page.value - 1) * pageSize
+      const limit = pageSize
+
       isLoading.value = true
       try {
-        data.value = await endpoint.value.fetchTableData(table.value)
+        data.value = await endpoint.value.fetchTableData(table.value, { offset, limit })
       } catch (e) {
         error.value = e
         console.error(e)
@@ -93,13 +116,21 @@ export default defineComponent({
         isLoading.value = false
       }
     }
+
+    const setPage = (newPage) => {
+      page.value = newPage
+      loadData()
+    }
+
     onMounted(loadData)
-    watch(table, loadData)
+    watch(table, () => { setPage(1) })
 
     return {
       data,
       error,
       isLoading,
+      page,
+      setPage,
     }
   },
 })
