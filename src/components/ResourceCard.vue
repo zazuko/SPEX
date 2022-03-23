@@ -1,7 +1,7 @@
 <template>
-  <div class="border rounded shadow-md bg-white opacity-90 text-sm" :class="{ active: isActive }">
+  <div class="border dark:border-gray-500 rounded shadow-md bg-white dark:bg-gray-800 opacity-90 text-sm" :class="{ active: isActive }">
     <header
-      class="bg-gray-100 flex items-center gap-4 justify-between px-3 py-2"
+      class="bg-gray-100 dark:bg-gray-900 flex items-center gap-4 justify-between px-3 py-2"
       @mouseenter="$emit('hover-title', resource)"
       @mouseleave="$emit('unhover-title', resource)"
     >
@@ -23,12 +23,12 @@
         @mouseenter="$emit('hover-property', resource, property)"
         @mouseleave="$emit('unhover-property', resource, property)"
       >
-        <th class="border-b px-3 py-2">
+        <th class="border-b dark:border-gray-500 px-3 py-2 text-gray-800 dark:text-gray-50">
           <Tooltip :label="property.id">
             {{ property.name }}
           </Tooltip>
         </th>
-        <td class="border-b px-3 py-2">
+        <td class="border-b dark:border-gray-500 px-3 py-2">
           <div v-for="value in property.values" :key="value.id">
             <slot name="property-value" :value="value">
               <Tooltip :label="value.id">

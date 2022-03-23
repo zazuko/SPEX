@@ -38,7 +38,7 @@
         <li v-if="hasMoreGraphs">
           <button
             type="button"
-            class="button is-white justify-start w-full"
+            class="button is-light justify-start w-full"
             :class="{ 'is-loading': loading }"
             @click="$emit('fetch-more')"
           >

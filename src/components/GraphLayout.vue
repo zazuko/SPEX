@@ -14,7 +14,9 @@
             refX="10" refY="5"
             markerUnits="userSpaceOnUse"
             markerWidth="10" markerHeight="10"
-            orient="auto">
+            orient="auto"
+            class="fill-gray-600 dark:fill-gray-100"
+          >
             <path d="M 0 0 L 10 5 L 0 10 z" class="link-arrow" />
           </marker>
           <marker
@@ -23,7 +25,9 @@
             refX="10" refY="5"
             markerUnits="userSpaceOnUse"
             markerWidth="10" markerHeight="10"
-            orient="auto">
+            orient="auto"
+            class="fill-primary-300"
+          >
             <path d="M 0 0 L 10 5 L 0 10 z" class="link-arrow" />
           </marker>
           <marker
@@ -32,7 +36,9 @@
             refX="50" refY="50"
             markerUnits="userSpaceOnUse"
             markerWidth="6" markerHeight="6"
-            orient="auto">
+            orient="auto"
+            class="fill-gray-600 dark:fill-gray-100"
+          >
             <circle cx="50" cy="50" r="50" class="link-start" />
           </marker>
           <marker
@@ -41,11 +47,18 @@
             refX="50" refY="50"
             markerUnits="userSpaceOnUse"
             markerWidth="6" markerHeight="6"
-            orient="auto">
+            orient="auto"
+            class="fill-primary-300"
+          >
             <circle cx="50" cy="50" r="50" class="link-start" />
           </marker>
         </defs>
-        <path v-for="(link, index) in links" :key="index" class="link" :class="{ active: activeLinks.includes(link) }">
+        <path
+          v-for="(link, index) in links"
+          :key="index"
+          class="link stroke-gray-700 dark:stroke-gray-100"
+          :class="{ active: activeLinks.includes(link) }"
+        >
           <title>{{ link.label }}</title>
         </path>
       </svg>
@@ -372,29 +385,17 @@ function setupZoomArrowKeys (container, zoom) {
 .link {
   fill: transparent;
   stroke-width: 1;
-  stroke: #333;
   marker-end: url(#arrow);
   marker-start: url(#dot);
   pointer-events: all;
 }
 
-.link-arrow {
-  fill: #456;
-}
-
-.link-start {
-  fill: #456;
-}
-
 /* SVG 1 doesn't provide a way to style markers based on their referencing
  * element. To circumvent this limitation, I use one marker for the normal
  * state, and one marker for the active state. */
-#arrow-active > .link-arrow { fill: #ffb15e; }
-#dot-active > .link-start { fill: #ffb15e; }
-
 .link.active {
   z-index: 10;
-  stroke: #ffb15e;
+  stroke: var(--color-primary-300);
   stroke-width: 2;
   marker-end: url(#arrow-active);
   marker-start: url(#dot-active);

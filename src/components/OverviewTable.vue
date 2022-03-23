@@ -1,16 +1,18 @@
 <template>
   <ResourceCard :resource="table" :active-links="activeLinks">
     <template v-slot:actions>
-      <Tooltip label="Hide">
-        <button class="button is-light" @click="$emit('hide', table)">
-          <EyeOffIcon class="icon" />
-        </button>
-      </Tooltip>
-      <Tooltip label="Explore">
-        <button class="button is-light" @click="$emit('explore', table)">
-          <TableIcon class="icon" />
-        </button>
-      </Tooltip>
+      <div class="flex gap-1">
+        <Tooltip label="Hide">
+          <button class="button is-light is-small" @click="$emit('hide', table)">
+            <EyeOffIcon class="icon" />
+          </button>
+        </Tooltip>
+        <Tooltip label="Explore">
+          <button class="button is-light is-small" @click="$emit('explore', table)">
+            <TableIcon class="icon" />
+          </button>
+        </Tooltip>
+      </div>
     </template>
   </ResourceCard>
 </template>

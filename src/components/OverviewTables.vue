@@ -6,7 +6,7 @@
     @link-enter="onLinkHover"
     @link-out="onUnhover"
     v-if="tablesVisible.length > 0"
-    class="bg-gray-50 flex-grow"
+    class="bg-gray-50 dark:bg-gray-700 flex-grow"
   >
     <template v-slot:node="{ node }">
       <OverviewTable
