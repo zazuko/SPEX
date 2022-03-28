@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import GraphLayout from './GraphLayout.vue'
+import { GraphLayout } from '@zazuko/vue-graph-layout'
 import OverviewTable from './OverviewTable.vue'
 
 export default {

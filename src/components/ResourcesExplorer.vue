@@ -55,7 +55,7 @@
 <script>
 import { computed, onMounted, ref, toRefs, watch } from 'vue'
 import { ExternalLinkIcon, EyeOffIcon, XIcon } from '@heroicons/vue/solid'
-import GraphLayout from './GraphLayout.vue'
+import { GraphLayout } from '@zazuko/vue-graph-layout'
 import ResourceCard from './ResourceCard.vue'
 import Term from './Term.vue'
 import TermExploreButton from './TermExploreButton.vue'

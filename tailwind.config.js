@@ -1,5 +1,9 @@
 module.exports = {
-  content: ['public/index.html', './src/**/*.{css,js,vue}'],
+  content: [
+    'public/index.html',
+    './src/**/*.{css,js,vue}',
+    './node_modules/@zazuko/vue-graph-layout/src/components/GraphLayout.vue',
+  ],
   theme: {
     extend: {
       colors: {

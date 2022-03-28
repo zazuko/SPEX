@@ -51,6 +51,7 @@
 <script>
 import { RefreshIcon } from '@heroicons/vue/solid'
 import { shrink as _shrink } from '@zazuko/rdf-vocabularies/shrink'
+import { GraphLayout } from '@zazuko/vue-graph-layout'
 import { Splitpanes, Pane } from 'splitpanes'
 import 'splitpanes/dist/splitpanes.css'
 import '@rdfjs-elements/rdf-editor'
@@ -58,7 +59,6 @@ import { parsers } from '@rdf-esm/formats-common'
 import RDF from 'rdf-ext'
 import { tablesFromSHACL } from '@/shacl'
 import { rdf, sh } from '@/namespace'
-import GraphLayout from '@/components/GraphLayout.vue'
 import ResourceCard from '@/components/ResourceCard.vue'
 
 const formats = [...parsers.keys()]
