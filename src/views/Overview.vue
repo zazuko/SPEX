@@ -29,7 +29,7 @@ export default {
     // Since we don't put user/password in the URL, get them from localStorage if the endpoint URL is the same
     if (localSettings.url && urlSettings.url && localSettings.url === urlSettings.url) {
       settings.user = localSettings.user
-      settings.password = localSettings.user
+      settings.password = localSettings.password
     }
 
     return {
