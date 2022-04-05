@@ -22,9 +22,14 @@ export default {
     const urlSettings = settingsFromURL(this.$route.query)
     const localSettings = settingsFromLocalStorage()
 
-    let settings = defaultSettings
-    if (localSettings.url) settings = { ...settings, ...localSettings }
-    if (urlSettings.url) settings = { ...settings, ...urlSettings }
+    let settings
+    if (urlSettings.url) {
+      settings = { ...defaultSettings, ...urlSettings }
+    } else if (localSettings.url) {
+      settings = { ...defaultSettings, ...localSettings }
+    } else {
+      settings = defaultSettings
+    }
 
     // Since we don't put user/password in the URL, get them from localStorage if the endpoint URL is the same
     if (localSettings.url && urlSettings.url && localSettings.url === urlSettings.url) {
