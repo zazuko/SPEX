@@ -6,7 +6,6 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "deploy": "./scripts/deploy.sh",
     "build-lib": "vue-cli-service build --target lib --formats umd,umd-min --inline-vue --name spex ./src/index.js",
     "prepublishOnly": "npm run build-lib"
   },
