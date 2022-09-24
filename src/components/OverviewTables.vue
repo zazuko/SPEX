@@ -14,6 +14,7 @@
         :active-links="activeLinks"
         @explore="$emit('explore', $event)"
         @hide="$emit('toggle-table', $event, false)"
+        @export="$emit('export', $event)"
         @hover-title="onHoverTable"
         @unhover-title="onUnhover"
         @hover-property="onHoverProperty"
@@ -40,7 +41,7 @@ export default {
   name: 'OverviewTables',
   components: { GraphLayout, OverviewTable },
   props: ['datamodel'],
-  emits: ['explore', 'toggle-table'],
+  emits: ['explore', 'toggle-table', 'export'],
 
   data () {
     return {
@@ -89,7 +90,7 @@ export default {
 
     onLinkHover (link) {
       this.activeLinks = [link]
-    },
+    }
   }
 }
 </script>

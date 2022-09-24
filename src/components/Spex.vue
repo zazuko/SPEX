@@ -35,7 +35,7 @@
                   <span>Classes</span>
                 </button>
               </div>
-              <OverviewTables :datamodel="datamodel" @explore="exploreTable" @toggle-table="toggleTable">
+              <OverviewTables :datamodel="datamodel" @explore="exploreTable" @export="onExportTable" @toggle-table="toggleTable">
                 <template v-slot:default>
                   <p
                     v-show="!(tableExplorerShown || resourcesExplorerShown)"
@@ -127,6 +127,7 @@ import SettingsPane from './SettingsPane.vue'
 import TableExplorer from './TableExplorer.vue'
 import TablesList from './TablesList.vue'
 import LoadingSpinner from './LoadingSpinner.vue'
+import { sh, rdf } from '../namespace'
 
 export default {
   name: 'Spex',
@@ -218,6 +219,46 @@ export default {
     exploreTable (table) {
       this.tableExplorerShown = true
       this.exploredTable = table
+    },
+
+    async onExportTable (table) {
+      const shapePtr = this.endpoint.datamodelToSHACL(this.datamodel).namedNode(table.id).in(sh.targetClass)
+      const subject = shapePtr.value
+      const rdfType = shapePtr.out(rdf.type).value
+      const targetClass = shapePtr.out(sh.targetClass).value
+      let shapeString = `_:${subject} a <${rdfType}> ;`
+      shapeString += `\n\t<${sh.targetClass.value}> <${targetClass}> ;`
+      const properties = shapePtr.out(sh.property)
+      if (properties.values.length > 0) {
+        shapeString += `\n\t<${sh.property.value}> `
+        properties.forEach((propertyPtr, index) => {
+          shapeString += '\n\t\t['
+          const propertyType = propertyPtr.out(rdf.type).value
+
+          const path = propertyPtr.out(sh.path).value
+          const shClass = propertyPtr.out(sh.class).value
+          const datatype = propertyPtr.out(sh.datatype).value
+          const shOr = propertyPtr.out(sh.or)
+          let propertyString = `\t\t\t<${rdf.type}> <${propertyType}> ;\n\t\t\t<http://www.w3.org/ns/shacl#path> <${path}> ;\n`
+          propertyString += shClass ? `\t\t\t<http://www.w3.org/ns/shacl#class> <${shClass}> ;\n` : ''
+          propertyString += datatype ? `\t\t\t<http://www.w3.org/ns/shacl#datatype> <${datatype}> ;\n` : ''
+
+          if (shOr.values.length > 0) {
+            let shOrString = '\t\t\t<http://www.w3.org/ns/shacl#shOr> (\n'
+            const shOrList = shOr.list()
+            Array.from(shOrList).forEach(x => {
+              const shOrMemberLines = []
+              x.dataset.match(x.term, null, null, null).forEach(q => shOrMemberLines.push(`\t\t\t\t\t<${q.predicate.value}> <${q.object.value}>`))
+              shOrString += `\t\t\t\t[\n${shOrMemberLines.join(' ;/n')}`
+              shOrString += ' ;\n\t\t\t\t]\n'
+            })
+            propertyString += `${shOrString}`
+            propertyString += '\t\t\t) ;\n'
+          }
+          shapeString += `\n${propertyString}\t\t] ${index === (properties.values.length - 1) ? '.' : ','}`
+        })
+      }
+      await navigator.clipboard.writeText(shapeString)
     },
 
     exploreResource (resource) {
