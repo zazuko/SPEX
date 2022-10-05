@@ -248,7 +248,7 @@ export default {
             const shOrList = shOr.list()
             Array.from(shOrList).forEach(x => {
               const shOrMemberLines = []
-              x.dataset.match(x.term, null, null, null).forEach(q => shOrMemberLines.push(`\t\t\t\t\t<${q.predicate.value}> <${q.object.value}>`))
+              x.dataset.match(x.term, null, null, null).filter(quad => !(quad.predicate.equals(rdf.last) || quad.predicate.equals(rdf.last) || quad.predicate.equals(rdf.nil))).forEach(q => shOrMemberLines.push(`\t\t\t\t\t<${q.predicate.value}> <${q.object.value}>`))
               shOrString += `\t\t\t\t[\n${shOrMemberLines.join(' ;/n')}`
               shOrString += ' ;\n\t\t\t\t]\n'
             })
