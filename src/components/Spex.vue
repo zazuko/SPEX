@@ -224,9 +224,8 @@ export default {
     async onExportTable (table) {
       const shapePtr = this.endpoint.datamodelToSHACL(this.datamodel).namedNode(table.id).in(sh.targetClass)
       const subject = shapePtr.value
-      const rdfType = shapePtr.out(rdf.type).value
       const targetClass = shapePtr.out(sh.targetClass).value
-      let shapeString = `_:${subject} a <${rdfType}> ;`
+      let shapeString = `_:${subject} a <http://www.w3.org/ns/shacl#NodeShape> ;`
       shapeString += `\n\t<${sh.targetClass.value}> <${targetClass}> ;`
       const properties = shapePtr.out(sh.property)
       if (properties.values.length > 0) {
@@ -249,7 +248,7 @@ export default {
             Array.from(shOrList).forEach(x => {
               const shOrMemberLines = []
               x.dataset.match(x.term, null, null, null).filter(quad => !(quad.predicate.equals(rdf.last) || quad.predicate.equals(rdf.last) || quad.predicate.equals(rdf.nil))).forEach(q => shOrMemberLines.push(`\t\t\t\t\t<${q.predicate.value}> <${q.object.value}>`))
-              shOrString += `\t\t\t\t[\n${shOrMemberLines.join(' ;/n')}`
+              shOrString += `\t\t\t\t[\n${shOrMemberLines.join(' ;\n')}`
               shOrString += ' ;\n\t\t\t\t]\n'
             })
             propertyString += `${shOrString}`
