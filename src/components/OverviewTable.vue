@@ -8,7 +8,7 @@
           </button>
         </Tooltip>
         <Tooltip label="Hide">
-          <button class="button is-light is-small" @click="$f('hide', table)">
+          <button class="button is-light is-small" @click="$emit('hide', table)">
             <EyeOffIcon class="icon" />
           </button>
         </Tooltip>
