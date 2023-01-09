@@ -7,14 +7,14 @@
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "build-lib": "vue-cli-service build --target lib --formats umd,umd-min --inline-vue --name spex ./src/index.js",
-    "prepublishOnly": "npm run build-lib",
-    "prepack": "npm run build"
+    "prepack": "npm run build-lib"
   },
   "main": "dist/spex.umd.js",
   "files": [
     "/src",
     "/dist/spex.css",
-    "/dist/spex.umd.min.js"
+    "/dist/spex.umd.min.js",
+    "/dist/spex.umd.min.js.map"
   ],
   "dependencies": {
     "@headlessui/vue": "^1.6.7",
