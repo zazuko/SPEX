@@ -191,6 +191,8 @@ export default {
       } catch (e) {
         this.error = e
         this.showSettings()
+
+        // eslint-disable-next-line no-console
         console.error(e)
       } finally {
         this.isLoading = false

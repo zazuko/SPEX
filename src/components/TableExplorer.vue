@@ -111,6 +111,8 @@ export default defineComponent({
         data.value = await endpoint.value.fetchTableData(table.value, { offset, limit })
       } catch (e) {
         error.value = e
+
+        // eslint-disable-next-line no-console
         console.error(e)
       } finally {
         isLoading.value = false
