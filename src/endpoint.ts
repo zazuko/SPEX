@@ -24,7 +24,7 @@ export class Endpoint {
   client: any;
   forceIntrospection: boolean;
 
-  constructor ({ url, user = null, password = null, prefixes = [], graph = '', forceIntrospection = false }) {
+  constructor({ url, user = null, password = null, prefixes = [], graph = '', forceIntrospection = false }) {
     this.url = url
     this.user = user || null
     this.password = password || null
@@ -46,14 +46,14 @@ export class Endpoint {
     })
   }
 
-  shrink (uri) {
+  shrink(uri: string): string {
     return shrink(uri) || uri
   }
 
   /**
    * Fetch a list of graphs in the endpoint
    */
-  async fetchGraphs (opts? :FetchDataOptions) {
+  async fetchGraphs(opts?: FetchDataOptions) {
     const offset = opts?.offset ?? 0
     const limit = opts?.limit ?? null
 
@@ -74,7 +74,7 @@ export class Endpoint {
    * Fetch data model, either by introspecting it or by querying the
    * pre-defined SHACL definition
    */
-  async fetchDataModel () {
+  async fetchDataModel() {
     if (this.forceIntrospection) {
       return this.fetchIntrospectDataModel()
     }
@@ -86,14 +86,14 @@ export class Endpoint {
       : this.fetchIntrospectDataModel()
   }
 
-  get datasetURI () {
+  get datasetURI() {
     return this.url.replace(/query\/?$/, SCHEMA_URI)
   }
 
   /**
    * Fetch data model from pre-defined SHACL definition
    */
-  async fetchPredefinedDataModel () {
+  async fetchPredefinedDataModel() {
     const fromClause = this.graph ? `FROM <${this.graph}>` : ''
     const query = `
       #pragma describe.strategy cbd
@@ -109,18 +109,18 @@ export class Endpoint {
     return this.dataModelFromSHACL(dataset)
   }
 
-  dataModelFromSHACL (dataset) {
+  dataModelFromSHACL(dataset) {
     return dataModelFromSHACL(dataset, displayLanguage, this.shrink)
   }
 
-  dataModelToSHACL (datamodel) {
+  dataModelToSHACL(datamodel) {
     return dataModelToSHACL(datamodel, this.datasetURI)
   }
 
   /**
    * Fetch data model by introspecting the endpoint
    */
-  async fetchIntrospectDataModel () {
+  async fetchIntrospectDataModel() {
     const structure = await this._fetchStructure()
     const tablesMap = structure.reduce((tables, { cls, property, linktype, datatype }) => {
       const table = tables.get(cls.value) || { id: cls.value, name: this.shrink(cls.value), properties: new Map(), isShown: true }
@@ -155,7 +155,7 @@ export class Endpoint {
     }
   }
 
-  async _fetchStructure () {
+  async _fetchStructure() {
     const fromClause = this.graph ? `FROM <${this.graph}>` : ''
     const query = `
       SELECT DISTINCT ?cls ?property ?linktype ?datatype
@@ -177,7 +177,7 @@ export class Endpoint {
   /**
    * Fetch a sample of the data of a given table
    */
-  async fetchTableData (table, opts?: FetchDataOptions) {
+  async fetchTableData(table, opts?: FetchDataOptions) {
     const type = RDF.namedNode(table.id)
     const limit = opts?.limit ?? 10
     const offset = opts?.offset ?? 0
@@ -221,7 +221,7 @@ export class Endpoint {
   /**
    * Fetch triples related to a given resource.
    */
-  async fetchResource (uri) {
+  async fetchResource(uri) {
     const query = `
       DESCRIBE <${uri}> {}
     `

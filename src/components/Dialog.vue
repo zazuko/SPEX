@@ -1,7 +1,7 @@
 <template>
   <HDialog :open="open" @close="$emit('close')" class="fixed inset-0 z-10 overflow-y-auto">
     <div class="flex items-center justify-center min-h-screen">
-      <DialogOverlay  class="fixed inset-0 bg-black opacity-50" />
+      <DialogOverlay class="fixed inset-0 bg-black opacity-50" />
 
       <div class="modal-card">
         <slot />
