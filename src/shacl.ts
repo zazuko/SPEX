@@ -2,12 +2,12 @@ import RDF from 'rdf-ext'
 import { rdf, schema, sh, spex } from './namespace'
 
 /**
- * Extracts a SPEX datamodel from a given dataset SHACL description.
+ * Extracts a SPEX data model from a given dataset SHACL description.
  *
  * @param {Clownface} dataset - Pointer to the dataset description
  * @returns {Object} SPEX datamodel
  */
-export function datamodelFromSHACL (dataset, language, shrink) {
+export function dataModelFromSHACL (dataset: any, language: any, shrink: any) {
   const defaultShapes = dataset.out(spex.shape).has(rdf.type, spex.DefaultShapes)
   const tables = defaultShapes.term
     ? tablesFromSHACL(defaultShapes.out(schema.hasPart), shrink)
@@ -87,8 +87,8 @@ function typeFromTerm (term, termType, shrink) {
  * @param {string} datasetURI - URI of the dataset (.well-known/void)
  * @returns {Clownface} - Pointer to the dataset description
  */
-export function datamodelToSHACL (datamodel, datasetURI) {
-  const dataset = RDF.clownface({
+export function dataModelToSHACL (datamodel, datasetURI) {
+  const dataset = (RDF as any).clownface({
     dataset: RDF.dataset(),
     term: RDF.namedNode(datasetURI)
   })

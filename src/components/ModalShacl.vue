@@ -18,7 +18,8 @@
     <div class="modal-card-body overflow-y-hidden flex flex-col pb-0">
       <div class="flex justify-between">
         <RadioGroup v-model="selectedFormat" class="field has-addons">
-          <RadioGroupOption v-for="format in formats" :key="format.value" v-slot="{ checked }" :value="format.value" class="control">
+          <RadioGroupOption v-for="format in formats" :key="format.value" v-slot="{ checked }" :value="format.value"
+            class="control">
             <span class="button" :class="checked ? 'is-primary' : ''">
               {{ format.label }}
             </span>
@@ -35,14 +36,8 @@
           </button>
         </div>
       </div>
-      <rdf-editor
-        :format="selectedFormat"
-        :quads.prop="shacl"
-        :prefixes.prop="prefixes"
-        :customPrefixes.prop="customPrefixes"
-        ref="snippet"
-        class="overflow-y-auto"
-      />
+      <rdf-editor :format="selectedFormat" :quads.prop="shacl" :prefixes.prop="prefixes"
+        :customPrefixes.prop="customPrefixes" ref="snippet" class="overflow-y-auto" />
     </div>
   </Dialog>
 </template>
@@ -61,13 +56,13 @@ export default {
   props: ['datamodel', 'loadShacl', 'endpoint'],
   emits: ['close', 'open-load-shacl'],
 
-  setup (props) {
+  setup(props) {
     const { datamodel, endpoint } = toRefs(props)
 
     const customPrefixes = computed(() => endpoint.value
       .prefixes.reduce((acc, { prefix, url }) => ({ ...acc, [prefix]: url }), {}))
 
-    const shacl = computed(() => [...endpoint.value.datamodelToSHACL(datamodel.value).dataset])
+    const shacl = computed(() => [...endpoint.value.dataModelToSHACL(datamodel.value).dataset])
 
     const copiedMessage = ref(null)
 
@@ -78,7 +73,7 @@ export default {
     }
   },
 
-  data () {
+  data() {
     return {
       formats: [
         { label: 'JSON-LD', value: 'application/ld+json' },
@@ -91,7 +86,7 @@ export default {
   },
 
   methods: {
-    async copy () {
+    async copy() {
       const content = this.$refs.snippet.codeMirror.value
       await navigator.clipboard.writeText(content)
 
@@ -99,7 +94,7 @@ export default {
       setTimeout(() => { this.copiedMessage = null }, 3000)
     },
 
-    load () {
+    load() {
       this.$emit('open-load-shacl')
       this.$emit('close')
     }

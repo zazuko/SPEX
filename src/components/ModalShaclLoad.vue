@@ -40,7 +40,7 @@ export default {
   emits: ['close'],
   components: { Dialog, XIcon },
 
-  data () {
+  data() {
     return {
       data: '',
       error: null,
@@ -48,7 +48,7 @@ export default {
   },
 
   methods: {
-    async onSubmit () {
+    async onSubmit() {
       if (!this.data) {
         return
       }
@@ -65,7 +65,7 @@ export default {
           throw new Error('No node with spex:shape pointing to a spex:DefaultShapes found')
         }
 
-        const datamodel = this.endpoint.datamodelFromSHACL(pointer)
+        const datamodel = this.endpoint.dataModelFromSHACL(pointer)
         this.load(datamodel)
         this.$emit('close')
       } catch (e) {

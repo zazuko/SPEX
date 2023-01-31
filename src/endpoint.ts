@@ -1,7 +1,7 @@
 import { shrink } from '@zazuko/rdf-vocabularies/shrink'
 import RDF from 'rdf-ext'
 import ParsingClient from 'sparql-http-client/ParsingClient'
-import { datamodelFromSHACL, datamodelToSHACL } from '@/shacl'
+import { dataModelFromSHACL, dataModelToSHACL } from '@/shacl'
 import * as ns from './namespace'
 import { prefixes as _prefixes } from './namespace'
 
@@ -10,7 +10,20 @@ const SCHEMA_URI = '.well-known/void'
 const initialPrefixes = [...Object.keys(_prefixes)]
 const displayLanguage = ['en', '*']
 
+export interface FetchDataOptions {
+  offset?: number,
+  limit?: number;
+}
+
 export class Endpoint {
+  user: string | null = null;
+  url: string;
+  prefixes: any;
+  password: string | null = null;
+  graph: any;
+  client: any;
+  forceIntrospection: boolean;
+
   constructor ({ url, user = null, password = null, prefixes = [], graph = '', forceIntrospection = false }) {
     this.url = url
     this.user = user || null
@@ -40,9 +53,9 @@ export class Endpoint {
   /**
    * Fetch a list of graphs in the endpoint
    */
-  async fetchGraphs (opts = {}) {
-    const offset = opts.offset || 0
-    const limit = opts.limit || null
+  async fetchGraphs (opts? :FetchDataOptions) {
+    const offset = opts?.offset ?? 0
+    const limit = opts?.limit ?? null
 
     const query = `
       SELECT DISTINCT ?g
@@ -61,16 +74,16 @@ export class Endpoint {
    * Fetch data model, either by introspecting it or by querying the
    * pre-defined SHACL definition
    */
-  async fetchDatamodel () {
+  async fetchDataModel () {
     if (this.forceIntrospection) {
-      return this.fetchIntrospectDatamodel()
+      return this.fetchIntrospectDataModel()
     }
 
-    const datamodel = await this.fetchPredefinedDatamodel()
+    const dataModel = await this.fetchPredefinedDataModel()
 
-    return datamodel.tables
-      ? datamodel
-      : this.fetchIntrospectDatamodel()
+    return dataModel.tables
+      ? dataModel
+      : this.fetchIntrospectDataModel()
   }
 
   get datasetURI () {
@@ -80,7 +93,7 @@ export class Endpoint {
   /**
    * Fetch data model from pre-defined SHACL definition
    */
-  async fetchPredefinedDatamodel () {
+  async fetchPredefinedDataModel () {
     const fromClause = this.graph ? `FROM <${this.graph}>` : ''
     const query = `
       #pragma describe.strategy cbd
@@ -88,26 +101,26 @@ export class Endpoint {
       ${fromClause}
     `
     const quads = await this.client.query.construct(query)
-    const dataset = RDF.clownface({
+    const dataset = (RDF as any).clownface({
       dataset: RDF.dataset(quads),
       term: RDF.namedNode(this.datasetURI),
     })
 
-    return this.datamodelFromSHACL(dataset)
+    return this.dataModelFromSHACL(dataset)
   }
 
-  datamodelFromSHACL (dataset) {
-    return datamodelFromSHACL(dataset, displayLanguage, this.shrink)
+  dataModelFromSHACL (dataset) {
+    return dataModelFromSHACL(dataset, displayLanguage, this.shrink)
   }
 
-  datamodelToSHACL (datamodel) {
-    return datamodelToSHACL(datamodel, this.datasetURI)
+  dataModelToSHACL (datamodel) {
+    return dataModelToSHACL(datamodel, this.datasetURI)
   }
 
   /**
    * Fetch data model by introspecting the endpoint
    */
-  async fetchIntrospectDatamodel () {
+  async fetchIntrospectDataModel () {
     const structure = await this._fetchStructure()
     const tablesMap = structure.reduce((tables, { cls, property, linktype, datatype }) => {
       const table = tables.get(cls.value) || { id: cls.value, name: this.shrink(cls.value), properties: new Map(), isShown: true }
@@ -164,10 +177,10 @@ export class Endpoint {
   /**
    * Fetch a sample of the data of a given table
    */
-  async fetchTableData (table, opts = {}) {
+  async fetchTableData (table, opts?: FetchDataOptions) {
     const type = RDF.namedNode(table.id)
-    const limit = opts.limit || 10
-    const offset = opts.offset || 0
+    const limit = opts?.limit ?? 10
+    const offset = opts?.offset ?? 0
     const graphClause = this.graph ? `GRAPH <${this.graph}>` : ''
     const query = `
       DESCRIBE ?subject {
@@ -186,7 +199,7 @@ export class Endpoint {
     const results = await this.client.query.construct(query)
     const dataset = RDF.dataset(results)
     const subjects = [...dataset.match(null, ns.rdf.type, type)]
-    const rows = RDF.termMap(subjects.map(({ subject }) => [subject, { id: subject.value, term: subject }]))
+    const rows = (RDF as any).termMap(subjects.map(({ subject }) => [subject, { id: subject.value, term: subject }]))
 
     results.forEach(({ subject, predicate: { value: predicate }, object }) => {
       const row = rows.get(subject)
@@ -194,7 +207,7 @@ export class Endpoint {
       if (!row) return
 
       if (!row[predicate]) {
-        row[predicate] = RDF.termSet()
+        row[predicate] = (RDF as any).termSet()
       }
 
       row[predicate].add(object)
@@ -220,7 +233,7 @@ export class Endpoint {
           id: predicate.value,
           term: predicate,
           name: this.shrink(predicate.value),
-          values: RDF.termSet(),
+          values: (RDF as any).termSet(),
         }
         acc.set(predicate.value, property)
       }
