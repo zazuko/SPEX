@@ -17,10 +17,10 @@ interface Props {
   term: Term
 }
 
-// eslint-disable-next-line no-unused-vars
+// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
 const props = defineProps<Props>()
 
-// eslint-disable-next-line no-unused-vars
+// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
 const emit = defineEmits<{
   (event: 'explore-resource'): void
 }>()

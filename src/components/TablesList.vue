@@ -44,34 +44,43 @@
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
+import { DataModel } from '@/model/data-model.model'
 import { XIcon } from '@heroicons/vue/solid'
+import { ref, defineProps, defineEmits } from 'vue'
 import SpexSwitch from './Switch.vue'
+interface Props {
+  datamodel: DataModel
+}
+const props = defineProps<Props>()
+
+const toggleAll = ref<boolean>(true)
+
+// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+const emit = defineEmits<{
+  (event: 'toggle-table', boolean): void;
+  (event: 'select-viewport', value: any): void,
+  (event: 'close', value: any): void
+}>()
+const selectViewport = (event) => {
+  const id = event.target.value
+  const viewport =
+    props.datamodel.viewports.find((viewport) => viewport.id === id) ?? null
+  emit('select-viewport', viewport)
+}
+
+const onToggleAll = (event: boolean) => {
+  toggleAll.value = event
+  props.datamodel.tables.forEach((table) => {
+    table.isShown = event
+  })
+}
+
+</script>
+<script lang="ts">
 
 export default {
-  name: 'TablesList',
-  props: ['datamodel'],
-  emits: ['toggle-table', 'select-viewport', 'close'],
-  components: { SpexSwitch, XIcon },
-  data: () => {
-    return { toggleAll: true }
-  },
-
-  methods: {
-    selectViewport(event) {
-      const id = event.target.value
-      const viewport =
-        this.datamodel.viewports.find((viewport) => viewport.id === id) ?? null
-
-      this.$emit('select-viewport', viewport)
-    },
-
-    onToggleAll(event) {
-      this.toggleAll = event
-      this.datamodel.tables.forEach((table) => {
-        table.isShown = event
-      })
-    }
-  }
+  name: 'TablesList'
 }
+
 </script>
