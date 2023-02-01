@@ -12,17 +12,17 @@ const displayLanguage = ['en', '*']
 
 export interface FetchDataOptions {
   offset?: number,
-  limit?: number;
+  limit?: number
 }
 
 export class Endpoint {
-  user: string | null = null;
-  url: string;
-  prefixes: any;
-  password: string | null = null;
-  graph: any;
-  client: any;
-  forceIntrospection: boolean;
+  user: string | null = null
+  url: string
+  prefixes: any
+  password: string | null = null
+  graph: any
+  client: any
+  forceIntrospection: boolean
 
   constructor({ url, user = null, password = null, prefixes = [], graph = '', forceIntrospection = false }) {
     this.url = url
@@ -198,7 +198,7 @@ export class Endpoint {
     `
     const results = await this.client.query.construct(query)
     const dataset = RDF.dataset(results)
-    const subjects = [...dataset.match(null, ns.rdf.type, type)]
+    const subjects = [...(dataset.match(null, ns.rdf.type, type) as any)]
     const rows = (RDF as any).termMap(subjects.map(({ subject }) => [subject, { id: subject.value, term: subject }]))
 
     results.forEach(({ subject, predicate: { value: predicate }, object }) => {

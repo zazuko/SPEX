@@ -6,24 +6,37 @@
   </Tooltip>
 </template>
 
-<script>
-import { EyeIcon } from '@heroicons/vue/solid'
+<script setup lang="ts">
+import { computed } from 'vue'
 import Tooltip from './Tooltip.vue'
+import { EyeIcon } from '@heroicons/vue/solid'
+import { Term } from 'rdf-js'
+import { Resource } from '@/model/resource.model'
 
+interface Props {
+  term: Term
+}
+
+// eslint-disable-next-line no-unused-vars
+const props = defineProps<Props>()
+
+// eslint-disable-next-line no-unused-vars
+const emit = defineEmits<{
+  (event: 'explore-resource'): void
+}>()
+
+const canExplore = computed(() => {
+  return ['NamedNode', 'BlankNode'].includes(props.term.termType)
+})
+const resource = computed(() => {
+  const newResource: Resource = { id: props.term.value, name: props.term.value, term: props.term }
+  return newResource
+}
+)
+</script>
+
+<script lang="ts">
 export default {
-  name: 'TermExploreButton',
-  props: ['term', 'endpoint'],
-  emits: ['explore-resource'],
-  components: { EyeIcon, Tooltip },
-
-  computed: {
-    canExplore () {
-      return ['NamedNode', 'BlankNode'].includes(this.term.termType)
-    },
-
-    resource () {
-      return { id: this.term.value, name: this.term.value, term: this.term }
-    },
-  }
+  name: 'TermExploreButton'
 }
 </script>

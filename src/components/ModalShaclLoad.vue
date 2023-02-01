@@ -1,5 +1,5 @@
 <template>
-  <Dialog @close="$emit('close')">
+  <SpexDialog @close="$emit('close')">
     <div class="modal-card-head py-4">
       <h3>Load SHACL shapes</h3>
       <div class="ml-auto">
@@ -24,7 +24,7 @@
         </div>
       </form>
     </div>
-  </Dialog>
+  </SpexDialog>
 </template>
 
 <script>
@@ -32,13 +32,13 @@ import { XIcon } from '@heroicons/vue/solid'
 import * as N3 from 'n3'
 import RDF from 'rdf-ext'
 import { rdf, spex } from '../namespace'
-import Dialog from './Dialog.vue'
+import SpexDialog from './Dialog.vue'
 
 export default {
   name: 'ModalShaclLoad',
   props: ['load', 'endpoint'],
   emits: ['close'],
-  components: { Dialog, XIcon },
+  components: { SpexDialog, XIcon },
 
   data() {
     return {

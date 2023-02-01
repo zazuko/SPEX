@@ -28,6 +28,6 @@ const props = defineProps<Props>()
 
 <script lang="ts">
 export default {
-  name: 'Tooltip',
+  name: 'SpexTooltip',
 }
 </script>

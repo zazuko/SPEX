@@ -23,6 +23,8 @@ module.exports = {
     'no-unused-vars': 'warn',
     'padded-blocks': 'warn',
     'comma-dangle': 'off',
-    'space-before-function-paren': 'off'
+    'space-before-function-paren': 'off',
+    'func-call-spacing': 'off',
+    "no-extra-semi": "off"
   }
 }

@@ -1,10 +1,10 @@
 <template>
-  <Spex :settings="settings" @settings-change="onSettingsChange" />
+  <SpexMain :settings="settings" @settings-change="onSettingsChange" />
 </template>
 
 <script>
 import { isNavigationFailure, NavigationFailureType } from 'vue-router'
-import Spex from '@/components/Spex.vue'
+import SpexMain from '@/components/Spex.vue'
 
 const defaultSettings = {
   url: '',
@@ -16,9 +16,10 @@ const defaultSettings = {
 }
 
 export default {
-  components: { Spex },
+  name: 'SpexOverview',
+  components: { SpexMain },
 
-  data () {
+  data() {
     const urlSettings = settingsFromURL(this.$route.query)
     const localSettings = settingsFromLocalStorage()
 
@@ -43,13 +44,13 @@ export default {
   },
 
   methods: {
-    onSettingsChange (settings) {
+    onSettingsChange(settings) {
       this.settings = settings
       saveSettingsInLocalStorage(settings)
       this.updateURL(settings)
     },
 
-    async updateURL (settings) {
+    async updateURL(settings) {
       const query = urlQueryFromSettings(settings)
       try {
         await this.$router.push({ query })
@@ -64,18 +65,18 @@ export default {
   },
 }
 
-function settingsFromLocalStorage () {
+function settingsFromLocalStorage() {
   const settings = localStorage.getItem('settings')
   return settings ? JSON.parse(settings) : {}
 }
 
-function saveSettingsInLocalStorage (settings) {
+function saveSettingsInLocalStorage(settings) {
   localStorage.setItem('settings', JSON.stringify(settings))
 }
 
 const validURLOptions = ['url', 'graph', 'prefixes', 'forceIntrospection']
 
-function settingsFromURL (params) {
+function settingsFromURL(params) {
   return validURLOptions.reduce((settings, option) => {
     if (option in params) {
       settings[option] = deserializeURLParam(option, params[option])
@@ -84,7 +85,7 @@ function settingsFromURL (params) {
   }, {})
 }
 
-function deserializeURLParam (param, value) {
+function deserializeURLParam(param, value) {
   if (param === 'prefixes') {
     if (typeof value === 'string') {
       value = [value]
@@ -104,13 +105,13 @@ function deserializeURLParam (param, value) {
   return value
 }
 
-function urlQueryFromSettings (settings) {
+function urlQueryFromSettings(settings) {
   return validURLOptions.reduce((params, option) => {
     return { ...params, [option]: serializeURLParam(option, settings[option]) }
   }, {})
 }
 
-function serializeURLParam (param, value) {
+function serializeURLParam(param, value) {
   if (param === 'prefixes') {
     return value.map(({ prefix, url }) => `${prefix}:${url}`)
   }

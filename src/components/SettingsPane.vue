@@ -23,14 +23,8 @@
       </div>
       <div class="field" :class="fetchError ? 'is-danger' : ''">
         <label class="label" for="graph">Graph</label>
-        <SelectGraph
-          id="graph"
-          v-model="data.graph"
-          :graphs="graphs"
-          :loading="loadingGraphs"
-          :has-more-graphs="hasMoreGraphs"
-          @fetch-more="fetchMoreGraphs"
-        />
+        <SelectGraph id="graph" v-model="data.graph" :graphs="graphs" :loading="loadingGraphs"
+          :has-more-graphs="hasMoreGraphs" @fetch-more="fetchMoreGraphs" />
       </div>
       <div class="field">
         <div class="message is-danger" v-if="fetchError">
@@ -61,7 +55,7 @@
       </div>
       <div class="field">
         <label class="label flex items-center gap-2">
-          <Switch v-model="data.forceIntrospection" />
+          <SpexSwitch v-model="data.forceIntrospection" />
           Force introspection
         </label>
         <p class="help">
@@ -81,17 +75,17 @@ import { MinusSmIcon, PlusSmIcon, XIcon } from '@heroicons/vue/solid'
 import { Endpoint } from '@/endpoint'
 import cloneDeep from 'lodash.clonedeep'
 import SelectGraph from './SelectGraph.vue'
-import Switch from './Switch.vue'
+import SpexSwitch from './Switch.vue'
 
 const graphsPageSize = 10
 
 export default {
   name: 'SettingsPane',
   props: ['settings'],
-  components: { MinusSmIcon, SelectGraph, PlusSmIcon, Switch, XIcon },
+  components: { MinusSmIcon, SelectGraph, PlusSmIcon, SpexSwitch, XIcon },
   emits: ['change', 'close'],
 
-  data () {
+  data() {
     return {
       endpoint: null,
       graphs: [],
@@ -103,32 +97,32 @@ export default {
     }
   },
 
-  async mounted () {
+  async mounted() {
     await this.fetchGraphs()
   },
 
   methods: {
-    onSubmit () {
+    onSubmit() {
       this.$emit('change', this.data)
     },
 
-    onClose () {
+    onClose() {
       this.$emit('close')
     },
 
-    async fetchGraphs () {
+    async fetchGraphs() {
       this.loadingGraphs = true
       this.endpoint = new Endpoint(this.data)
       this.graphsOffset = 0
       this.graphs = await this.fetchGraphPage()
     },
 
-    async fetchMoreGraphs () {
+    async fetchMoreGraphs() {
       const newGraphs = await this.fetchGraphPage()
       this.graphs = this.graphs.concat(newGraphs)
     },
 
-    async fetchGraphPage () {
+    async fetchGraphPage() {
       this.loadingGraphs = true
       this.fetchError = ''
 
@@ -146,21 +140,21 @@ export default {
       }
     },
 
-    addPrefix () {
+    addPrefix() {
       this.data.prefixes.push({ prefix: '', url: '' })
     },
 
-    removePrefix (index) {
+    removePrefix(index) {
       this.data.prefixes.splice(index, 1)
     },
   },
 
   watch: {
-    settings (settings) {
+    settings(settings) {
       this.data = cloneDeep(settings)
     },
 
-    'data.url' () {
+    'data.url'() {
       this.endpoint = new Endpoint(this.data)
       this.graphs = []
       this.data.graph = null

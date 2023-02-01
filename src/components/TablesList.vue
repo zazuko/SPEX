@@ -9,9 +9,7 @@
       </p>
     </div>
     <div class="card-content px-0 py-1">
-      <div
-        v-show="datamodel.viewports.length > 0"
-        class="
+      <div v-show="datamodel.viewports.length > 0" class="
           field
           m-0
           px-2
@@ -21,17 +19,12 @@
           justify-end
           items-center
           gap-2
-        "
-      >
+        ">
         <label class="label m-0" for="predefined-views">Predefined views</label>
         <div class="select">
           <select id="predefined-views" @input="selectViewport">
             <option value="">-</option>
-            <option
-              v-for="viewport in datamodel.viewports"
-              :key="viewport.id"
-              :value="viewport.id"
-            >
+            <option v-for="viewport in datamodel.viewports" :key="viewport.id" :value="viewport.id">
               {{ viewport.name }}
             </option>
           </select>
@@ -40,18 +33,11 @@
       <ul>
         <li class="panel-block is-justify-content-space-between">
           <span>All</span>
-          <Switch :modelValue="toggleAll" @update:modelValue="onToggleAll" />
+          <SpexSwitch :modelValue="toggleAll" @update:modelValue="onToggleAll" />
         </li>
-        <li
-          v-for="table in datamodel.tables"
-          :key="table.id"
-          class="panel-block is-justify-content-space-between"
-        >
+        <li v-for="table in datamodel.tables" :key="table.id" class="panel-block is-justify-content-space-between">
           <span>{{ table.name }}</span>
-          <Switch
-            :modelValue="table.isShown"
-            @update:modelValue="$emit('toggle-table', table, $event)"
-          />
+          <SpexSwitch :modelValue="table.isShown" @update:modelValue="$emit('toggle-table', table, $event)" />
         </li>
       </ul>
     </div>
@@ -60,19 +46,19 @@
 
 <script>
 import { XIcon } from '@heroicons/vue/solid'
-import Switch from './Switch.vue'
+import SpexSwitch from './Switch.vue'
 
 export default {
   name: 'TablesList',
   props: ['datamodel'],
   emits: ['toggle-table', 'select-viewport', 'close'],
-  components: { Switch, XIcon },
+  components: { SpexSwitch, XIcon },
   data: () => {
     return { toggleAll: true }
   },
 
   methods: {
-    selectViewport (event) {
+    selectViewport(event) {
       const id = event.target.value
       const viewport =
         this.datamodel.viewports.find((viewport) => viewport.id === id) ?? null
@@ -80,7 +66,7 @@ export default {
       this.$emit('select-viewport', viewport)
     },
 
-    onToggleAll (event) {
+    onToggleAll(event) {
       this.toggleAll = event
       this.datamodel.tables.forEach((table) => {
         table.isShown = event

@@ -15,7 +15,7 @@ import { defineComponent } from 'vue'
 import { Dialog as HDialog, DialogOverlay } from '@headlessui/vue'
 
 export default defineComponent({
-  name: 'Dialog',
+  name: 'SpexDialog',
   props: ['open'],
   emits: ['close'],
   components: { DialogOverlay, HDialog },

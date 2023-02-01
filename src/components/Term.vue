@@ -4,47 +4,45 @@
   </Tooltip>
 </template>
 
-<script>
+<script setup lang="ts">
+import { Endpoint } from '@/endpoint'
+import { Term } from 'rdf-js'
+import { ref } from 'vue'
 import Tooltip from './Tooltip.vue'
 
-export default {
-  name: 'Term',
-  props: ['term', 'endpoint'],
-
-  components: { Tooltip },
-
-  data () {
-    const displayValue = termValue(this.endpoint, this.term)
-    const expandedValue = expandValue(this.endpoint, this.term)
-
-    return {
-      displayValue,
-      language: this.term && this.term.language,
-      tooltip: expandedValue !== displayValue ? expandedValue : ''
-    }
-  }
+interface Props {
+  term: Term,
+  endpoint: Endpoint
 }
+const props = defineProps<Props>()
+const displayValue = ref(termValue(props.endpoint, props.term))
+const expandedValue = expandValue(props.endpoint, props.term)
+const language = ref<string>(props.term && (props.term as any).language)
+const tooltip = ref<string>(expandedValue !== displayValue.value ? expandedValue : '')
 
-function termValue (endpoint, term) {
+function termValue(endpoint: Endpoint, term: Term): string {
   if (!term) {
     return term
   }
-
   if (term.termType === 'NamedNode') {
     return endpoint.shrink(term.value)
   }
-
   return term.value
 }
 
-function expandValue (endpoint, term) {
+function expandValue(endpoint: Endpoint, term: Term): string {
   if (term.termType === 'Literal') {
     const datatype = term.datatype ? `^^${endpoint.shrink(term.datatype.value)}` : ''
     const language = term.language ? `@${term.language}` : ''
-
     return `${term.value}${datatype}${language}`
   }
-
   return term.value
 }
+</script>
+
+<script lang="ts">
+export default {
+  name: 'SpexTerm'
+}
+
 </script>

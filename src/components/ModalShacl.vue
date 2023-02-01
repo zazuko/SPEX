@@ -1,5 +1,5 @@
 <template>
-  <Dialog @close="$emit('close')">
+  <SpexDialog @close="$emit('close')">
     <div class="modal-card-head py-4">
       <h3>Generated SHACL shapes</h3>
       <div class="ml-auto">
@@ -39,7 +39,7 @@
       <rdf-editor :format="selectedFormat" :quads.prop="shacl" :prefixes.prop="prefixes"
         :customPrefixes.prop="customPrefixes" ref="snippet" class="overflow-y-auto" />
     </div>
-  </Dialog>
+  </SpexDialog>
 </template>
 
 <script>
@@ -47,12 +47,12 @@ import { computed, ref, toRefs } from 'vue'
 import '@rdfjs-elements/rdf-editor'
 import { RadioGroup, RadioGroupOption } from '@headlessui/vue'
 import { ClipboardCopyIcon, UploadIcon, XIcon } from '@heroicons/vue/solid'
-import Dialog from './Dialog.vue'
+import SpexDialog from './Dialog.vue'
 import Tooltip from './Tooltip.vue'
 
 export default {
   name: 'ModalShacl',
-  components: { ClipboardCopyIcon, Dialog, RadioGroup, RadioGroupOption, Tooltip, UploadIcon, XIcon },
+  components: { ClipboardCopyIcon, SpexDialog, RadioGroup, RadioGroupOption, Tooltip, UploadIcon, XIcon },
   props: ['datamodel', 'loadShacl', 'endpoint'],
   emits: ['close', 'open-load-shacl'],
 
@@ -106,23 +106,23 @@ export default {
 rdf-editor::part(CodeMirror-sizer) {
   margin-bottom: 0 !important;
   min-height: 0 !important;
-  border-right-width: 0 !important;
+  border-right-width: 0 !important
 }
 
 rdf-editor::part(CodeMirror-scroll) {
   margin-bottom: 0;
-  padding-bottom: 0;
+  padding-bottom: 0
 }
 
 rdf-editor::part(CodeMirror-lines) {
-  padding-bottom: 0;
+  padding-bottom: 0
 }
 
 rdf-editor::part(CodeMirror-vscrollbar) {
-  display: none;
+  display: none
 }
 
 rdf-editor::part(CodeMirror-hscrollbar) {
-  display: none;
+  display: none
 }
 </style>

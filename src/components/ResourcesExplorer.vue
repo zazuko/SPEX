@@ -10,24 +10,11 @@
         </button>
       </p>
     </div>
-    <GraphLayout
-      class="card-content p-0"
-      :nodes="resources"
-      :links="links"
-      :active-links="activeLinks"
-      :auto-zoom="false"
-      @link-enter="onLinkHover"
-      @link-out="onUnhover"
-    >
+    <GraphLayout class="card-content p-0" :nodes="resources" :links="links" :active-links="activeLinks"
+      :auto-zoom="false" @link-enter="onLinkHover" @link-out="onUnhover">
       <template v-slot:node="{ node }">
-        <ResourceCard
-          :resource="node"
-          :active-links="activeLinks"
-          @hover-title="onHoverResource"
-          @unhover-title="onUnhover"
-          @hover-property="onHoverProperty"
-          @unhover-property="onUnhover"
-        >
+        <ResourceCard :resource="node" :active-links="activeLinks" @hover-title="onHoverResource"
+          @unhover-title="onUnhover" @hover-property="onHoverProperty" @unhover-property="onUnhover">
           <template v-slot:actions>
             <Tooltip label="Open URI in new tab">
               <a :href="node.id" target="_blank" rel="noopener noreferrer" class="button is-light">
@@ -76,7 +63,7 @@ export default {
     XIcon,
   },
 
-  setup (props, context) {
+  setup(props, context) {
     const { endpoint, resources } = toRefs(props)
 
     const links = computed(() => {
@@ -140,7 +127,7 @@ export default {
   },
 
   computed: {
-    uri () {
+    uri() {
       return this.$route.params.uri
     },
   },
