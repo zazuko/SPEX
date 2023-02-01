@@ -32,11 +32,11 @@
       </div>
       <ul>
         <li class="panel-block is-justify-content-space-between">
-          <span>All</span>
+          <span style="flex-grow:0; overflow-x: clip; text-overflow:ellipsis">All</span>
           <SpexSwitch :modelValue="toggleAll" @update:modelValue="onToggleAll" />
         </li>
         <li v-for="table in datamodel.tables" :key="table.id" class="panel-block is-justify-content-space-between">
-          <span>{{ table.name }}</span>
+          <span style="flex-grow:0; overflow-x: clip; text-overflow:ellipsis">{{ table.name }}</span>
           <SpexSwitch :modelValue="table.isShown" @update:modelValue="$emit('toggle-table', table, $event)" />
         </li>
       </ul>
