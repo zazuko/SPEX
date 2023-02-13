@@ -7,14 +7,27 @@
   </HSwitch>
 </template>
 
-<script>
-import { defineComponent } from 'vue'
+<script setup lang="ts">
 import { Switch as HSwitch } from '@headlessui/vue'
 
-export default defineComponent({
-  name: 'SpexSwitch',
-  props: ['modelValue'],
-  emits: ['update:modelValue'],
-  components: { HSwitch },
-})
+interface Props {
+  modelValue: any
+}
+
+// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+const props = defineProps<Props>()
+
+// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+const emit = defineEmits<{
+  (event: 'update:modelValue', boolean): void;
+}>()
+
+</script>
+
+<script lang="ts">
+
+export default {
+  name: 'SpexSwitch'
+}
+
 </script>
