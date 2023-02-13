@@ -10,14 +10,24 @@
   </HDialog>
 </template>
 
-<script>
-import { defineComponent } from 'vue'
+<script setup lang="ts">
 import { Dialog as HDialog, DialogOverlay } from '@headlessui/vue'
 
-export default defineComponent({
+interface Props {
+  open: boolean
+}
+// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+const props = defineProps<Props>()
+
+// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+const emit = defineEmits<{
+  (event: 'close'): void;
+}>()
+</script>
+
+<script lang="ts">
+
+export default {
   name: 'SpexDialog',
-  props: ['open'],
-  emits: ['close'],
-  components: { DialogOverlay, HDialog },
-})
+}
 </script>
