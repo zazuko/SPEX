@@ -14,7 +14,7 @@
 import { Dialog as HDialog, DialogOverlay } from '@headlessui/vue'
 
 interface Props {
-  open: boolean
+  open?: boolean
 }
 // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
 const props = defineProps<Props>()

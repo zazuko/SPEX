@@ -42,64 +42,62 @@
   </SpexDialog>
 </template>
 
-<script>
-import { computed, ref, toRefs } from 'vue'
+<script setup lang="ts">
 import '@rdfjs-elements/rdf-editor'
-import { RadioGroup, RadioGroupOption } from '@headlessui/vue'
+import { DataModel } from '@/model/data-model.model'
+import { Endpoint } from '@/endpoint'
 import { ClipboardCopyIcon, UploadIcon, XIcon } from '@heroicons/vue/solid'
 import SpexDialog from './Dialog.vue'
 import Tooltip from './Tooltip.vue'
+import { RadioGroup, RadioGroupOption } from '@headlessui/vue'
+import { computed, ref } from 'vue'
+
+interface Props {
+  datamodel: DataModel,
+  loadShacl?: any,
+  endpoint: Endpoint
+}
+// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+const props = defineProps<Props>()
+
+// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+const emit = defineEmits<{
+  (event: 'close'): void;
+  (event: 'open-load-shacl'): void
+}>()
+const customPrefixes = computed(() => props.endpoint.prefixes.reduce((acc, { prefix, url }) => ({ ...acc, [prefix]: url }), {}))
+const shacl = computed(() => [...props.endpoint.dataModelToSHACL(props.datamodel).dataset])
+const copiedMessage = ref<string | null>(null)
+const snippet = ref<any>(null)
+
+const formats = ref<any[]>([
+  { label: 'JSON-LD', value: 'application/ld+json' },
+  { label: 'Turtle', value: 'text/turtle' },
+  { label: 'N-Triples', value: 'application/n-triples' },
+])
+
+const selectedFormat = ref<string>('application/ld+json')
+const prefixes = ref<string>(['sh', 'schema'].join(','))
+
+async function copy(): Promise<void> {
+  const content = snippet.value.codeMirror.value
+  await navigator.clipboard.writeText(content)
+  copiedMessage.value = 'Copied 👍'
+  setTimeout(() => { copiedMessage.value = null }, 3000)
+}
+
+function load(): void {
+  emit('open-load-shacl')
+  emit('close')
+}
+</script>
+
+<script lang="ts">
 
 export default {
-  name: 'ModalShacl',
-  components: { ClipboardCopyIcon, SpexDialog, RadioGroup, RadioGroupOption, Tooltip, UploadIcon, XIcon },
-  props: ['datamodel', 'loadShacl', 'endpoint'],
-  emits: ['close', 'open-load-shacl'],
-
-  setup(props) {
-    const { datamodel, endpoint } = toRefs(props)
-
-    const customPrefixes = computed(() => endpoint.value
-      .prefixes.reduce((acc, { prefix, url }) => ({ ...acc, [prefix]: url }), {}))
-
-    const shacl = computed(() => [...endpoint.value.dataModelToSHACL(datamodel.value).dataset])
-
-    const copiedMessage = ref(null)
-
-    return {
-      customPrefixes,
-      shacl,
-      copiedMessage,
-    }
-  },
-
-  data() {
-    return {
-      formats: [
-        { label: 'JSON-LD', value: 'application/ld+json' },
-        { label: 'Turtle', value: 'text/turtle' },
-        { label: 'N-Triples', value: 'application/n-triples' },
-      ],
-      selectedFormat: 'application/ld+json',
-      prefixes: ['sh', 'schema'].join(','),
-    }
-  },
-
-  methods: {
-    async copy() {
-      const content = this.$refs.snippet.codeMirror.value
-      await navigator.clipboard.writeText(content)
-
-      this.copiedMessage = 'Copied 👍'
-      setTimeout(() => { this.copiedMessage = null }, 3000)
-    },
-
-    load() {
-      this.$emit('open-load-shacl')
-      this.$emit('close')
-    }
-  }
+  name: 'ModalShacl'
 }
+
 </script>
 
 <style scoped>
