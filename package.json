@@ -21,7 +21,7 @@
     "@heroicons/vue": "^1.0.6",
     "@rdfjs-elements/rdf-editor": "^0.5.4",
     "@zazuko/rdf-vocabularies": "^2022.6.29",
-    "@zazuko/vue-graph-layout": "^0.1.0",
+    "@zazuko/vue-graph-layout": "^0.1.2",
     "buffer": "^6.0.3",
     "bulma": "^0.9.4",
     "core-js": "^3.24.1",

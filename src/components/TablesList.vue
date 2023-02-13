@@ -47,8 +47,9 @@
 <script setup lang="ts">
 import { DataModel } from '@/model/data-model.model'
 import { XIcon } from '@heroicons/vue/solid'
-import { ref, defineProps, defineEmits } from 'vue'
+import { ref } from 'vue'
 import SpexSwitch from './Switch.vue'
+
 interface Props {
   datamodel: DataModel
 }
@@ -60,7 +61,7 @@ const toggleAll = ref<boolean>(true)
 const emit = defineEmits<{
   (event: 'toggle-table', boolean): void;
   (event: 'select-viewport', value: any): void,
-  (event: 'close', value: any): void
+  (event: 'close'): void
 }>()
 const selectViewport = (event) => {
   const id = event.target.value
