@@ -35,36 +35,44 @@
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
+import { Link, Property, Table } from '@/model/data-model.model'
+import { computed } from 'vue'
 import Tooltip from './Tooltip.vue'
 
+interface Props {
+  resource: Table,
+  activeLinks: Link[]
+}
+
+// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+const props = defineProps<Props>()
+
+// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+const emit = defineEmits<{
+  (event: 'hover-title', value: Table): void;
+  (event: 'unhover-title', value: Table): void,
+  (event: 'hover-property', value: Property): void,
+  (event: 'unhover-property', value: Property): void
+}>()
+
+const isActive = computed(() => {
+  return props.activeLinks.some((link) => link.target === props.resource.id)
+})
+
+function isPropertyActive(property: Property): boolean {
+  return props.activeLinks.some((link) => (
+    link.source === props.resource.id &&
+    link.sourceProperty === property.id
+  ))
+}
+
+</script>
+
+<script lang="ts">
+
 export default {
-  name: 'ResourceCard',
-  props: [
-    'resource',
-    'activeLinks',
-  ],
-  emits: ['hover-title', 'unhover-title', 'hover-property', 'unhover-property'],
-  components: { Tooltip },
-
-  data() {
-    return {}
-  },
-
-  computed: {
-    isActive() {
-      return this.activeLinks.some((link) => link.target === this.resource.id)
-    }
-  },
-
-  methods: {
-    isPropertyActive(property) {
-      return this.activeLinks.some((link) => (
-        link.source === this.resource.id &&
-        link.sourceProperty === property.id
-      ))
-    }
-  }
+  name: 'ResourceCard'
 }
 </script>
 

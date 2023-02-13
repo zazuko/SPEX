@@ -23,7 +23,7 @@
 </template>
 
 <script setup lang="ts">
-import { Table } from '@/model/data-model.model'
+import { Link, Table } from '@/model/data-model.model'
 import Tooltip from './Tooltip.vue'
 import { EyeOffIcon, TableIcon, ClipboardCopyIcon } from '@heroicons/vue/solid'
 import { ref } from 'vue'
@@ -31,7 +31,7 @@ import ResourceCard from './ResourceCard.vue'
 
 interface Props {
   table: Table,
-  activeLinks: any
+  activeLinks: Link[]
 }
 // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
 const props = defineProps<Props>()

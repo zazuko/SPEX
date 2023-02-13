@@ -19,3 +19,9 @@ export interface DataModel {
     tables: Table[]
     isIntrospected: boolean,
 }
+export interface Link {
+    label: string,
+    source: string,
+    sourceProperty: string,
+    target: string
+}

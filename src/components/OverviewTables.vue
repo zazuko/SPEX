@@ -21,7 +21,7 @@
 <script setup lang="ts">
 import OverviewTable from './OverviewTable.vue'
 import { GraphLayout } from '@zazuko/vue-graph-layout'
-import { DataModel, Property, Table } from '@/model/data-model.model'
+import { DataModel, Link, Property, Table } from '@/model/data-model.model'
 import { computed, ref } from 'vue'
 
 interface Props {
@@ -37,7 +37,7 @@ const emit = defineEmits<{
   (event: 'export', value: Table): void
 }>()
 
-const activeLinks = ref<any[]>([])
+const activeLinks = ref<Link[]>([])
 
 const tablesVisible = computed(() => {
   return props.datamodel.tables.filter(({ isShown }) => isShown)
@@ -47,7 +47,7 @@ const links = computed(() => {
   const tableIds = new Set(tablesVisible.value.map(({ id }) => id))
   return tablesVisible.value
     .flatMap(table => table.properties.map((property) => ({ ...property, table })))
-    .reduce((acc: any[], property) => {
+    .reduce((acc: Link[], property) => {
       property.values.forEach((value) => {
         const source = property.table.id
         const target = value.id
