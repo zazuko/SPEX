@@ -31,6 +31,7 @@ function termValue(endpoint: Endpoint, term: Term): string {
 }
 
 function expandValue(endpoint: Endpoint, term: Term): string {
+  console.log('expand', props.term)
   if (term.termType === 'Literal') {
     const datatype = term.datatype ? `^^${endpoint.shrink(term.datatype.value)}` : ''
     const language = term.language ? `@${term.language}` : ''

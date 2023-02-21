@@ -2,7 +2,7 @@
   <div class="card h-full flex flex-col">
     <div class="card-header has-background-light">
       <h3 class="card-header-title">
-        Resources explorer
+        Resources Explorer
       </h3>
       <p class="card-header-icon py-0 px-1">
         <button class="button is-light" @click="$emit('close')" title="Close">
@@ -10,11 +10,15 @@
         </button>
       </p>
     </div>
+    <!-- GRAPH -->
     <GraphLayout class="card-content p-0" :nodes="resources" :links="links" :active-links="activeLinks"
       :auto-zoom="false" @link-enter="onLinkHover" @link-out="onUnhover">
+
+      <!-- Template for NODES -->
       <template v-slot:node="{ node }">
         <ResourceCard :resource="node" :active-links="activeLinks" @hover-title="onHoverResource"
           @unhover-title="onUnhover" @hover-property="onHoverProperty" @unhover-property="onUnhover">
+          <!-- this is the header ?-->
           <template v-slot:actions>
             <Tooltip label="Open URI in new tab">
               <a :href="node.id" target="_blank" rel="noopener noreferrer" class="button is-light">
@@ -27,15 +31,20 @@
               </button>
             </Tooltip>
           </template>
+          <!-- END: this is the header ?-->
+          <!-- these are the terms in the table / rows -->
           <template v-slot:property-value="{ value }">
             <div class="flex items-center">
               <Term :term="value" :endpoint="endpoint" />
               <TermExploreButton :term="value" @explore-resource="$emit('explore-resource', $event)" />
             </div>
           </template>
+          <!-- END: these are the terms in the table / rows -->
         </ResourceCard>
+        <!-- END Template for NODES -->
       </template>
     </GraphLayout>
+    <!-- END GRAPH -->
   </div>
 </template>
 
@@ -65,7 +74,7 @@ export default {
 
   setup(props, context) {
     const { endpoint, resources } = toRefs(props)
-
+    console.log(resources.value)
     const links = computed(() => {
       const resourceIds = new Set(resources.value.map(({ id }) => id))
 

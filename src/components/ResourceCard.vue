@@ -52,8 +52,8 @@ const props = defineProps<Props>()
 const emit = defineEmits<{
   (event: 'hover-title', value: Table): void;
   (event: 'unhover-title', value: Table): void,
-  (event: 'hover-property', value: Property): void,
-  (event: 'unhover-property', value: Property): void
+  (event: 'hover-property', table: Table, property: Property): void,
+  (event: 'unhover-property', table: Table, property: Property): void
 }>()
 
 const isActive = computed(() => {
@@ -67,6 +67,15 @@ function isPropertyActive(property: Property): boolean {
   ))
 }
 
+/*
+
+it it's a table in the main view
+id: "http://schema.org/Organization"
+isShown: true
+name: "schema:Organization"
+properties:
+(11) [{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}]
+*/
 </script>
 
 <script lang="ts">
