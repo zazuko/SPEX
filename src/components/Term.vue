@@ -11,7 +11,7 @@ import { ref } from 'vue'
 import Tooltip from './Tooltip.vue'
 
 interface Props {
-  term: Term,
+  term: any, // should be Term
   endpoint: Endpoint
 }
 const props = defineProps<Props>()

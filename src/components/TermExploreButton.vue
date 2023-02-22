@@ -14,7 +14,7 @@ import { Term } from 'rdf-js'
 import { Resource } from '@/model/resource.model'
 
 interface Props {
-  term: Term
+  term: any // should be Term
 }
 
 // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars

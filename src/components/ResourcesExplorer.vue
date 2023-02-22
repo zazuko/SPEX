@@ -11,8 +11,8 @@
       </p>
     </div>
     <!-- GRAPH -->
-    <GraphLayout class="card-content p-0" :nodes="resources" :links="links" :active-links="activeLinks"
-      :auto-zoom="false" @link-enter="onLinkHover" @link-out="onUnhover">
+    <GraphLayout class="card-content p-0" :nodes="resources" :links="links" :active-links="activeLinks" :auto-zoom="false"
+      @link-enter="onLinkHover" @link-out="onUnhover">
 
       <!-- Template for NODES -->
       <template v-slot:node="{ node }">
@@ -47,98 +47,114 @@
     <!-- END GRAPH -->
   </div>
 </template>
-
-<script>
-import { computed, onMounted, ref, toRefs, watch } from 'vue'
+<script setup lang="ts">
+import { Endpoint } from '@/endpoint'
+import { computed, onMounted, ref, watch } from 'vue'
+import { Link } from '@/model/data-model.model'
 import { ExternalLinkIcon, EyeOffIcon, XIcon } from '@heroicons/vue/solid'
 import { GraphLayout } from '@zazuko/vue-graph-layout'
 import ResourceCard from './ResourceCard.vue'
 import Term from './Term.vue'
 import TermExploreButton from './TermExploreButton.vue'
 import Tooltip from './Tooltip.vue'
+import { useRoute } from 'vue-router'
 
-export default {
-  name: 'ResourcesExplorer',
-  props: ['resources', 'endpoint'],
-  emits: ['explore-resource', 'unexplore-resource', 'close'],
-  components: {
-    ExternalLinkIcon,
-    EyeOffIcon,
-    GraphLayout,
-    ResourceCard,
-    Term,
-    TermExploreButton,
-    Tooltip,
-    XIcon,
-  },
+interface Props {
+  resources: any[],
+  endpoint: Endpoint
+}
 
-  setup(props, context) {
-    const { endpoint, resources } = toRefs(props)
-    console.log(resources.value)
-    const links = computed(() => {
-      const resourceIds = new Set(resources.value.map(({ id }) => id))
+// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+const props = defineProps<Props>()
 
-      return resources.value
-        .filter(resource => resource.properties)
-        .flatMap(resource => resource.properties.map((property) => ({ ...property, resource })))
-        .reduce((acc, property) => {
-          property.values.forEach((value) => {
-            const source = property.resource.id
-            const target = value.value
-            if (resourceIds.has(target)) {
-              acc.push({ source, target, sourceProperty: property.id, label: property.name })
-            }
-          })
+// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+const emit = defineEmits<{
+  (event: 'explore-resource', value: any): void;
+  (event: 'unexplore-resource', value: any): void,
+  (event: 'close'): void
+}>()
 
-          return acc
-        }, [])
-    })
+const route = useRoute()
 
-    const activeLinks = ref([])
-    const onLinkHover = (link) => { activeLinks.value.push(link) }
-    const onUnhover = () => { activeLinks.value = [] }
-    const onHoverResource = (resource) => { activeLinks.value = links.value.filter((link) => link.source === resource.id) }
-    const onHoverProperty = (resource, property) => {
-      activeLinks.value = links.value.filter((link) => (
-        link.source === resource.id &&
-        link.sourceProperty === property.id
-      ))
-    }
+const links = computed(() => {
+  const resourceIds = new Set(props.resources.map(({ id }) => id))
 
-    const fetchResources = async () => {
-      if (!endpoint.value) return
-
-      resources.value.forEach(async (resource) => {
-        if (resource.isFetched) return
-
-        try {
-          const responseResource = await endpoint.value.fetchResource(resource.id)
-          const fetchedResource = { ...responseResource, isFetched: true }
-          context.emit('explore-resource', fetchedResource)
-        } catch (e) {
-          const fetchedResource = { ...resource, isFetched: true }
-          context.emit('explore-resource', fetchedResource)
+  return props.resources
+    .filter(resource => resource.properties)
+    .flatMap(resource => resource.properties.map((property) => ({ ...property, resource })))
+    .reduce((acc, property) => {
+      property.values.forEach((value) => {
+        const source = property.resource.id
+        const target = value.value
+        if (resourceIds.has(target)) {
+          acc.push({ source, target, sourceProperty: property.id, label: property.name })
         }
       })
-    }
-    onMounted(fetchResources)
-    watch(endpoint, fetchResources)
-    watch(resources, fetchResources)
 
-    return {
-      links,
-      activeLinks,
-      onLinkHover,
-      onUnhover,
-      onHoverResource,
-      onHoverProperty,
-    }
-  },
+      return acc
+    }, [])
+})
 
-  computed: {
-    uri() {
-      return this.$route.params.uri
-    },
-  },
+const activeLinks = ref<Link[]>([])
+
+function onLinkHover(link: Link) {
+  activeLinks.value.push(link)
+}
+function onUnhover() {
+  activeLinks.value = []
+}
+
+function onHoverResource(resource: any) {
+  activeLinks.value = links.value.filter((link) => link.source === resource.id)
+}
+
+function onHoverProperty(resource: any, property: any) {
+  activeLinks.value = links.value.filter((link) => (
+    link.source === resource.id &&
+    link.sourceProperty === property.id
+  ))
+}
+
+async function fetchResources() {
+  if (!props.endpoint) {
+    return
+  }
+
+  props.resources.forEach(async (resource) => {
+    if (resource.isFetched) {
+      return
+    }
+
+    try {
+      const responseResource = await props.endpoint.fetchResource(resource.id)
+      const fetchedResource = { ...responseResource, isFetched: true }
+      emit('explore-resource', fetchedResource)
+    } catch (e) {
+      const fetchedResource = { ...resource, isFetched: true }
+      emit('explore-resource', fetchedResource)
+    }
+  }
+  )
+}
+
+// lifecycle hooks
+onMounted(() => {
+  fetchResources()
+})
+
+watch(props.endpoint, fetchResources)
+watch(props.resources, fetchResources)
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+const uri = computed(() => {
+  return route.params.uri
+})
+
+</script>
+
+<script lang="ts">
+
+export default {
+  name: 'ResourcesExplorer'
 }
 </script>

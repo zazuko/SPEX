@@ -25,6 +25,7 @@ module.exports = {
     'comma-dangle': 'off',
     'space-before-function-paren': 'off',
     'func-call-spacing': 'off',
-    "no-extra-semi": "off"
+    'no-extra-semi': 'off',
+    'indent': 'off',
   }
 }
