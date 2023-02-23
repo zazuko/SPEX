@@ -1,14 +1,14 @@
 <template>
   <SpexDialog @close="$emit('close')">
     <div class="modal-card-head py-4">
-      <h3>Generated SHACL shapes</h3>
+      <h3 style="color: grey">Generated SHACL shapes</h3>
       <div class="ml-auto">
         <Tooltip label="Load SHACL shapes" position="bottom" class="mr-4">
           <button class="button" @click="load">
             <UploadIcon class="icon" />
           </button>
         </Tooltip>
-        <Tooltip label="Close">
+        <Tooltip label="Close" position="bottom">
           <button class="button is-light" @click="$emit('close')">
             <XIcon class="icon" />
           </button>
@@ -48,7 +48,7 @@ import { DataModel } from '@/model/data-model.model'
 import { Endpoint } from '@/endpoint'
 import { ClipboardCopyIcon, UploadIcon, XIcon } from '@heroicons/vue/solid'
 import SpexDialog from './Dialog.vue'
-import Tooltip from './Tooltip.vue'
+import Tooltip from './common/tooltip.vue'
 import { RadioGroup, RadioGroupOption } from '@headlessui/vue'
 import { computed, ref } from 'vue'
 

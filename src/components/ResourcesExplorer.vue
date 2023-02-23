@@ -56,7 +56,7 @@ import { GraphLayout } from '@zazuko/vue-graph-layout'
 import ResourceCard from './ResourceCard.vue'
 import Term from './Term.vue'
 import TermExploreButton from './TermExploreButton.vue'
-import Tooltip from './Tooltip.vue'
+import Tooltip from './common/tooltip.vue'
 import { useRoute } from 'vue-router'
 
 interface Props {

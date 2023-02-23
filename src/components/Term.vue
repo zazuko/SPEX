@@ -8,7 +8,7 @@
 import { Endpoint } from '@/endpoint'
 import { Term } from 'rdf-js'
 import { ref } from 'vue'
-import Tooltip from './Tooltip.vue'
+import Tooltip from './common/tooltip.vue'
 
 interface Props {
   term: any, // should be Term

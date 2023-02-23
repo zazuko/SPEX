@@ -8,7 +8,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import Tooltip from './Tooltip.vue'
+import Tooltip from './common/tooltip.vue'
 import { EyeIcon } from '@heroicons/vue/solid'
 import { Term } from 'rdf-js'
 import { Resource } from '@/model/resource.model'

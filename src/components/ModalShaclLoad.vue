@@ -1,7 +1,7 @@
 <template>
   <SpexDialog @close="$emit('close')">
     <div class="modal-card-head py-4">
-      <h3>Load SHACL shapes</h3>
+      <h3 style="color: grey">Load SHACL shapes</h3>
       <div class="ml-auto">
         <button class="button is-light" title="Close" @click="$emit('close')">
           <XIcon class="icon" />

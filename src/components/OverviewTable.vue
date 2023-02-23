@@ -24,10 +24,10 @@
 
 <script setup lang="ts">
 import { Link, Table } from '@/model/data-model.model'
-import Tooltip from './Tooltip.vue'
 import { EyeOffIcon, TableIcon, ClipboardCopyIcon } from '@heroicons/vue/solid'
 import { ref } from 'vue'
 import ResourceCard from './ResourceCard.vue'
+import Tooltip from './common/tooltip.vue'
 
 interface Props {
   table: Table,

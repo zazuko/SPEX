@@ -97,8 +97,8 @@ import TableExplorer from './TableExplorer.vue'
 import TablesList from './TablesList.vue'
 import LoadingSpinner from './LoadingSpinner.vue'
 import { sh, rdf } from '../namespace'
-import GitHubLogo from './logo/git-hub-logo.vue'
-import ZazukoLogo from './logo/zazuko-logo.vue'
+import GitHubLogo from './common/git-hub-logo.vue'
+import ZazukoLogo from './common/zazuko-logo.vue'
 
 export default {
   name: 'SpexMain',
