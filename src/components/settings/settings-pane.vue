@@ -74,8 +74,8 @@
 import { MinusSmIcon, PlusSmIcon, XIcon } from '@heroicons/vue/solid'
 import { Endpoint } from '@/endpoint'
 import cloneDeep from 'lodash.clonedeep'
-import SelectGraph from './SelectGraph.vue'
-import SpexSwitch from './Switch.vue'
+import SelectGraph from './select-graph.vue'
+import SpexSwitch from '../common/switch.vue'
 
 const graphsPageSize = 10
 

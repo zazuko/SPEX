@@ -70,7 +70,7 @@
 <script setup lang="ts">
 import { Endpoint } from '@/endpoint'
 import { ChevronLeftIcon, ChevronRightIcon, XIcon } from '@heroicons/vue/solid'
-import LoadingSpinner from './LoadingSpinner.vue'
+import LoadingSpinner from './common/loading-spinner.vue'
 import { ref, watch, onMounted } from 'vue'
 import Term from './Term.vue'
 import TermExploreButton from './TermExploreButton.vue'

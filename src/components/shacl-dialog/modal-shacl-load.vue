@@ -31,8 +31,8 @@
 import { XIcon } from '@heroicons/vue/solid'
 import * as N3 from 'n3'
 import RDF from 'rdf-ext'
-import { rdf, spex } from '../namespace'
-import SpexDialog from './Dialog.vue'
+import { rdf, spex } from '@/namespace'
+import SpexDialog from './dialog.vue'
 
 export default {
   name: 'ModalShaclLoad',

@@ -10,16 +10,16 @@
     </div>
     <div class="card-content px-0 py-1">
       <div v-show="datamodel.viewports.length > 0" class="
-          field
-          m-0
-          px-2
-          py-2
-          border-b
-          flex flex-wrap
-          justify-end
-          items-center
-          gap-2
-        ">
+            field
+            m-0
+            px-2
+            py-2
+            border-b
+            flex flex-wrap
+            justify-end
+            items-center
+            gap-2
+          ">
         <label class="label m-0" for="predefined-views">Predefined views</label>
         <div class="select">
           <select id="predefined-views" @input="selectViewport">
@@ -48,7 +48,7 @@
 import { DataModel } from '@/model/data-model.model'
 import { XIcon } from '@heroicons/vue/solid'
 import { ref } from 'vue'
-import SpexSwitch from './Switch.vue'
+import SpexSwitch from './common/switch.vue'
 
 interface Props {
   datamodel: DataModel

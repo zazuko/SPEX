@@ -36,7 +36,7 @@ import {
   ListboxOption,
 } from '@headlessui/vue'
 import { RefreshIcon } from '@heroicons/vue/solid'
-import LoadingSpinner from './LoadingSpinner.vue'
+import LoadingSpinner from '../common/loading-spinner.vue'
 
 interface Props {
   id: string,
