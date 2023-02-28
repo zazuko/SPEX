@@ -11,19 +11,20 @@
     <form class="card-content" @submit.prevent="onSubmit">
       <div class="field">
         <label class="label" for="endpoint">Endpoint URL</label>
-        <input id="endpoint" type="text" class="input" v-model="data.url" @blur="fetchGraphs" />
+        <input id="endpoint" type="text" class="input" v-model="endpointUrl" @blur="updateEndpoint" />
       </div>
+      endpointUrl: {{ endpointUrl }}
       <div class="field">
         <label class="label" for="username">Username</label>
-        <input id="username" type="text" class="input" v-model="data.user" @blur="fetchGraphs" />
+        <input id="username" type="text" class="input" v-model="username" @blur="fetchGraphs" />
       </div>
       <div class="field">
         <label class="label" for="password">Password</label>
-        <input id="password" type="password" class="input" v-model="data.password" @blur="fetchGraphs" />
+        <input id="password" type="password" class="input" v-model="password" @blur="fetchGraphs" />
       </div>
       <div class="field" :class="fetchError ? 'is-danger' : ''">
         <label class="label" for="graph">Graph</label>
-        <SelectGraph id="graph" v-model="data.graph" :graphs="graphs" :loading="loadingGraphs"
+        <SelectGraph id="graph" v-model="namedGraph" :graphs="graphs" :loading="loadingGraphs"
           :has-more-graphs="hasMoreGraphs" @fetch-more="fetchMoreGraphs" />
       </div>
       <div class="field">
@@ -36,14 +37,15 @@
       <div class="field">
         <label class="label">Custom prefixes</label>
         <div class="flex flex-col gap-1">
-          <div v-for="(prefix, index) in data.prefixes" :key="index" class="flex gap-1">
+          <div v-for="(prefix, index) in prefixes" :key="index" class="flex gap-1">
             <input type="text" v-model="prefix.prefix" placeholder="schema" class="input w-24" required />
-            <input type="text" v-model="prefix.url" placeholder="http://schema.org/" class="input flex-grow" required />
+            <input type="text" v-model="prefix.namespace" placeholder="http://schema.org/" class="input flex-grow"
+              required />
             <button type="button" class="button is-white" title="Remove prefix" @click="removePrefix(index)">
               <MinusSmIcon class="icon" />
             </button>
           </div>
-          <p v-if="data.prefixes.length === 0" class="has-text-grey">
+          <p v-if="prefixes.length === 0" class="has-text-grey">
             No custom prefix
           </p>
           <p>
@@ -55,7 +57,7 @@
       </div>
       <div class="field">
         <label class="label flex items-center gap-2">
-          <SpexSwitch v-model="data.forceIntrospection" />
+          <SpexSwitch v-model="forceIntrospection" />
           Force introspection
         </label>
         <p class="help">
@@ -70,95 +72,131 @@
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
 import { MinusSmIcon, PlusSmIcon, XIcon } from '@heroicons/vue/solid'
 import { Endpoint } from '@/endpoint'
-import cloneDeep from 'lodash.clonedeep'
+import { Settings, TPrefix, TLegacySettings } from '@/model/settings.model'
 import SelectGraph from './select-graph.vue'
 import SpexSwitch from '../common/switch.vue'
+import { ref, watch, onMounted } from 'vue'
 
 const graphsPageSize = 10
 
+interface Props {
+  settings: Settings
+}
+const props = defineProps<Props>()
+
+// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+const emit = defineEmits<{
+  (event: 'settingsChanged', value: Settings): void;
+  (event: 'close'): void
+}>()
+
+const endpointUrl = ref<string>('aff')
+const username = ref<string>('')
+const password = ref<string>('')
+const namedGraph = ref<string>('')
+const forceIntrospection = ref<boolean>(false)
+const prefixes = ref<TPrefix[]>([])
+const endpoint: Endpoint | null = null
+let graphs = []
+let hasMoreGraphs = false
+let loadingGraphs = false
+let fetchError: string | null = null
+let graphsOffset = 0
+
+onMounted(async () => {
+  console.log('mounted call', props.settings)
+  console.log('sp', props.settings.sparqlEndpoint)
+  /*
+  endpointUrl.value = props.settings.sparqlEndpoint ?? ''
+  username.value = props.settings.username ?? ''
+  password.value = props.settings.password ?? ''
+  forceIntrospection.value = props.settings.forceIntrospection
+  namedGraph.value = props.settings.namedGraph ?? ''
+*/
+  // await fetchGraphs()
+})
+
+function onSubmit(): void {
+  const newSettings: Settings = {
+    sparqlEndpoint: endpointUrl.value,
+    username: username.value,
+    password: password.value,
+    forceIntrospection: forceIntrospection.value,
+    namedGraph: namedGraph.value,
+    prefixes: []
+  }
+  emit('settingsChanged', newSettings)
+}
+
+function onClose(): void {
+  emit('close')
+}
+
+function updateEndpoint(payload: FocusEvent) {
+  console.log('eps', endpointUrl.value)
+}
+async function fetchGraphs() {
+  loadingGraphs = true
+  // endpoint = new Endpoint(newSettings as LegacySettings)
+  graphsOffset = 0
+  // graphs = await fetchGraphPage()
+}
+
+async function fetchMoreGraphs() {
+  const newGraphs = await fetchGraphPage()
+  graphs = graphs.concat(newGraphs)
+}
+
+async function fetchGraphPage() {
+  loadingGraphs = true
+  fetchError = ''
+
+  try {
+    const page = { offset: graphsOffset, limit: graphsPageSize }
+    const graphs = await endpoint?.fetchGraphs(page)
+    graphsOffset = graphsOffset + graphsPageSize
+    hasMoreGraphs = graphs.length >= graphsPageSize
+    return graphs
+  } catch (e) {
+    fetchError = (e as any).toString()
+    return []
+  } finally {
+    loadingGraphs = false
+  }
+}
+
+function addPrefix(): void {
+  prefixes.value.push({ prefix: '', namespace: '' })
+}
+
+function removePrefix(index: number): void {
+  prefixes.value.splice(index, 1)
+}
+
+watch(endpointUrl, (newEndpoint, oldEndpoint) => {
+  console.log('watch', newEndpoint, oldEndpoint)
+})
+ /**
+watch: {
+settings(settings) {
+this.data = cloneDeep(settings)
+},
+
+'data.url'() {
+this.endpoint = new Endpoint(this.data)
+this.graphs = []
+this.data.graph = null
+},
+},
+*/
+</script>
+
+<script lang="ts">
+
 export default {
-  name: 'SettingsPane',
-  props: ['settings'],
-  components: { MinusSmIcon, SelectGraph, PlusSmIcon, SpexSwitch, XIcon },
-  emits: ['change', 'close'],
-
-  data() {
-    return {
-      endpoint: null,
-      graphs: [],
-      hasMoreGraphs: false,
-      loadingGraphs: false,
-      fetchError: null,
-      graphsOffset: 0,
-      data: cloneDeep(this.settings),
-    }
-  },
-
-  async mounted() {
-    await this.fetchGraphs()
-  },
-
-  methods: {
-    onSubmit() {
-      this.$emit('change', this.data)
-    },
-
-    onClose() {
-      this.$emit('close')
-    },
-
-    async fetchGraphs() {
-      this.loadingGraphs = true
-      this.endpoint = new Endpoint(this.data)
-      this.graphsOffset = 0
-      this.graphs = await this.fetchGraphPage()
-    },
-
-    async fetchMoreGraphs() {
-      const newGraphs = await this.fetchGraphPage()
-      this.graphs = this.graphs.concat(newGraphs)
-    },
-
-    async fetchGraphPage() {
-      this.loadingGraphs = true
-      this.fetchError = ''
-
-      try {
-        const page = { offset: this.graphsOffset, limit: graphsPageSize }
-        const graphs = await this.endpoint.fetchGraphs(page)
-        this.graphsOffset = this.graphsOffset + graphsPageSize
-        this.hasMoreGraphs = graphs.length >= graphsPageSize
-        return graphs
-      } catch (e) {
-        this.fetchError = e.toString()
-        return []
-      } finally {
-        this.loadingGraphs = false
-      }
-    },
-
-    addPrefix() {
-      this.data.prefixes.push({ prefix: '', url: '' })
-    },
-
-    removePrefix(index) {
-      this.data.prefixes.splice(index, 1)
-    },
-  },
-
-  watch: {
-    settings(settings) {
-      this.data = cloneDeep(settings)
-    },
-
-    'data.url'() {
-      this.endpoint = new Endpoint(this.data)
-      this.graphs = []
-      this.data.graph = null
-    },
-  },
+  name: 'SettingsPane'
 }
 </script>
