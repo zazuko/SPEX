@@ -11,9 +11,8 @@
     <form class="card-content" @submit.prevent="onSubmit">
       <div class="field">
         <label class="label" for="endpoint">Endpoint URL</label>
-        <input id="endpoint" type="text" class="input" v-model="endpointUrl" @blur="updateEndpoint" />
+        <input id="endpoint" type="text" class="input" v-model="sparqlEndpoint" @blur="updateEndpoint" />
       </div>
-      endpointUrl: {{ endpointUrl }}
       <div class="field">
         <label class="label" for="username">Username</label>
         <input id="username" type="text" class="input" v-model="username" @blur="fetchGraphs" />
@@ -93,12 +92,13 @@ const emit = defineEmits<{
   (event: 'close'): void
 }>()
 
-const endpointUrl = ref<string>('aff')
-const username = ref<string>('')
-const password = ref<string>('')
-const namedGraph = ref<string>('')
-const forceIntrospection = ref<boolean>(false)
-const prefixes = ref<TPrefix[]>([])
+const sparqlEndpoint = ref<string>(props.settings.sparqlEndpoint ?? '')
+const username = ref<string>(props.settings.username ?? '')
+const password = ref<string>(props.settings.password ?? '')
+const namedGraph = ref<string>(props.settings.namedGraph ?? '')
+const forceIntrospection = ref<boolean>(props.settings.forceIntrospection)
+const prefixes = ref<TPrefix[]>(props.settings.prefixes)
+
 const endpoint: Endpoint | null = null
 let graphs = []
 let hasMoreGraphs = false
@@ -108,20 +108,12 @@ let graphsOffset = 0
 
 onMounted(async () => {
   console.log('mounted call', props.settings)
-  console.log('sp', props.settings.sparqlEndpoint)
-  /*
-  endpointUrl.value = props.settings.sparqlEndpoint ?? ''
-  username.value = props.settings.username ?? ''
-  password.value = props.settings.password ?? ''
-  forceIntrospection.value = props.settings.forceIntrospection
-  namedGraph.value = props.settings.namedGraph ?? ''
-*/
   // await fetchGraphs()
 })
 
 function onSubmit(): void {
   const newSettings: Settings = {
-    sparqlEndpoint: endpointUrl.value,
+    sparqlEndpoint: sparqlEndpoint.value,
     username: username.value,
     password: password.value,
     forceIntrospection: forceIntrospection.value,
@@ -136,7 +128,7 @@ function onClose(): void {
 }
 
 function updateEndpoint(payload: FocusEvent) {
-  console.log('eps', endpointUrl.value)
+  console.log('eps', sparqlEndpoint.value)
 }
 async function fetchGraphs() {
   loadingGraphs = true
@@ -176,7 +168,7 @@ function removePrefix(index: number): void {
   prefixes.value.splice(index, 1)
 }
 
-watch(endpointUrl, (newEndpoint, oldEndpoint) => {
+watch(sparqlEndpoint, (newEndpoint, oldEndpoint) => {
   console.log('watch', newEndpoint, oldEndpoint)
 })
  /**

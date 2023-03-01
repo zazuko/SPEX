@@ -264,7 +264,7 @@ export class UrlSettings {
         if (Array.isArray(prefixes)) {
             urlSettings.prefixes = prefixes.map(p => {
                 const prefix = p?.split(':')[0]
-                const namespace = p?.substring(prefix?.length ?? 0)
+                const namespace = p?.substring((prefix?.length ?? 0) + 1)
                 if (prefix && namespace) {
                     return {
                         prefix,

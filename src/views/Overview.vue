@@ -10,7 +10,7 @@ import { isNavigationFailure, NavigationFailureType, useRouter, useRoute, Locati
 
 const appSettings = new SettingsPersistance()
 
-const settings = ref<SettingsPersistance | null>(null)
+const settings = ref<Settings>(appSettings)
 const router = useRouter()
 const route = useRoute()
 
@@ -28,11 +28,6 @@ if (urlSettings !== null) {
   console.log('from local store', appSettings.sparqlEndpoint)
   const newURLSettings = new UrlSettings(appSettings.sparqlEndpoint, appSettings.namedGraph, appSettings.prefixes, appSettings.forceIntrospection)
   updateURL(newURLSettings.toRouterQueryObject())
-} else {
-  /* no configuration available: SPEX ask for it */
-  console.log('no config')
-
-  settings.value = null
 }
 
 function onSettingsChange(newSettings: Settings): void {
