@@ -22,11 +22,13 @@
       </div>
       <div class="field">
         <label class="label" for="username">Username</label>
-        <input id="username" type="text" class="input" v-model="newAppSettings.username" />
+        <input id="username" type="text" class="input" v-model="newAppSettings.username"
+          @blur="onUsernamePasswordInputBlur" />
       </div>
       <div class="field">
         <label class="label" for="password">Password</label>
-        <input id="password" type="password" class="input" v-model="newAppSettings.password" />
+        <input id="password" type="password" class="input" v-model="newAppSettings.password"
+          @blur="onUsernamePasswordInputBlur" />
       </div>
       <div class="field" :class="fetchError ? 'is-danger' : ''">
         <label class="label" for="graph">Named Graph</label>
@@ -102,6 +104,7 @@ const newAppSettings = ref<Settings>({
   forceIntrospection: props.settings.forceIntrospection
 })
 
+console.log('settings', props.settings)
 // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
 const emit = defineEmits<{
   (event: 'settingsChanged', value: Settings): void;
@@ -138,6 +141,16 @@ function onClose(): void {
 function onSparqlInputBlur(payload: FocusEvent) {
   newAppSettings.value.namedGraph = null
   updateEndpoint()
+}
+
+function onUsernamePasswordInputBlur(payload: FocusEvent) {
+  if ((newAppSettings.value.username?.length ?? 0) > 0 && (newAppSettings.value.username?.length ?? 0) > 0) {
+    console.log('pwd', newAppSettings.value.username, newAppSettings.value.password)
+    updateEndpoint()
+  } else if ((newAppSettings.value.username?.length ?? 0) === 0 && (newAppSettings.value.username?.length ?? 0) === 0) {
+    console.log('empty', newAppSettings.value.username, newAppSettings.value.password)
+    updateEndpoint()
+  }
 }
 
 async function updateEndpoint() {
@@ -189,6 +202,7 @@ function removePrefix(index: number): void {
 
 function onSparqlInputFocus() {
   hasSparqlEndpointInputFocus.value = true
+  endpoint = null
 }
 
 </script>
