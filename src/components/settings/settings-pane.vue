@@ -104,7 +104,6 @@ const newAppSettings = ref<Settings>({
   forceIntrospection: props.settings.forceIntrospection
 })
 
-console.log('settings', props.settings)
 // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
 const emit = defineEmits<{
   (event: 'settingsChanged', value: Settings): void;
