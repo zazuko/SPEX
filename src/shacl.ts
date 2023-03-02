@@ -65,7 +65,6 @@ export function tablesFromSHACL(shapes, shrink) {
         properties,
         isShown: true,
       }
-      console.log(p)
       return p
     })
     .filter(Boolean)
@@ -95,7 +94,6 @@ function typeFromTerm(term, termType, shrink) {
  * @returns {Clownface} - Pointer to the dataset description
  */
 export function dataModelToSHACL(datamodel, datasetURI) {
-  console.log('datamodel', datamodel)
   const dataset = (RDF as any).clownface({
     dataset: RDF.dataset(),
     term: RDF.namedNode(datasetURI)

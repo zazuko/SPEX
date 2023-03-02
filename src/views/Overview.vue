@@ -19,19 +19,16 @@ const urlSettings = UrlSettings.createUrlSettingFromQueryParams(route.query)
 /** there are 3 possibilities  */
 if (urlSettings !== null) {
   /* 1. in the end we always land here: and url with a query param */
-  console.log('we have an url param', urlSettings.sparqlEndpoint)
   appSettings.mergeSettingsWithUrlSettings(urlSettings)
   settings.value = appSettings
 } else if (appSettings.sparqlEndpoint) {
   /* 2. SPEX without query string but with settings from local store.
    * Restore the query string an redirect with query string to land in 1 */
-  console.log('from local store', appSettings.sparqlEndpoint)
   const newURLSettings = new UrlSettings(appSettings.sparqlEndpoint, appSettings.namedGraph, appSettings.prefixes, appSettings.forceIntrospection)
   updateURL(newURLSettings.toRouterQueryObject())
 }
 
 function onSettingsChanged(newSettings: Settings): void {
-  console.log('top', newSettings)
   const newAppSettings = new SettingsPersistance()
   newAppSettings.sparqlEndpoint = newSettings.sparqlEndpoint
   newAppSettings.username = newSettings.username
@@ -42,7 +39,6 @@ function onSettingsChanged(newSettings: Settings): void {
   newAppSettings.storeSettings()
   settings.value = newAppSettings
   const newURLSettings = new UrlSettings(newAppSettings.sparqlEndpoint, newAppSettings.namedGraph, newAppSettings.prefixes, newAppSettings.forceIntrospection)
-  console.log('change route', newURLSettings)
 
   updateURL(newURLSettings.toRouterQueryObject())
 }
