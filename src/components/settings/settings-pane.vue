@@ -10,20 +10,27 @@
     </div>
     <form class="card-content" @submit.prevent="onSubmit">
       <div class="field">
-        <label class="label" for="endpoint">Endpoint URL</label>
-        <input id="endpoint" type="text" class="input" v-model="sparqlEndpoint" @blur="updateEndpoint" />
+        <label class="label" for="endpoint">Sparql Endpoint URL</label>
+        <p class="control has-icons-right">
+          <input id="endpoint" type="text" class="input" v-model="newAppSettings.sparqlEndpoint" @blur="onSparqlInputBlur"
+            @focusin="onSparqlInputFocus" />
+          <span class="icon is-small is-right" CheckIcon v-if="!hasSparqlEndpointInputFocus">
+            <CheckIcon v-if="isEndpointOk" class="icon" style="color: green" />
+            <XIcon v-if="!isEndpointOk" class="icon" style="color: red" />
+          </span>
+        </p>
       </div>
       <div class="field">
         <label class="label" for="username">Username</label>
-        <input id="username" type="text" class="input" v-model="username" @blur="fetchGraphs" />
+        <input id="username" type="text" class="input" v-model="newAppSettings.username" />
       </div>
       <div class="field">
         <label class="label" for="password">Password</label>
-        <input id="password" type="password" class="input" v-model="password" @blur="fetchGraphs" />
+        <input id="password" type="password" class="input" v-model="newAppSettings.password" />
       </div>
       <div class="field" :class="fetchError ? 'is-danger' : ''">
-        <label class="label" for="graph">Graph</label>
-        <SelectGraph id="graph" v-model="namedGraph" :graphs="graphs" :loading="loadingGraphs"
+        <label class="label" for="graph">Named Graph</label>
+        <SelectGraph id="graph" v-model="newAppSettings.namedGraph" :graphs="graphs" :loading="loadingGraphs"
           :has-more-graphs="hasMoreGraphs" @fetch-more="fetchMoreGraphs" />
       </div>
       <div class="field">
@@ -36,7 +43,7 @@
       <div class="field">
         <label class="label">Custom prefixes</label>
         <div class="flex flex-col gap-1">
-          <div v-for="(prefix, index) in prefixes" :key="index" class="flex gap-1">
+          <div v-for="(prefix, index) in newAppSettings.prefixes" :key="index" class="flex gap-1">
             <input type="text" v-model="prefix.prefix" placeholder="schema" class="input w-24" required />
             <input type="text" v-model="prefix.namespace" placeholder="http://schema.org/" class="input flex-grow"
               required />
@@ -44,7 +51,7 @@
               <MinusSmIcon class="icon" />
             </button>
           </div>
-          <p v-if="prefixes.length === 0" class="has-text-grey">
+          <p v-if="newAppSettings.prefixes.length === 0" class="has-text-grey">
             No custom prefix
           </p>
           <p>
@@ -56,7 +63,7 @@
       </div>
       <div class="field">
         <label class="label flex items-center gap-2">
-          <SpexSwitch v-model="forceIntrospection" />
+          <SpexSwitch v-model="newAppSettings.forceIntrospection" />
           Force introspection
         </label>
         <p class="help">
@@ -72,12 +79,12 @@
 </template>
 
 <script setup lang="ts">
-import { MinusSmIcon, PlusSmIcon, XIcon } from '@heroicons/vue/solid'
+import { MinusSmIcon, PlusSmIcon, XIcon, CheckIcon } from '@heroicons/vue/solid'
 import { Endpoint } from '@/endpoint'
-import { Settings, TPrefix, TLegacySettings } from '@/model/settings.model'
+import { Settings } from '@/model/settings.model'
 import SelectGraph from './select-graph.vue'
 import SpexSwitch from '../common/switch.vue'
-import { ref, watch, onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 
 const graphsPageSize = 10
 
@@ -86,104 +93,104 @@ interface Props {
 }
 const props = defineProps<Props>()
 
+const newAppSettings = ref<Settings>({
+  sparqlEndpoint: props.settings.sparqlEndpoint,
+  namedGraph: props.settings.namedGraph,
+  prefixes: props.settings.prefixes,
+  username: props.settings.username,
+  password: props.settings.password,
+  forceIntrospection: props.settings.forceIntrospection
+})
+
 // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
 const emit = defineEmits<{
   (event: 'settingsChanged', value: Settings): void;
   (event: 'close'): void
 }>()
 
-const sparqlEndpoint = ref<string>(props.settings.sparqlEndpoint ?? '')
-const username = ref<string>(props.settings.username ?? '')
-const password = ref<string>(props.settings.password ?? '')
-const namedGraph = ref<string>(props.settings.namedGraph ?? '')
-const forceIntrospection = ref<boolean>(props.settings.forceIntrospection)
-const prefixes = ref<TPrefix[]>(props.settings.prefixes)
+const isEndpointOk = ref<boolean>(false)
+const hasSparqlEndpointInputFocus = ref<boolean>(false)
 
-const endpoint: Endpoint | null = null
-let graphs = []
-let hasMoreGraphs = false
-let loadingGraphs = false
-let fetchError: string | null = null
-let graphsOffset = 0
+let endpoint: Endpoint | null = null
+
+if (props.settings.sparqlEndpoint) {
+  updateEndpoint()
+}
+const graphs = ref<string[]>([])
+const hasMoreGraphs = ref<boolean>(false)
+const loadingGraphs = ref<boolean>(false)
+const fetchError = ref<string | null>(null)
+const graphsOffset = ref<number>(0)
 
 onMounted(async () => {
-  console.log('mounted call', props.settings)
-  // await fetchGraphs()
+  if (props.settings.sparqlEndpoint !== null) {
+    await fetchGraphs()
+  }
 })
 
 function onSubmit(): void {
-  const newSettings: Settings = {
-    sparqlEndpoint: sparqlEndpoint.value,
-    username: username.value,
-    password: password.value,
-    forceIntrospection: forceIntrospection.value,
-    namedGraph: namedGraph.value,
-    prefixes: []
-  }
-  emit('settingsChanged', newSettings)
+  emit('settingsChanged', newAppSettings.value)
 }
 
 function onClose(): void {
   emit('close')
 }
-
-function updateEndpoint(payload: FocusEvent) {
-  console.log('eps', sparqlEndpoint.value)
+function onSparqlInputBlur(payload: FocusEvent) {
+  newAppSettings.value.namedGraph = null
+  updateEndpoint()
 }
+
+async function updateEndpoint() {
+  const endpoint = new Endpoint(newAppSettings.value)
+  isEndpointOk.value = await endpoint.canFetchOne()
+  hasSparqlEndpointInputFocus.value = false
+  if (isEndpointOk.value) {
+    fetchGraphs()
+  }
+}
+
 async function fetchGraphs() {
-  loadingGraphs = true
-  // endpoint = new Endpoint(newSettings as LegacySettings)
-  graphsOffset = 0
-  // graphs = await fetchGraphPage()
+  loadingGraphs.value = true
+  endpoint = new Endpoint(newAppSettings.value)
+  graphsOffset.value = 0
+  graphs.value = await fetchGraphPage()
 }
 
 async function fetchMoreGraphs() {
   const newGraphs = await fetchGraphPage()
-  graphs = graphs.concat(newGraphs)
+  graphs.value = graphs.value.concat(newGraphs)
 }
 
 async function fetchGraphPage() {
-  loadingGraphs = true
-  fetchError = ''
+  loadingGraphs.value = true
+  fetchError.value = ''
 
   try {
-    const page = { offset: graphsOffset, limit: graphsPageSize }
+    const page = { offset: graphsOffset.value, limit: graphsPageSize }
     const graphs = await endpoint?.fetchGraphs(page)
-    graphsOffset = graphsOffset + graphsPageSize
-    hasMoreGraphs = graphs.length >= graphsPageSize
+    graphsOffset.value = graphsOffset.value + graphsPageSize
+    hasMoreGraphs.value = graphs.length >= graphsPageSize
     return graphs
   } catch (e) {
-    fetchError = (e as any).toString()
+    fetchError.value = (e as any).toString()
     return []
   } finally {
-    loadingGraphs = false
+    loadingGraphs.value = false
   }
 }
 
 function addPrefix(): void {
-  prefixes.value.push({ prefix: '', namespace: '' })
+  newAppSettings.value.prefixes.push({ prefix: '', namespace: '' })
 }
 
 function removePrefix(index: number): void {
-  prefixes.value.splice(index, 1)
+  newAppSettings.value.prefixes.splice(index, 1)
 }
 
-watch(sparqlEndpoint, (newEndpoint, oldEndpoint) => {
-  console.log('watch', newEndpoint, oldEndpoint)
-})
- /**
-watch: {
-settings(settings) {
-this.data = cloneDeep(settings)
-},
+function onSparqlInputFocus() {
+  hasSparqlEndpointInputFocus.value = true
+}
 
-'data.url'() {
-this.endpoint = new Endpoint(this.data)
-this.graphs = []
-this.data.graph = null
-},
-},
-*/
 </script>
 
 <script lang="ts">

@@ -9,7 +9,7 @@
             </h1>
             <button class="button is-white dark:is-dark flex items-center gap-1" title="Options" @click="showSettings">
               <h2>
-                <span v-if="endpoint">{{ endpoint.url }}</span>
+                <span v-if="endpoint">{{ endpoint.sparqlEndpoint }}</span>
                 <span v-else>No endpoint configured yet</span>
               </h2>
               <CogIcon class="icon" />
@@ -73,7 +73,7 @@
       </Splitpanes>
     </Pane>
     <Pane v-if="isSettingsEditorShown" size="30">
-      <SettingsPane :settings="settings" @change="loadEndpoint" @close="hideSettings" />
+      <SettingsPane :settings="settings" @settingsChanged="onSettingsChanged" @close="hideSettings" />
     </Pane>
 
     <ModalShacl v-if="isShaclModalShown" :open="isShaclModalShown" @close="hideShaclModal" :endpoint="endpoint"
@@ -100,7 +100,7 @@ import { sh, rdf } from '../namespace'
 import GitHubLogo from './common/git-hub-logo.vue'
 import ZazukoLogo from './common/zazuko-logo.vue'
 import { Settings } from '@/model/settings.model'
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { DataModel, Table } from '@/model/data-model.model'
 
 interface Props {
@@ -110,11 +110,20 @@ interface Props {
 const props = defineProps<Props>()
 // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
 const emit = defineEmits<{
-  (event: 'settings-changed', value: Settings): void;
+  (event: 'settingsChanged', value: Settings): void;
 }>()
 
 const resourcesExplorerShown = computed(() => {
   return exploredResources.value.length > 0
+})
+
+watch(() => props.settings, (newValue: Props['settings']) => {
+  if ((newValue.sparqlEndpoint?.length ?? 0) > 0) {
+    isSettingsEditorShown.value = false
+    loadEndpoint(newValue)
+  } else {
+    isSettingsEditorShown.value = true
+  }
 })
 
 onMounted(async () => {
@@ -128,7 +137,7 @@ onMounted(async () => {
 const isSettingsEditorShown = ref<boolean>(false)
 const isTableExplorerShown = ref<boolean>(false)
 const isTablesListShown = ref<boolean>(false)
-const isListShown = ref<boolean>(false)
+// const isListShown = ref<boolean>(false)
 const isShaclModalShown = ref<boolean>(false)
 const isShaclLoadModalShown = ref<boolean>(false)
 
@@ -228,8 +237,6 @@ async function loadData() {
 }
 
 async function loadEndpoint(settings: Settings): Promise<void> {
-  console.log('load Endpoint', settings)
-  // emit('settings-changed', settings)
   if (settings.sparqlEndpoint) {
     endpoint.value = new Endpoint(settings)
     await loadData()
@@ -276,7 +283,7 @@ async function onExportTable(table: Table): Promise<void> {
         let shOrString = '\t\t\t<http://www.w3.org/ns/shacl#shOr> (\n'
         const shOrList = shOr.list()
         Array.from(shOrList).forEach((x: any) => {
-          const shOrMemberLines = []
+          const shOrMemberLines: string[] = []
           x.dataset.match(x.term, null, null, null).filter(quad => !(quad.predicate.equals(rdf.last) || quad.predicate.equals(rdf.last) || quad.predicate.equals(rdf.nil))).forEach(q => shOrMemberLines.push(`\t\t\t\t\t<${q.predicate.value}> <${q.object.value}>`))
           shOrString += `\t\t\t\t[\n${shOrMemberLines.join(' \n')}`
           shOrString += ' \n\t\t\t\t]\n'
@@ -288,6 +295,11 @@ async function onExportTable(table: Table): Promise<void> {
     })
   }
   await navigator.clipboard.writeText(shapeString)
+}
+
+function onSettingsChanged(newSettings: Settings) {
+  /* bubble up */
+  emit('settingsChanged', newSettings)
 }
 </script>
 

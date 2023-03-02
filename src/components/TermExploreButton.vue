@@ -10,7 +10,6 @@
 import { computed } from 'vue'
 import Tooltip from './common/tooltip.vue'
 import { EyeIcon } from '@heroicons/vue/solid'
-import { Term } from 'rdf-js'
 import { Resource } from '@/model/resource.model'
 
 interface Props {

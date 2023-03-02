@@ -1,12 +1,12 @@
 <template>
-  <SpexMain :settings="settings" @settings-change="onSettingsChange" />
+  <SpexMain :settings="settings" @settings-changed="onSettingsChanged" />
 </template>
 
 <script setup lang="ts">
 import SpexMain from '@/components/Spex.vue'
 import { Settings, SettingsPersistance, UrlSettings } from '@/model/settings.model'
 import { ref } from 'vue'
-import { isNavigationFailure, NavigationFailureType, useRouter, useRoute, LocationQuery, LocationQueryValue } from 'vue-router'
+import { isNavigationFailure, NavigationFailureType, useRouter, useRoute } from 'vue-router'
 
 const appSettings = new SettingsPersistance()
 
@@ -30,10 +30,21 @@ if (urlSettings !== null) {
   updateURL(newURLSettings.toRouterQueryObject())
 }
 
-function onSettingsChange(newSettings: Settings): void {
-  // settings.value = newSettings
-  //  saveSettingsInLocalStorage(newSettings)
-  // updateURL(newSettings)
+function onSettingsChanged(newSettings: Settings): void {
+  console.log('top', newSettings)
+  const newAppSettings = new SettingsPersistance()
+  newAppSettings.sparqlEndpoint = newSettings.sparqlEndpoint
+  newAppSettings.username = newSettings.username
+  newAppSettings.password = newSettings.password
+  newAppSettings.prefixes = newSettings.prefixes
+  newAppSettings.namedGraph = newSettings.namedGraph
+  newAppSettings.forceIntrospection = newSettings.forceIntrospection
+  newAppSettings.storeSettings()
+  settings.value = newAppSettings
+  const newURLSettings = new UrlSettings(newAppSettings.sparqlEndpoint, newAppSettings.namedGraph, newAppSettings.prefixes, newAppSettings.forceIntrospection)
+  console.log('change route', newURLSettings)
+
+  updateURL(newURLSettings.toRouterQueryObject())
 }
 
 async function updateURL(queryObject: any): Promise<void> {

@@ -4,7 +4,7 @@ import ParsingClient from 'sparql-http-client/ParsingClient'
 import { dataModelFromSHACL, dataModelToSHACL } from '@/shacl'
 import * as ns from './namespace'
 import { prefixes as _prefixes } from './namespace'
-import { Settings } from './model/settings.model'
+import { Settings, TPrefix } from './model/settings.model'
 
 const SCHEMA_URI = '.well-known/void'
 
@@ -85,6 +85,14 @@ export class Endpoint {
 
   get datasetURI(): string {
     return this._settings.sparqlEndpoint?.replace(/query\/?$/, SCHEMA_URI) ?? ''
+  }
+
+  get sparqlEndpoint(): string {
+    return this._settings.sparqlEndpoint ?? ''
+  }
+
+  get prefixes(): TPrefix[] {
+    return this._settings.prefixes
   }
 
   /**
@@ -247,6 +255,20 @@ export class Endpoint {
       term,
       name: this.shrink(term.value),
       properties: [...properties.values()],
+    }
+  }
+
+  async canFetchOne() {
+    const query = `
+      SELECT ?s WHERE {
+        ?s ?p ?o
+      } LIMIT 1
+    `
+    try {
+      const result = await this._client.query.select(query)
+      return result.length === 1
+    } catch (e) {
+      return false
     }
   }
 }

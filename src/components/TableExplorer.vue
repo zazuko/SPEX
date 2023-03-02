@@ -77,9 +77,9 @@ import TermExploreButton from './TermExploreButton.vue'
 import { Table } from '@/model/data-model.model'
 
 interface Props {
-  table: Table,
+  table: Table | null,
   tables?: Table[],
-  endpoint: Endpoint
+  endpoint: Endpoint | null
 }
 const props = defineProps<Props>()
 
@@ -108,7 +108,9 @@ const loadData = async () => {
 
   isLoading.value = true
   try {
-    data.value = await props.endpoint.fetchTableData(props.table, { offset, limit })
+    if (props.endpoint) {
+      data.value = await props.endpoint.fetchTableData(props.table, { offset, limit })
+    }
   } catch (e) {
     error.value = e
     // eslint-disable-next-line no-console
