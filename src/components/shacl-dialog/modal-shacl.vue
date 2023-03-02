@@ -5,12 +5,12 @@
       <div class="ml-auto">
         <Tooltip label="Load SHACL shapes" position="bottom" class="mr-4">
           <button class="button" @click="load">
-            <UploadIcon class="icon" />
+            <ArrowUpTrayIcon class="icon" />
           </button>
         </Tooltip>
         <Tooltip label="Close" position="bottom">
           <button class="button is-light" @click="$emit('close')">
-            <XIcon class="icon" />
+            <XMarkIcon class="icon" />
           </button>
         </Tooltip>
       </div>
@@ -31,7 +31,7 @@
             {{ copiedMessage }}
           </span>
           <button class="button" @click="copy">
-            <ClipboardCopyIcon class="icon" />
+            <ClipboardDocumentIcon class="icon" />
             <span>Copy</span>
           </button>
         </div>
@@ -46,7 +46,7 @@
 import '@rdfjs-elements/rdf-editor'
 import { DataModel } from '@/model/data-model.model'
 import { Endpoint } from '@/endpoint'
-import { ClipboardCopyIcon, UploadIcon, XIcon } from '@heroicons/vue/solid'
+import { ClipboardDocumentIcon, ArrowUpTrayIcon, XMarkIcon } from '@heroicons/vue/24/solid'
 import SpexDialog from './dialog.vue'
 import Tooltip from '../common/tooltip.vue'
 import { RadioGroup, RadioGroupOption } from '@headlessui/vue'
@@ -65,7 +65,7 @@ const emit = defineEmits<{
   (event: 'close'): void;
   (event: 'open-load-shacl'): void
 }>()
-const customPrefixes = computed(() => props.endpoint.prefixes.reduce((acc, { prefix, url }) => ({ ...acc, [prefix]: url }), {}))
+const customPrefixes = computed(() => props.endpoint.prefixes.reduce((acc, { prefix, namespace }) => ({ ...acc, [prefix]: namespace }), {}))
 const shacl = computed(() => [...props.endpoint.dataModelToSHACL(props.datamodel).dataset])
 const copiedMessage = ref<string | null>(null)
 const snippet = ref<any>(null)

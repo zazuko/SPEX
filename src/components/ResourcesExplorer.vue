@@ -6,7 +6,7 @@
       </h3>
       <p class="card-header-icon py-0 px-1">
         <button class="button is-light" @click="$emit('close')" title="Close">
-          <XIcon class="icon" />
+          <XMarkIcon class="icon" />
         </button>
       </p>
     </div>
@@ -22,12 +22,12 @@
           <template v-slot:actions>
             <Tooltip label="Open URI in new tab">
               <a :href="node.id" target="_blank" rel="noopener noreferrer" class="button is-light">
-                <ExternalLinkIcon class="icon" />
+                <ArrowTopRightOnSquareIcon class="icon" />
               </a>
             </Tooltip>
             <Tooltip label="Hide">
               <button class="button is-light" @click="$emit('unexplore-resource', node)">
-                <EyeOffIcon class="icon" />
+                <EyeSlashIcon class="icon" />
               </button>
             </Tooltip>
           </template>
@@ -51,7 +51,7 @@
 import { Endpoint } from '@/endpoint'
 import { computed, onMounted, ref, watch } from 'vue'
 import { Link } from '@/model/data-model.model'
-import { ExternalLinkIcon, EyeOffIcon, XIcon } from '@heroicons/vue/solid'
+import { ArrowTopRightOnSquareIcon, EyeSlashIcon, XMarkIcon } from '@heroicons/vue/24/solid'
 import { GraphLayout } from '@zazuko/vue-graph-layout'
 import ResourceCard from './ResourceCard.vue'
 import Term from './Term.vue'

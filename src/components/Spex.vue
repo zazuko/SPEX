@@ -14,10 +14,13 @@
               </h2>
               <CogIcon class="icon" />
             </button>
-            <button v-if="endpoint && !error" class="button is-white is-small" @click="showShacl">
-              SHACL
-            </button>
-            <div v-if="!(endpoint && !error)"></div>
+            <div v-if="!isSettingsEditorShown" class="flex flex-row items-center mr-2">
+              <ZazukoLogo />
+              <span>&nbsp;/&nbsp;</span>
+              <GitHubLogo />
+            </div>
+            <div v-if="isSettingsEditorShown">
+            </div>
           </div>
 
           <Splitpanes vertical v-if="datamodel" class="overflow-hidden">
@@ -28,7 +31,7 @@
             <Pane class="relative h-full">
               <div class="z-10 absolute m-3">
                 <button v-show="!isTablesListShown" class="button" @click="showTablesList">
-                  <MenuIcon class="icon" />
+                  <Bars3Icon class="icon" />
                   <span>Classes</span>
                 </button>
               </div>
@@ -37,9 +40,9 @@
                 <template v-slot:default>
                   <p v-show="!(isTableExplorerShown || resourcesExplorerShown)"
                     class="z-10 absolute bottom-2 left-2 text-sm bg-gray-50 dark:bg-gray-700 flex items-center gap-2">
-                    <ZazukoLogo />
-                    <span>/</span>
-                    <GitHubLogo />
+                    <button v-if="endpoint && !error" class="button is-white is-small" @click="showShacl">
+                      SHACL
+                    </button>
                   </p>
                 </template>
               </OverviewTables>
@@ -85,7 +88,7 @@
 </template>
 
 <script setup lang="ts">
-import { CogIcon, MenuIcon } from '@heroicons/vue/solid'
+import { CogIcon, Bars3Icon } from '@heroicons/vue/24/solid'
 import { Splitpanes, Pane } from 'splitpanes'
 import 'splitpanes/dist/splitpanes.css'
 import { Endpoint } from '@/endpoint'

@@ -4,17 +4,17 @@
       <div class="flex gap-1">
         <Tooltip :label="`${copiedMessage ? copiedMessage : 'Copy'}`">
           <button class="button is-light is-small" @click="onExportTable(table)">
-            <ClipboardCopyIcon class="icon" />
+            <ClipboardDocumentIcon class="icon" />
           </button>
         </Tooltip>
         <Tooltip label="Hide">
           <button class="button is-light is-small" @click="$emit('hide', table)">
-            <EyeOffIcon class="icon" />
+            <EyeSlashIcon class="icon" />
           </button>
         </Tooltip>
         <Tooltip label="Explore">
           <button class="button is-light is-small" @click="$emit('explore', table)">
-            <TableIcon class="icon" />
+            <TableCellsIcon class="icon" />
           </button>
         </Tooltip>
       </div>
@@ -24,7 +24,7 @@
 
 <script setup lang="ts">
 import { Link, Table } from '@/model/data-model.model'
-import { EyeOffIcon, TableIcon, ClipboardCopyIcon } from '@heroicons/vue/solid'
+import { EyeSlashIcon, TableCellsIcon, ClipboardDocumentIcon } from '@heroicons/vue/24/solid'
 import { ref } from 'vue'
 import ResourceCard from './ResourceCard.vue'
 import Tooltip from './common/tooltip.vue'

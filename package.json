@@ -18,7 +18,7 @@
   ],
   "dependencies": {
     "@headlessui/vue": "^1.6.7",
-    "@heroicons/vue": "^1.0.6",
+    "@heroicons/vue": "^2.0.16",
     "@rdfjs-elements/rdf-editor": "^0.5.4",
     "@zazuko/rdf-vocabularies": "^2023.1.19",
     "@zazuko/vue-graph-layout": "^0.1.2",

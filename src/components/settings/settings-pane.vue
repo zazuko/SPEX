@@ -4,7 +4,7 @@
       <h3 class="card-header-title">Options</h3>
       <p class="card-header-icon py-0 px-1">
         <button type="button" class="button is-light" @click="onClose" title="Close">
-          <XIcon class="icon" />
+          <XMarkIcon class="icon" />
         </button>
       </p>
     </div>
@@ -16,7 +16,7 @@
             @focusin="onSparqlInputFocus" />
           <span class="icon is-small is-right" CheckIcon v-if="!hasSparqlEndpointInputFocus">
             <CheckIcon v-if="isEndpointOk" class="icon" style="color: green" />
-            <XIcon v-if="!isEndpointOk" class="icon" style="color: red" />
+            <XMarkIcon v-if="!isEndpointOk" class="icon" style="color: red" />
           </span>
         </p>
       </div>
@@ -50,7 +50,7 @@
             <input type="text" v-model="prefix.namespace" placeholder="http://schema.org/" class="input flex-grow"
               required />
             <button type="button" class="button is-white" title="Remove prefix" @click="removePrefix(index)">
-              <MinusSmIcon class="icon" />
+              <MinusSmallIcon class="icon" />
             </button>
           </div>
           <p v-if="newAppSettings.prefixes.length === 0" class="has-text-grey">
@@ -58,7 +58,7 @@
           </p>
           <p>
             <button type="button" class="button is-white" title="Add prefix" @click="addPrefix">
-              <PlusSmIcon class="icon" />
+              <PlusSmallIcon class="icon" />
             </button>
           </p>
         </div>
@@ -81,7 +81,7 @@
 </template>
 
 <script setup lang="ts">
-import { MinusSmIcon, PlusSmIcon, XIcon, CheckIcon } from '@heroicons/vue/solid'
+import { MinusSmallIcon, PlusSmallIcon, XMarkIcon, CheckIcon } from '@heroicons/vue/24/solid'
 import { Endpoint } from '@/endpoint'
 import { Settings } from '@/model/settings.model'
 import SelectGraph from './select-graph.vue'
@@ -144,10 +144,8 @@ function onSparqlInputBlur(payload: FocusEvent) {
 
 function onUsernamePasswordInputBlur(payload: FocusEvent) {
   if ((newAppSettings.value.username?.length ?? 0) > 0 && (newAppSettings.value.username?.length ?? 0) > 0) {
-    console.log('pwd', newAppSettings.value.username, newAppSettings.value.password)
     updateEndpoint()
   } else if ((newAppSettings.value.username?.length ?? 0) === 0 && (newAppSettings.value.username?.length ?? 0) === 0) {
-    console.log('empty', newAppSettings.value.username, newAppSettings.value.password)
     updateEndpoint()
   }
 }

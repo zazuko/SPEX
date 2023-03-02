@@ -19,7 +19,7 @@
         <li v-if="hasMoreGraphs">
           <button type="button" class="button is-light justify-start w-full" :class="{ 'is-loading': loading }"
             @click="$emit('fetch-more')">
-            <RefreshIcon class="icon" />
+            <ArrowPathIcon class="icon" />
             <span>Load more</span>
           </button>
         </li>
@@ -35,7 +35,7 @@ import {
   ListboxOptions,
   ListboxOption,
 } from '@headlessui/vue'
-import { RefreshIcon } from '@heroicons/vue/solid'
+import { ArrowPathIcon } from '@heroicons/vue/24/solid'
 import LoadingSpinner from '../common/loading-spinner.vue'
 
 interface Props {

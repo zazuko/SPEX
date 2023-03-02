@@ -14,7 +14,7 @@
         </div>
       </div>
       <button class="button is-primary" @click="loadShacl">
-        <RefreshIcon class="icon" />
+        <ArrowPathIcon class="icon" />
         <span>Update</span>
       </button>
     </Pane>
@@ -24,11 +24,7 @@
           <div class="flex-grow flex flex-col">
             <h2 class="font-bold text-lg px-4 py-2 bg-gray-200">Representation</h2>
 
-            <GraphLayout
-              :nodes="datamodel.tables"
-              :links="links"
-              :active-links="activeLinks"
-            >
+            <GraphLayout :nodes="datamodel.tables" :links="links" :active-links="activeLinks">
               <template v-slot:node="{ node }">
                 <ResourceCard :resource="node" :active-links="activeLinks" />
               </template>
@@ -49,7 +45,7 @@
 </template>
 
 <script>
-import { RefreshIcon } from '@heroicons/vue/solid'
+import { ArrowPathIcon } from '@heroicons/vue/24/solid'
 import { shrink as _shrink } from '@zazuko/rdf-vocabularies/shrink'
 import { GraphLayout } from '@zazuko/vue-graph-layout'
 import { Splitpanes, Pane } from 'splitpanes'
@@ -73,11 +69,11 @@ export default {
     GraphLayout,
     Splitpanes,
     Pane,
-    RefreshIcon,
+    ArrowPathIcon,
     ResourceCard,
   },
 
-  data () {
+  data() {
     return {
       format: 'text/turtle',
       formats,
@@ -93,7 +89,7 @@ export default {
   },
 
   computed: {
-    links () {
+    links() {
       const tables = this.datamodel.tables
       const tableIds = new Set(tables.map(({ id }) => id))
       return tables
@@ -113,7 +109,7 @@ export default {
   },
 
   methods: {
-    async loadShacl () {
+    async loadShacl() {
       const editor = this.$refs.shaclEditor
 
       this.error = null

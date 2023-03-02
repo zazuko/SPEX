@@ -4,7 +4,7 @@
       <h3 style="color: grey">Load SHACL shapes</h3>
       <div class="ml-auto">
         <button class="button is-light" title="Close" @click="$emit('close')">
-          <XIcon class="icon" />
+          <XMarkIcon class="icon" />
         </button>
       </div>
     </div>
@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import { XIcon } from '@heroicons/vue/solid'
+import { XMarkIcon } from '@heroicons/vue/24/solid'
 import * as N3 from 'n3'
 import RDF from 'rdf-ext'
 import { rdf, spex } from '@/namespace'
@@ -38,7 +38,7 @@ export default {
   name: 'ModalShaclLoad',
   props: ['load', 'endpoint'],
   emits: ['close'],
-  components: { SpexDialog, XIcon },
+  components: { SpexDialog, XMarkIcon },
 
   data() {
     return {

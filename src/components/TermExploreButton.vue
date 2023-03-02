@@ -9,7 +9,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import Tooltip from './common/tooltip.vue'
-import { EyeIcon } from '@heroicons/vue/solid'
+import { EyeIcon } from '@heroicons/vue/24/solid'
 import { Resource } from '@/model/resource.model'
 
 interface Props {

@@ -4,22 +4,22 @@
       <h3 class="card-header-title">Classes</h3>
       <p class="card-header-icon py-0 px-1">
         <button class="button is-light" @click="$emit('close')">
-          <XIcon class="icon" />
+          <XMarkIcon class="icon" />
         </button>
       </p>
     </div>
     <div class="card-content px-0 py-1">
       <div v-show="datamodel.viewports.length > 0" class="
-            field
-            m-0
-            px-2
-            py-2
-            border-b
-            flex flex-wrap
-            justify-end
-            items-center
-            gap-2
-          ">
+                field
+                m-0
+                px-2
+                py-2
+                border-b
+                flex flex-wrap
+                justify-end
+                items-center
+                gap-2
+              ">
         <label class="label m-0" for="predefined-views">Predefined views</label>
         <div class="select">
           <select id="predefined-views" @input="selectViewport">
@@ -46,7 +46,7 @@
 
 <script setup lang="ts">
 import { DataModel } from '@/model/data-model.model'
-import { XIcon } from '@heroicons/vue/solid'
+import { XMarkIcon } from '@heroicons/vue/24/solid'
 import { ref } from 'vue'
 import SpexSwitch from './common/switch.vue'
 

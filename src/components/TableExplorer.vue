@@ -7,7 +7,7 @@
       </h3>
       <p class="card-header-icon py-0 px-1">
         <button class="button is-light" @click="$emit('close')" title="Close">
-          <XIcon class="icon" />
+          <XMarkIcon class="icon" />
         </button>
       </p>
     </div>
@@ -69,7 +69,7 @@
 
 <script setup lang="ts">
 import { Endpoint } from '@/endpoint'
-import { ChevronLeftIcon, ChevronRightIcon, XIcon } from '@heroicons/vue/solid'
+import { ChevronLeftIcon, ChevronRightIcon, XMarkIcon } from '@heroicons/vue/24/solid'
 import LoadingSpinner from './common/loading-spinner.vue'
 import { ref, watch, onMounted } from 'vue'
 import Term from './Term.vue'
