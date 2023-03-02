@@ -15,8 +15,8 @@
           <p class="help is-danger" v-if="error">
             {{ error }}
           </p>
-          <p class="help">
-            Paste your SHACL shapes in <strong>N3</strong> format in the field above.
+          <p class="help" style="color: grey">
+            Paste your SHACL shapes in <strong>Turtle</strong> format in the field above.
           </p>
         </div>
         <div class="field">

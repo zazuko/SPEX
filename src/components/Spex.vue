@@ -49,8 +49,10 @@
             </Pane>
           </Splitpanes>
 
-          <div class="m-auto" v-if="isLoading">
-            <loading-spinner />
+          <div class="bg-gray-50 dark:bg-gray-700 flex-grow flex items-center">
+            <div class="m-auto" v-if="isLoading">
+              <loading-spinner />
+            </div>
           </div>
 
           <div class="section" v-if="error">
