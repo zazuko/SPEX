@@ -2,147 +2,159 @@
   <div class="card h-full flex flex-col">
     <div class="card-header has-background-light">
       <h3 class="card-header-title">
-        Resources explorer
+        Resources Explorer
       </h3>
       <p class="card-header-icon py-0 px-1">
         <button class="button is-light" @click="$emit('close')" title="Close">
-          <XIcon class="icon" />
+          <XMarkIcon class="icon" />
         </button>
       </p>
     </div>
-    <GraphLayout
-      class="card-content p-0"
-      :nodes="resources"
-      :links="links"
-      :active-links="activeLinks"
-      :auto-zoom="false"
-      @link-enter="onLinkHover"
-      @link-out="onUnhover"
-    >
+    <!-- GRAPH -->
+    <GraphLayout class="card-content p-0" :nodes="resources" :links="links" :active-links="activeLinks" :auto-zoom="false"
+      @link-enter="onLinkHover" @link-out="onUnhover">
+
+      <!-- Template for NODES -->
       <template v-slot:node="{ node }">
-        <ResourceCard
-          :resource="node"
-          :active-links="activeLinks"
-          @hover-title="onHoverResource"
-          @unhover-title="onUnhover"
-          @hover-property="onHoverProperty"
-          @unhover-property="onUnhover"
-        >
+        <ResourceCard :resource="node" :active-links="activeLinks" @hover-title="onHoverResource"
+          @unhover-title="onUnhover" @hover-property="onHoverProperty" @unhover-property="onUnhover">
+          <!-- this is the header ?-->
           <template v-slot:actions>
             <Tooltip label="Open URI in new tab">
               <a :href="node.id" target="_blank" rel="noopener noreferrer" class="button is-light">
-                <ExternalLinkIcon class="icon" />
+                <ArrowTopRightOnSquareIcon class="icon" />
               </a>
             </Tooltip>
             <Tooltip label="Hide">
               <button class="button is-light" @click="$emit('unexplore-resource', node)">
-                <EyeOffIcon class="icon" />
+                <EyeSlashIcon class="icon" />
               </button>
             </Tooltip>
           </template>
+          <!-- END: this is the header ?-->
+          <!-- these are the terms in the table / rows -->
           <template v-slot:property-value="{ value }">
             <div class="flex items-center">
               <Term :term="value" :endpoint="endpoint" />
               <TermExploreButton :term="value" @explore-resource="$emit('explore-resource', $event)" />
             </div>
           </template>
+          <!-- END: these are the terms in the table / rows -->
         </ResourceCard>
+        <!-- END Template for NODES -->
       </template>
     </GraphLayout>
+    <!-- END GRAPH -->
   </div>
 </template>
-
-<script>
-import { computed, onMounted, ref, toRefs, watch } from 'vue'
-import { ExternalLinkIcon, EyeOffIcon, XIcon } from '@heroicons/vue/solid'
+<script setup lang="ts">
+import { Endpoint } from '@/endpoint'
+import { computed, onMounted, ref, watch } from 'vue'
+import { Link } from '@/model/data-model.model'
+import { ArrowTopRightOnSquareIcon, EyeSlashIcon, XMarkIcon } from '@heroicons/vue/24/solid'
 import { GraphLayout } from '@zazuko/vue-graph-layout'
 import ResourceCard from './ResourceCard.vue'
 import Term from './Term.vue'
 import TermExploreButton from './TermExploreButton.vue'
-import Tooltip from './Tooltip.vue'
+import Tooltip from './common/tooltip.vue'
+import { useRoute } from 'vue-router'
 
-export default {
-  name: 'ResourcesExplorer',
-  props: ['resources', 'endpoint'],
-  emits: ['explore-resource', 'unexplore-resource', 'close'],
-  components: {
-    ExternalLinkIcon,
-    EyeOffIcon,
-    GraphLayout,
-    ResourceCard,
-    Term,
-    TermExploreButton,
-    Tooltip,
-    XIcon,
-  },
+interface Props {
+  resources: any[],
+  endpoint: Endpoint
+}
 
-  setup (props, context) {
-    const { endpoint, resources } = toRefs(props)
+// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+const props = defineProps<Props>()
 
-    const links = computed(() => {
-      const resourceIds = new Set(resources.value.map(({ id }) => id))
+// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+const emit = defineEmits<{
+  (event: 'explore-resource', value: any): void;
+  (event: 'unexplore-resource', value: any): void,
+  (event: 'close'): void
+}>()
 
-      return resources.value
-        .filter(resource => resource.properties)
-        .flatMap(resource => resource.properties.map((property) => ({ ...property, resource })))
-        .reduce((acc, property) => {
-          property.values.forEach((value) => {
-            const source = property.resource.id
-            const target = value.value
-            if (resourceIds.has(target)) {
-              acc.push({ source, target, sourceProperty: property.id, label: property.name })
-            }
-          })
+const route = useRoute()
 
-          return acc
-        }, [])
-    })
+const links = computed(() => {
+  const resourceIds = new Set(props.resources.map(({ id }) => id))
 
-    const activeLinks = ref([])
-    const onLinkHover = (link) => { activeLinks.value.push(link) }
-    const onUnhover = () => { activeLinks.value = [] }
-    const onHoverResource = (resource) => { activeLinks.value = links.value.filter((link) => link.source === resource.id) }
-    const onHoverProperty = (resource, property) => {
-      activeLinks.value = links.value.filter((link) => (
-        link.source === resource.id &&
-        link.sourceProperty === property.id
-      ))
-    }
-
-    const fetchResources = async () => {
-      if (!endpoint.value) return
-
-      resources.value.forEach(async (resource) => {
-        if (resource.isFetched) return
-
-        try {
-          const responseResource = await endpoint.value.fetchResource(resource.id)
-          const fetchedResource = { ...responseResource, isFetched: true }
-          context.emit('explore-resource', fetchedResource)
-        } catch (e) {
-          const fetchedResource = { ...resource, isFetched: true }
-          context.emit('explore-resource', fetchedResource)
+  return props.resources
+    .filter(resource => resource.properties)
+    .flatMap(resource => resource.properties.map((property) => ({ ...property, resource })))
+    .reduce((acc, property) => {
+      property.values.forEach((value) => {
+        const source = property.resource.id
+        const target = value.value
+        if (resourceIds.has(target)) {
+          acc.push({ source, target, sourceProperty: property.id, label: property.name })
         }
       })
-    }
-    onMounted(fetchResources)
-    watch(endpoint, fetchResources)
-    watch(resources, fetchResources)
 
-    return {
-      links,
-      activeLinks,
-      onLinkHover,
-      onUnhover,
-      onHoverResource,
-      onHoverProperty,
-    }
-  },
+      return acc
+    }, [])
+})
 
-  computed: {
-    uri () {
-      return this.$route.params.uri
-    },
-  },
+const activeLinks = ref<Link[]>([])
+
+function onLinkHover(link: Link) {
+  activeLinks.value.push(link)
+}
+function onUnhover() {
+  activeLinks.value = []
+}
+
+function onHoverResource(resource: any) {
+  activeLinks.value = links.value.filter((link) => link.source === resource.id)
+}
+
+function onHoverProperty(resource: any, property: any) {
+  activeLinks.value = links.value.filter((link) => (
+    link.source === resource.id &&
+    link.sourceProperty === property.id
+  ))
+}
+
+async function fetchResources() {
+  if (!props.endpoint) {
+    return
+  }
+
+  props.resources.forEach(async (resource) => {
+    if (resource.isFetched) {
+      return
+    }
+
+    try {
+      const responseResource = await props.endpoint.fetchResource(resource.id)
+      const fetchedResource = { ...responseResource, isFetched: true }
+      emit('explore-resource', fetchedResource)
+    } catch (e) {
+      const fetchedResource = { ...resource, isFetched: true }
+      emit('explore-resource', fetchedResource)
+    }
+  }
+  )
+}
+
+// lifecycle hooks
+onMounted(() => {
+  fetchResources()
+})
+
+watch(props.endpoint, fetchResources)
+watch(props.resources, fetchResources)
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+const uri = computed(() => {
+  return route.params.uri
+})
+
+</script>
+
+<script lang="ts">
+
+export default {
+  name: 'ResourcesExplorer'
 }
 </script>

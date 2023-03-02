@@ -1,24 +1,34 @@
 import { shrink } from '@zazuko/rdf-vocabularies/shrink'
 import RDF from 'rdf-ext'
 import ParsingClient from 'sparql-http-client/ParsingClient'
-import { datamodelFromSHACL, datamodelToSHACL } from '@/shacl'
+import { dataModelFromSHACL, dataModelToSHACL } from '@/shacl'
 import * as ns from './namespace'
 import { prefixes as _prefixes } from './namespace'
+import { Settings, TPrefix } from './model/settings.model'
 
 const SCHEMA_URI = '.well-known/void'
 
 const initialPrefixes = [...Object.keys(_prefixes)]
 const displayLanguage = ['en', '*']
 
+export interface FetchDataOptions {
+  offset?: number,
+  limit?: number
+}
+
 export class Endpoint {
-  constructor ({ url, user = null, password = null, prefixes = [], graph = '', forceIntrospection = false }) {
-    this.url = url
-    this.user = user || null
-    this.password = password || null
-    this.prefixes = prefixes
-    this.graph = graph
-    this.client = new ParsingClient({ endpointUrl: this.url, user: this.user, password: this.password })
-    this.forceIntrospection = forceIntrospection
+  private _settings: Settings
+  private _client: any
+
+  constructor(settings: Settings) {
+    this._settings = settings
+    this._client = new ParsingClient(
+      {
+        endpointUrl: this._settings.sparqlEndpoint,
+        user: this._settings.username,
+        password: this._settings.password
+      }
+    )
 
     // Reinitialize prefixes
     Object.keys(_prefixes).forEach((prefix) => {
@@ -28,21 +38,21 @@ export class Endpoint {
     })
 
     // Apply custom prefixes
-    prefixes.forEach(({ prefix, url }) => {
-      _prefixes[prefix] = url
+    this._settings.prefixes.forEach(({ prefix, namespace }) => {
+      _prefixes[prefix] = namespace
     })
   }
 
-  shrink (uri) {
+  shrink(uri: string): string {
     return shrink(uri) || uri
   }
 
   /**
    * Fetch a list of graphs in the endpoint
    */
-  async fetchGraphs (opts = {}) {
-    const offset = opts.offset || 0
-    const limit = opts.limit || null
+  async fetchGraphs(opts?: FetchDataOptions) {
+    const offset = opts?.offset ?? 0
+    const limit = opts?.limit ?? null
 
     const query = `
       SELECT DISTINCT ?g
@@ -53,7 +63,7 @@ export class Endpoint {
       OFFSET ${offset}
       LIMIT ${limit}
     `
-    const graphs = await this.client.query.select(query)
+    const graphs = await this._client.query.select(query)
     return graphs.map(({ g: { value } }) => value)
   }
 
@@ -61,53 +71,61 @@ export class Endpoint {
    * Fetch data model, either by introspecting it or by querying the
    * pre-defined SHACL definition
    */
-  async fetchDatamodel () {
-    if (this.forceIntrospection) {
-      return this.fetchIntrospectDatamodel()
+  async fetchDataModel() {
+    if (this._settings.forceIntrospection) {
+      return this.fetchIntrospectDataModel()
     }
 
-    const datamodel = await this.fetchPredefinedDatamodel()
+    const dataModel = await this.fetchPredefinedDataModel()
 
-    return datamodel.tables
-      ? datamodel
-      : this.fetchIntrospectDatamodel()
+    return dataModel.tables
+      ? dataModel
+      : this.fetchIntrospectDataModel()
   }
 
-  get datasetURI () {
-    return this.url.replace(/query\/?$/, SCHEMA_URI)
+  get datasetURI(): string {
+    return this._settings.sparqlEndpoint?.replace(/query\/?$/, SCHEMA_URI) ?? ''
+  }
+
+  get sparqlEndpoint(): string {
+    return this._settings.sparqlEndpoint ?? ''
+  }
+
+  get prefixes(): TPrefix[] {
+    return this._settings.prefixes
   }
 
   /**
    * Fetch data model from pre-defined SHACL definition
    */
-  async fetchPredefinedDatamodel () {
-    const fromClause = this.graph ? `FROM <${this.graph}>` : ''
+  async fetchPredefinedDataModel() {
+    const fromClause = this._settings.namedGraph ? `FROM <${this._settings.namedGraph}>` : ''
     const query = `
       #pragma describe.strategy cbd
       DESCRIBE <${this.datasetURI}>
       ${fromClause}
     `
-    const quads = await this.client.query.construct(query)
-    const dataset = RDF.clownface({
+    const quads = await this._client.query.construct(query)
+    const dataset = (RDF as any).clownface({
       dataset: RDF.dataset(quads),
       term: RDF.namedNode(this.datasetURI),
     })
 
-    return this.datamodelFromSHACL(dataset)
+    return this.dataModelFromSHACL(dataset)
   }
 
-  datamodelFromSHACL (dataset) {
-    return datamodelFromSHACL(dataset, displayLanguage, this.shrink)
+  dataModelFromSHACL(dataset) {
+    return dataModelFromSHACL(dataset, displayLanguage, this.shrink)
   }
 
-  datamodelToSHACL (datamodel) {
-    return datamodelToSHACL(datamodel, this.datasetURI)
+  dataModelToSHACL(datamodel) {
+    return dataModelToSHACL(datamodel, this.datasetURI)
   }
 
   /**
    * Fetch data model by introspecting the endpoint
    */
-  async fetchIntrospectDatamodel () {
+  async fetchIntrospectDataModel() {
     const structure = await this._fetchStructure()
     const tablesMap = structure.reduce((tables, { cls, property, linktype, datatype }) => {
       const table = tables.get(cls.value) || { id: cls.value, name: this.shrink(cls.value), properties: new Map(), isShown: true }
@@ -142,8 +160,8 @@ export class Endpoint {
     }
   }
 
-  async _fetchStructure () {
-    const fromClause = this.graph ? `FROM <${this.graph}>` : ''
+  async _fetchStructure() {
+    const fromClause = this._settings.namedGraph ? `FROM <${this._settings.namedGraph}>` : ''
     const query = `
       SELECT DISTINCT ?cls ?property ?linktype ?datatype
       ${fromClause}
@@ -158,17 +176,17 @@ export class Endpoint {
         BIND(DATATYPE(?object) AS ?datatype)
       }
     `
-    return this.client.query.select(query)
+    return this._client.query.select(query)
   }
 
   /**
    * Fetch a sample of the data of a given table
    */
-  async fetchTableData (table, opts = {}) {
+  async fetchTableData(table, opts?: FetchDataOptions) {
     const type = RDF.namedNode(table.id)
-    const limit = opts.limit || 10
-    const offset = opts.offset || 0
-    const graphClause = this.graph ? `GRAPH <${this.graph}>` : ''
+    const limit = opts?.limit ?? 10
+    const offset = opts?.offset ?? 0
+    const graphClause = this._settings.namedGraph ? `GRAPH <${this._settings.namedGraph}>` : ''
     const query = `
       DESCRIBE ?subject {
         {
@@ -183,10 +201,10 @@ export class Endpoint {
         }
       }
     `
-    const results = await this.client.query.construct(query)
+    const results = await this._client.query.construct(query)
     const dataset = RDF.dataset(results)
-    const subjects = [...dataset.match(null, ns.rdf.type, type)]
-    const rows = RDF.termMap(subjects.map(({ subject }) => [subject, { id: subject.value, term: subject }]))
+    const subjects = [...(dataset.match(null, ns.rdf.type, type) as any)]
+    const rows = (RDF as any).termMap(subjects.map(({ subject }) => [subject, { id: subject.value, term: subject }]))
 
     results.forEach(({ subject, predicate: { value: predicate }, object }) => {
       const row = rows.get(subject)
@@ -194,7 +212,7 @@ export class Endpoint {
       if (!row) return
 
       if (!row[predicate]) {
-        row[predicate] = RDF.termSet()
+        row[predicate] = (RDF as any).termSet()
       }
 
       row[predicate].add(object)
@@ -208,11 +226,11 @@ export class Endpoint {
   /**
    * Fetch triples related to a given resource.
    */
-  async fetchResource (uri) {
+  async fetchResource(uri) {
     const query = `
       DESCRIBE <${uri}> {}
     `
-    const quads = await this.client.query.construct(query)
+    const quads = await this._client.query.construct(query)
 
     const properties = quads.reduce((acc, { predicate, object }) => {
       if (!acc.has(predicate.value)) {
@@ -220,7 +238,7 @@ export class Endpoint {
           id: predicate.value,
           term: predicate,
           name: this.shrink(predicate.value),
-          values: RDF.termSet(),
+          values: (RDF as any).termSet(),
         }
         acc.set(predicate.value, property)
       }
@@ -237,6 +255,20 @@ export class Endpoint {
       term,
       name: this.shrink(term.value),
       properties: [...properties.values()],
+    }
+  }
+
+  async canFetchOne() {
+    const query = `
+      SELECT ?s WHERE {
+        ?s ?p ?o
+      } LIMIT 1
+    `
+    try {
+      const result = await this._client.query.select(query)
+      return result.length === 1
+    } catch (e) {
+      return false
     }
   }
 }

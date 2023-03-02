@@ -1,120 +1,65 @@
 <template>
-  <Spex :settings="settings" @settings-change="onSettingsChange" />
+  <SpexMain :settings="settings" @settings-changed="onSettingsChanged" />
 </template>
 
-<script>
-import { isNavigationFailure, NavigationFailureType } from 'vue-router'
-import Spex from '@/components/Spex.vue'
+<script setup lang="ts">
+import SpexMain from '@/components/Spex.vue'
+import { Settings, SettingsPersistance, UrlSettings } from '@/model/settings.model'
+import { ref } from 'vue'
+import { isNavigationFailure, NavigationFailureType, useRouter, useRoute } from 'vue-router'
 
-const defaultSettings = {
-  url: '',
-  user: null,
-  password: null,
-  graph: null,
-  prefixes: [],
-  forceIntrospection: false
+const appSettings = new SettingsPersistance()
+
+const settings = ref<Settings>(appSettings)
+const router = useRouter()
+const route = useRoute()
+
+const urlSettings = UrlSettings.createUrlSettingFromQueryParams(route.query)
+
+/** there are 3 possibilities  */
+if (urlSettings !== null) {
+  /* 1. in the end we always land here: and url with a query param */
+  appSettings.mergeSettingsWithUrlSettings(urlSettings)
+  settings.value = appSettings
+} else if (appSettings.sparqlEndpoint) {
+  /* 2. SPEX without query string but with settings from local store.
+   * Restore the query string an redirect with query string to land in 1 */
+  const newURLSettings = new UrlSettings(appSettings.sparqlEndpoint, appSettings.namedGraph, appSettings.prefixes, appSettings.forceIntrospection)
+  updateURL(newURLSettings.toRouterQueryObject())
 }
+
+function onSettingsChanged(newSettings: Settings): void {
+  const newAppSettings = new SettingsPersistance()
+  newAppSettings.sparqlEndpoint = newSettings.sparqlEndpoint
+  newAppSettings.username = newSettings.username
+  newAppSettings.password = newSettings.password
+  newAppSettings.prefixes = newSettings.prefixes
+  newAppSettings.namedGraph = newSettings.namedGraph
+  newAppSettings.forceIntrospection = newSettings.forceIntrospection
+  newAppSettings.storeSettings()
+  settings.value = newAppSettings
+  const newURLSettings = new UrlSettings(newAppSettings.sparqlEndpoint, newAppSettings.namedGraph, newAppSettings.prefixes, newAppSettings.forceIntrospection)
+
+  updateURL(newURLSettings.toRouterQueryObject())
+}
+
+async function updateURL(queryObject: any): Promise<void> {
+  try {
+    await router.push({ query: queryObject })
+  } catch (err) {
+    // Ignore duplicated navigation error
+    if (!isNavigationFailure(err, NavigationFailureType.duplicated)) {
+      throw err
+    }
+  }
+}
+
+</script>
+
+<script lang="ts">
 
 export default {
-  components: { Spex },
-
-  data () {
-    const urlSettings = settingsFromURL(this.$route.query)
-    const localSettings = settingsFromLocalStorage()
-
-    let settings
-    if (urlSettings.url) {
-      settings = { ...defaultSettings, ...urlSettings }
-    } else if (localSettings.url) {
-      settings = { ...defaultSettings, ...localSettings }
-    } else {
-      settings = defaultSettings
-    }
-
-    // Since we don't put user/password in the URL, get them from localStorage if the endpoint URL is the same
-    if (localSettings.url && urlSettings.url && localSettings.url === urlSettings.url) {
-      settings.user = localSettings.user
-      settings.password = localSettings.password
-    }
-
-    return {
-      settings,
-    }
-  },
-
-  methods: {
-    onSettingsChange (settings) {
-      this.settings = settings
-      saveSettingsInLocalStorage(settings)
-      this.updateURL(settings)
-    },
-
-    async updateURL (settings) {
-      const query = urlQueryFromSettings(settings)
-      try {
-        await this.$router.push({ query })
-      } catch (err) {
-        // Ignore duplicated navigation error
-        if (!isNavigationFailure(err, NavigationFailureType.duplicated)) {
-          throw err
-        }
-      }
-    },
-
-  },
+  name: 'SpexOverview',
 }
 
-function settingsFromLocalStorage () {
-  const settings = localStorage.getItem('settings')
-  return settings ? JSON.parse(settings) : {}
-}
-
-function saveSettingsInLocalStorage (settings) {
-  localStorage.setItem('settings', JSON.stringify(settings))
-}
-
-const validURLOptions = ['url', 'graph', 'prefixes', 'forceIntrospection']
-
-function settingsFromURL (params) {
-  return validURLOptions.reduce((settings, option) => {
-    if (option in params) {
-      settings[option] = deserializeURLParam(option, params[option])
-    }
-    return settings
-  }, {})
-}
-
-function deserializeURLParam (param, value) {
-  if (param === 'prefixes') {
-    if (typeof value === 'string') {
-      value = [value]
-    }
-
-    return value.map((prefixValue) => {
-      const prefix = prefixValue.split(':')[0]
-      const url = prefixValue.split(':').slice(1).join(':')
-      return { prefix, url }
-    })
-  }
-
-  if (param === 'forceIntrospection') {
-    return value === 'true'
-  }
-
-  return value
-}
-
-function urlQueryFromSettings (settings) {
-  return validURLOptions.reduce((params, option) => {
-    return { ...params, [option]: serializeURLParam(option, settings[option]) }
-  }, {})
-}
-
-function serializeURLParam (param, value) {
-  if (param === 'prefixes') {
-    return value.map(({ prefix, url }) => `${prefix}:${url}`)
-  }
-
-  return value
-}
 </script>

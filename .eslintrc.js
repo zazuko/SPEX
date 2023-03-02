@@ -1,20 +1,31 @@
 module.exports = {
   root: true,
+
   env: {
     node: true
   },
+
   extends: [
     'plugin:vue/vue3-essential',
-    '@vue/standard'
+    '@vue/standard',
+    'plugin:vue/vue3-essential',
+    '@vue/standard',
+    '@vue/typescript'
   ],
+
   parserOptions: {
-    parser: '@babel/eslint-parser'
+    parser: '@typescript-eslint/parser'
   },
+
   rules: {
     'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     'no-unused-vars': 'warn',
     'padded-blocks': 'warn',
-    'comma-dangle': 'off'
+    'comma-dangle': 'off',
+    'space-before-function-paren': 'off',
+    'func-call-spacing': 'off',
+    'no-extra-semi': 'off',
+    'indent': 'off',
   }
 }

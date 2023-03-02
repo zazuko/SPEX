@@ -7,7 +7,7 @@
       </h3>
       <p class="card-header-icon py-0 px-1">
         <button class="button is-light" @click="$emit('close')" title="Close">
-          <XIcon class="icon" />
+          <XMarkIcon class="icon" />
         </button>
       </p>
     </div>
@@ -67,73 +67,75 @@
   </div>
 </template>
 
-<script>
-import { defineComponent, onMounted, ref, toRefs, watch } from 'vue'
-import { ChevronLeftIcon, ChevronRightIcon, XIcon } from '@heroicons/vue/solid'
-import LoadingSpinner from './LoadingSpinner.vue'
+<script setup lang="ts">
+import { Endpoint } from '@/endpoint'
+import { ChevronLeftIcon, ChevronRightIcon, XMarkIcon } from '@heroicons/vue/24/solid'
+import LoadingSpinner from './common/loading-spinner.vue'
+import { ref, watch, onMounted } from 'vue'
 import Term from './Term.vue'
 import TermExploreButton from './TermExploreButton.vue'
+import { Table } from '@/model/data-model.model'
 
-export default defineComponent({
-  name: 'TableExplorer',
-  props: ['table', 'tables', 'endpoint'],
-  emits: ['close', 'explore-resource'],
-  components: {
-    ChevronLeftIcon,
-    ChevronRightIcon,
-    LoadingSpinner,
-    Term,
-    TermExploreButton,
-    XIcon,
-  },
+interface Props {
+  table: Table | null,
+  tables?: Table[],
+  endpoint: Endpoint | null
+}
+const props = defineProps<Props>()
 
-  setup (props) {
-    const { endpoint, table } = toRefs(props)
+// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+const emit = defineEmits<{
+  (event: 'close'): void;
+  (event: 'explore-resource', value: any): void
+}>()
 
-    const data = ref([])
-    const error = ref(null)
-    const isLoading = ref(false)
+const data = ref<any[]>([])
+const error = ref<any>(null)
+const isLoading = ref<boolean>(false)
+const pageSize = 10
+const page = ref<number>(1)
 
-    const pageSize = 10
-    const page = ref(1)
+const loadData = async () => {
+  data.value = []
+  error.value = null
 
-    const loadData = async () => {
-      data.value = []
-      error.value = null
+  if (!props.table) {
+    return
+  }
 
-      if (!table.value) return
+  const offset = (page.value - 1) * pageSize
+  const limit = pageSize
 
-      const offset = (page.value - 1) * pageSize
-      const limit = pageSize
-
-      isLoading.value = true
-      try {
-        data.value = await endpoint.value.fetchTableData(table.value, { offset, limit })
-      } catch (e) {
-        error.value = e
-
-        // eslint-disable-next-line no-console
-        console.error(e)
-      } finally {
-        isLoading.value = false
-      }
+  isLoading.value = true
+  try {
+    if (props.endpoint) {
+      data.value = await props.endpoint.fetchTableData(props.table, { offset, limit })
     }
-
-    const setPage = (newPage) => {
-      page.value = newPage
-      loadData()
-    }
-
-    onMounted(loadData)
-    watch(table, () => { setPage(1) })
-
-    return {
-      data,
-      error,
-      isLoading,
-      page,
-      setPage,
-    }
-  },
+  } catch (e) {
+    error.value = e
+    // eslint-disable-next-line no-console
+    console.error(e)
+  } finally {
+    isLoading.value = false
+  }
+}
+watch(() => props.table, (first, second) => {
+  setPage(1)
 })
+
+const setPage = (newPage: number) => {
+  page.value = newPage
+  loadData()
+}
+
+onMounted(() => {
+  setPage(1)
+})
+
+</script>
+
+<script lang="ts">
+export default {
+  name: 'TableExplorer'
+}
 </script>

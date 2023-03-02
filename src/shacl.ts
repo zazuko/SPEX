@@ -1,13 +1,18 @@
 import RDF from 'rdf-ext'
 import { rdf, schema, sh, spex } from './namespace'
 
+interface SpexDataModel {
+  tables: any[],
+  viewports: any[],
+  isIntrospected: boolean,
+}
 /**
- * Extracts a SPEX datamodel from a given dataset SHACL description.
+ * Extracts a SPEX data model from a given dataset SHACL description.
  *
  * @param {Clownface} dataset - Pointer to the dataset description
  * @returns {Object} SPEX datamodel
  */
-export function datamodelFromSHACL (dataset, language, shrink) {
+export function dataModelFromSHACL(dataset: any, language: any, shrink: any): SpexDataModel {
   const defaultShapes = dataset.out(spex.shape).has(rdf.type, spex.DefaultShapes)
   const tables = defaultShapes.term
     ? tablesFromSHACL(defaultShapes.out(schema.hasPart), shrink)
@@ -27,7 +32,7 @@ export function datamodelFromSHACL (dataset, language, shrink) {
   }
 }
 
-export function tablesFromSHACL (shapes, shrink) {
+export function tablesFromSHACL(shapes, shrink) {
   return shapes
     .toArray()
     .map((shape) => {
@@ -54,17 +59,18 @@ export function tablesFromSHACL (shapes, shrink) {
         })
         .filter(Boolean)
 
-      return {
+      const p = {
         id,
         name: shrink(id),
         properties,
         isShown: true,
       }
+      return p
     })
     .filter(Boolean)
 }
 
-function propertyTypes (property, shrink) {
+function propertyTypes(property, shrink) {
   return [
     ...property.out(sh.datatype).terms.map((datatype) => typeFromTerm(datatype, 'Literal', shrink)),
     ...property.out(sh.class).terms.map((cls) => typeFromTerm(cls, 'NamedNode', shrink)),
@@ -72,7 +78,7 @@ function propertyTypes (property, shrink) {
   ]
 }
 
-function typeFromTerm (term, termType, shrink) {
+function typeFromTerm(term, termType, shrink) {
   return {
     id: term.value,
     name: shrink(term.value),
@@ -87,8 +93,8 @@ function typeFromTerm (term, termType, shrink) {
  * @param {string} datasetURI - URI of the dataset (.well-known/void)
  * @returns {Clownface} - Pointer to the dataset description
  */
-export function datamodelToSHACL (datamodel, datasetURI) {
-  const dataset = RDF.clownface({
+export function dataModelToSHACL(datamodel, datasetURI) {
+  const dataset = (RDF as any).clownface({
     dataset: RDF.dataset(),
     term: RDF.namedNode(datasetURI)
   })

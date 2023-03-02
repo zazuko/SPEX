@@ -1,10 +1,10 @@
 <template>
-  <Dialog @close="$emit('close')">
+  <SpexDialog @close="$emit('close')">
     <div class="modal-card-head py-4">
-      <h3>Load SHACL shapes</h3>
+      <h3 style="color: grey">Load SHACL shapes</h3>
       <div class="ml-auto">
         <button class="button is-light" title="Close" @click="$emit('close')">
-          <XIcon class="icon" />
+          <XMarkIcon class="icon" />
         </button>
       </div>
     </div>
@@ -24,23 +24,23 @@
         </div>
       </form>
     </div>
-  </Dialog>
+  </SpexDialog>
 </template>
 
 <script>
-import { XIcon } from '@heroicons/vue/solid'
+import { XMarkIcon } from '@heroicons/vue/24/solid'
 import * as N3 from 'n3'
 import RDF from 'rdf-ext'
-import { rdf, spex } from '../namespace'
-import Dialog from './Dialog.vue'
+import { rdf, spex } from '@/namespace'
+import SpexDialog from './dialog.vue'
 
 export default {
   name: 'ModalShaclLoad',
   props: ['load', 'endpoint'],
   emits: ['close'],
-  components: { Dialog, XIcon },
+  components: { SpexDialog, XMarkIcon },
 
-  data () {
+  data() {
     return {
       data: '',
       error: null,
@@ -48,7 +48,7 @@ export default {
   },
 
   methods: {
-    async onSubmit () {
+    async onSubmit() {
       if (!this.data) {
         return
       }
@@ -65,7 +65,7 @@ export default {
           throw new Error('No node with spex:shape pointing to a spex:DefaultShapes found')
         }
 
-        const datamodel = this.endpoint.datamodelFromSHACL(pointer)
+        const datamodel = this.endpoint.dataModelFromSHACL(pointer)
         this.load(datamodel)
         this.$emit('close')
       } catch (e) {
