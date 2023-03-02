@@ -16,7 +16,7 @@
             </button>
             <div v-if="!isSettingsEditorShown" class="flex flex-row items-center mr-2">
               <ZazukoLogo />
-              <span>&nbsp;/&nbsp;</span>
+              <div style="height: 15px;border-left: 1px solid; margin-left: 6px; margin-right: 8px; width: 1px;"></div>
               <GitHubLogo />
             </div>
             <div v-if="isSettingsEditorShown">
