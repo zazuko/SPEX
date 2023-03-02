@@ -17,6 +17,7 @@
             <button v-if="endpoint && !error" class="button is-white is-small" @click="showShacl">
               SHACL
             </button>
+            <div v-if="!(endpoint && !error)"></div>
           </div>
 
           <Splitpanes vertical v-if="datamodel" class="overflow-hidden">
