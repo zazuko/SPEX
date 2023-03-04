@@ -15,12 +15,30 @@ export interface FetchDataOptions {
   offset?: number,
   limit?: number
 }
-
 export class Endpoint {
-  private _settings: Settings
+  static getInstance(settings?: Settings): Endpoint | never {
+    if (this._endpointInstance === null && settings) {
+      this._endpointInstance = new Endpoint(settings)
+      return this._endpointInstance
+    } else if (settings && this._endpointInstance) {
+      this._endpointInstance.applySettings(settings)
+    }
+    if (this._endpointInstance === null) {
+      throw new Error('Endpoint Not Configured')
+    }
+    return this._endpointInstance
+  }
+
+  // eslint-disable-next-line no-use-before-define
+  private static _endpointInstance: Endpoint | null = null
+
   private _client: any
 
-  constructor(settings: Settings) {
+  public constructor(private _settings: Settings) {
+    this.applySettings(_settings)
+  }
+
+  public applySettings(settings: Settings) {
     this._settings = settings
     this._client = new ParsingClient(
       {

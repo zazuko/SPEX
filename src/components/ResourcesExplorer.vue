@@ -61,7 +61,6 @@ import { useRoute } from 'vue-router'
 
 interface Props {
   resources: any[],
-  endpoint: Endpoint
 }
 
 // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
@@ -75,6 +74,7 @@ const emit = defineEmits<{
 }>()
 
 const route = useRoute()
+const endpoint = Endpoint.getInstance()
 
 const links = computed(() => {
   const resourceIds = new Set(props.resources.map(({ id }) => id))
@@ -116,17 +116,13 @@ function onHoverProperty(resource: any, property: any) {
 }
 
 async function fetchResources() {
-  if (!props.endpoint) {
-    return
-  }
-
   props.resources.forEach(async (resource) => {
     if (resource.isFetched) {
       return
     }
 
     try {
-      const responseResource = await props.endpoint.fetchResource(resource.id)
+      const responseResource = await endpoint.fetchResource(resource.id)
       const fetchedResource = { ...responseResource, isFetched: true }
       emit('explore-resource', fetchedResource)
     } catch (e) {
@@ -142,7 +138,6 @@ onMounted(() => {
   fetchResources()
 })
 
-watch(props.endpoint, fetchResources)
 watch(props.resources, fetchResources)
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars

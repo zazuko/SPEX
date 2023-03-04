@@ -12,11 +12,13 @@ import Tooltip from './common/tooltip.vue'
 
 interface Props {
   term: Term, // should be Term
-  endpoint: Endpoint
 }
 const props = defineProps<Props>()
-const displayValue = ref(termValue(props.endpoint, props.term))
-const expandedValue = expandValue(props.endpoint, props.term)
+
+const endpoint = Endpoint.getInstance()
+
+const displayValue = ref(termValue(endpoint, props.term))
+const expandedValue = expandValue(endpoint, props.term)
 const language = ref<string>(props.term && (props.term as any).language)
 const tooltip = ref<string>(expandedValue !== displayValue.value ? expandedValue : '')
 
