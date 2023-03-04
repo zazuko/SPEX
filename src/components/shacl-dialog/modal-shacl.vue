@@ -55,7 +55,6 @@ import { computed, ref } from 'vue'
 interface Props {
   datamodel: DataModel,
   loadShacl?: any,
-  endpoint: Endpoint
 }
 // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
 const props = defineProps<Props>()
@@ -65,8 +64,10 @@ const emit = defineEmits<{
   (event: 'close'): void;
   (event: 'open-load-shacl'): void
 }>()
-const customPrefixes = computed(() => props.endpoint.prefixes.reduce((acc, { prefix, namespace }) => ({ ...acc, [prefix]: namespace }), {}))
-const shacl = computed(() => [...props.endpoint.dataModelToSHACL(props.datamodel).dataset])
+
+const endpoint = Endpoint.getInstance()
+const customPrefixes = computed(() => endpoint.prefixes.reduce((acc, { prefix, namespace }) => ({ ...acc, [prefix]: namespace }), {}))
+const shacl = computed(() => [...endpoint.dataModelToSHACL(props.datamodel).dataset])
 const copiedMessage = ref<string | null>(null)
 const snippet = ref<any>(null)
 

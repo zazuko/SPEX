@@ -79,7 +79,6 @@ import { Table } from '@/model/data-model.model'
 interface Props {
   table: Table | null,
   tables?: Table[],
-  endpoint: Endpoint | null
 }
 const props = defineProps<Props>()
 
@@ -88,6 +87,8 @@ const emit = defineEmits<{
   (event: 'close'): void;
   (event: 'explore-resource', value: any): void
 }>()
+
+const endpoint = Endpoint.getInstance()
 
 const data = ref<any[]>([])
 const error = ref<any>(null)
@@ -108,8 +109,8 @@ const loadData = async () => {
 
   isLoading.value = true
   try {
-    if (props.endpoint) {
-      data.value = await props.endpoint.fetchTableData(props.table, { offset, limit })
+    if (endpoint) {
+      data.value = await endpoint.fetchTableData(props.table, { offset, limit })
     }
   } catch (e) {
     error.value = e

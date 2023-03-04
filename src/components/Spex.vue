@@ -9,7 +9,7 @@
             </h1>
             <button class="button is-white dark:is-dark flex items-center gap-1" title="Options" @click="showSettings">
               <h2>
-                <span v-if="endpoint">{{ endpoint.sparqlEndpoint }}</span>
+                <span v-if="endpoint.sparqlEndpoint">{{ endpoint.sparqlEndpoint }}</span>
                 <span v-else>No endpoint configured yet</span>
               </h2>
               <CogIcon class="icon" />
@@ -67,11 +67,10 @@
         <Pane v-if="isTableExplorerShown || resourcesExplorerShown">
           <Splitpanes vertical>
             <Pane v-if="isTableExplorerShown">
-              <TableExplorer :table="exploredTable" :endpoint="endpoint" @close="hideExplorer"
-                @explore-resource="exploreResource" />
+              <TableExplorer :table="exploredTable" @close="hideExplorer" @explore-resource="exploreResource" />
             </Pane>
             <Pane v-if="resourcesExplorerShown">
-              <ResourcesExplorer :resources="exploredResources" :endpoint="endpoint" @close="hideResourcesExplorer"
+              <ResourcesExplorer :resources="exploredResources" @close="hideResourcesExplorer"
                 @explore-resource="exploreResource" @unexplore-resource="unexploreResource" />
             </Pane>
           </Splitpanes>
@@ -119,6 +118,8 @@ const emit = defineEmits<{
   (event: 'settingsChanged', value: Settings): void;
 }>()
 
+const endpoint = Endpoint.getInstance(props.settings)
+
 const resourcesExplorerShown = computed(() => {
   return exploredResources.value.length > 0
 })
@@ -147,7 +148,6 @@ const isTablesListShown = ref<boolean>(false)
 const isShaclModalShown = ref<boolean>(false)
 const isShaclLoadModalShown = ref<boolean>(false)
 
-const endpoint = ref<Endpoint | null>(null)
 const exploredTable = ref<Table | null>(null)
 const exploredResources = ref<any[]>([])
 const datamodel = ref<DataModel | null>(null)
@@ -223,15 +223,12 @@ function hideShaclLoadModal() {
 }
 
 async function loadData() {
-  if (!endpoint.value) {
-    throw new Error('No endpoint defined')
-  }
   resetView()
   error.value = null
   isLoading.value = true
   datamodel.value = null
   try {
-    datamodel.value = await endpoint.value.fetchDataModel()
+    datamodel.value = await endpoint.fetchDataModel()
   } catch (e) {
     error.value = e
     showSettings()
@@ -243,12 +240,8 @@ async function loadData() {
 }
 
 async function loadEndpoint(settings: Settings): Promise<void> {
-  if (settings.sparqlEndpoint) {
-    endpoint.value = new Endpoint(settings)
-    await loadData()
-  } else {
-    endpoint.value = null
-  }
+  endpoint.applySettings(settings)
+  await loadData()
 }
 
 function showSettings(): void {
@@ -265,7 +258,7 @@ function exploreTable(table: Table) {
 }
 
 async function onExportTable(table: Table): Promise<void> {
-  const shapePtr = endpoint.value?.dataModelToSHACL(datamodel.value).namedNode(table.id).in(sh.targetClass)
+  const shapePtr = endpoint.dataModelToSHACL(datamodel.value).namedNode(table.id).in(sh.targetClass)
   const subject = shapePtr.value
   const targetClass = shapePtr.out(sh.targetClass).value
   let shapeString = `_:${subject} a <http://www.w3.org/ns/shacl#NodeShape> `
