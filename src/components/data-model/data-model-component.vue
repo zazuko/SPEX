@@ -1,9 +1,11 @@
 <template>
+  <!--- the data model graph view ---->
   <GraphLayout :nodes="tablesVisible" :links="links" :active-links="activeLinks" @link-enter="onLinkHover"
     @link-out="onUnhover" v-if="tablesVisible.length > 0" class="bg-gray-50 dark:bg-gray-700 flex-grow">
     <template v-slot:node="{ node }">
-      <OverviewTable :table="node" :active-links="activeLinks" @explore="$emit('explore', $event)"
-        @hide="$emit('toggle-table', $event, false)" @export="$emit('export', $event)" @hover-title="onHoverTable"
+      <!--- a data model shape ---->
+      <ShapeComponent :table="node" :active-links="activeLinks" @explore="$emit('explore', $event)"
+        @hide="$emit('toggle-shape', $event, false)" @export="$emit('export', $event)" @hover-title="onHoverTable"
         @unhover-title="onUnhover" @hover-property="onHoverProperty" @unhover-property="onUnhover" />
     </template>
     <template v-slot:default>
@@ -19,7 +21,7 @@
 </template>
 
 <script setup lang="ts">
-import OverviewTable from './OverviewTable.vue'
+import ShapeComponent from './shape-component.vue'
 import { GraphLayout } from '@zazuko/vue-graph-layout'
 import { DataModel, Link, Property, Table } from '@/model/data-model.model'
 import { computed, ref } from 'vue'
@@ -33,7 +35,7 @@ const props = defineProps<Props>()
 // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
 const emit = defineEmits<{
   (event: 'explore', value: Table): void;
-  (event: 'toggle-table', value: Table): void
+  (event: 'toggle-shape', value: Table): void
   (event: 'export', value: Table): void
 }>()
 
@@ -83,7 +85,7 @@ function onLinkHover(link: any) {
 <script lang="ts">
 
 export default {
-  name: 'OverviewTables'
+  name: 'DataModelComponent'
 }
 
 </script>

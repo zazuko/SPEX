@@ -26,8 +26,8 @@
 import { Link, Table } from '@/model/data-model.model'
 import { EyeSlashIcon, TableCellsIcon, ClipboardDocumentIcon } from '@heroicons/vue/24/solid'
 import { ref } from 'vue'
-import ResourceCard from './ResourceCard.vue'
-import Tooltip from './common/tooltip.vue'
+import ResourceCard from '../ResourceCard.vue'
+import Tooltip from '../common/tooltip.vue'
 
 interface Props {
   table: Table,
@@ -55,6 +55,6 @@ function onExportTable(table: Table): void {
 <script lang="ts">
 
 export default {
-  name: 'OverviewTable',
+  name: 'ShapeComponent',
 }
 </script>
