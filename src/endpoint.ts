@@ -193,7 +193,7 @@ export class Endpoint {
     }, new Map<string, Table>())
 
     const tables = [...tablesMap.values()].map((table) => ({ ...table, properties: [...table.properties.values()] }))
-    debugger
+
     return {
       tables,
       viewports: [],
