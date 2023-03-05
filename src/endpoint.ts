@@ -5,6 +5,7 @@ import { dataModelFromSHACL, dataModelToSHACL } from '@/shacl'
 import * as ns from './namespace'
 import { prefixes as _prefixes } from './namespace'
 import { Settings, TPrefix } from './model/settings.model'
+import { Table } from './model/data-model.model'
 
 const SCHEMA_URI = '.well-known/void'
 
@@ -15,7 +16,15 @@ export interface FetchDataOptions {
   offset?: number,
   limit?: number
 }
+/**
+ * SPARQL Endpoint class. This is a singleton. Only one  instance exist for this class.
+ */
 export class Endpoint {
+  /**
+   * Get the instance of this class.
+   * @param settings configuration for the endpoint
+   * @returns The Endpoint instance (singleton)
+   */
   static getInstance(settings?: Settings): Endpoint | never {
     if (this._endpointInstance === null && settings) {
       this._endpointInstance = new Endpoint(settings)
@@ -34,10 +43,14 @@ export class Endpoint {
 
   private _client: any
 
-  public constructor(private _settings: Settings) {
+  private constructor(private _settings: Settings) {
     this.applySettings(_settings)
   }
 
+  /**
+  * Use new setting for SPARQL endpoint
+  * @param _settings new Settings for SPARQL Endpoint
+  */
   public applySettings(settings: Settings) {
     this._settings = settings
     this._client = new ParsingClient(
@@ -145,12 +158,22 @@ export class Endpoint {
    */
   async fetchIntrospectDataModel() {
     const structure = await this._fetchStructure()
-    const tablesMap = structure.reduce((tables, { cls, property, linktype, datatype }) => {
-      const table = tables.get(cls.value) || { id: cls.value, name: this.shrink(cls.value), properties: new Map(), isShown: true }
+    const tablesMap = structure.reduce((tables: Map<string, any>, { cls, property, linktype, datatype }) => {
+      const table = tables.get(cls.value) ??
+      {
+        id: cls.value,
+        name: this.shrink(cls.value),
+        properties: new Map<string, any>(),
+        isShown: true
+      }
 
       const typeURI = (linktype && linktype.value) || (datatype && datatype.value) || null
       const typeTermType = linktype ? 'NamedNode' : (datatype ? 'Literal' : null)
-      const type = typeURI && { id: typeURI, name: this.shrink(typeURI), termType: typeTermType }
+      const type = typeURI && {
+        id: typeURI,
+        name: this.shrink(typeURI),
+        termType: typeTermType
+      }
 
       if (table.properties.has(property.value)) {
         if (type) {
@@ -167,10 +190,10 @@ export class Endpoint {
       tables.set(cls.value, table)
 
       return tables
-    }, new Map())
+    }, new Map<string, Table>())
 
     const tables = [...tablesMap.values()].map((table) => ({ ...table, properties: [...table.properties.values()] }))
-
+    debugger
     return {
       tables,
       viewports: [],
@@ -276,7 +299,12 @@ export class Endpoint {
     }
   }
 
-  async canFetchOne() {
+  /**
+   * You can use this function to the the connection.
+   *
+   * @returns Promise<boolean> true if the SPARQL endpoint returns a triple
+   */
+  async canFetchOne(): Promise<boolean> {
     const query = `
       SELECT ?s WHERE {
         ?s ?p ?o

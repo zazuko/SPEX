@@ -3,26 +3,8 @@
     <Pane>
       <Splitpanes horizontal class="h-full">
         <Pane class="flex flex-col">
-          <div class="z-10 py-1 shadow-sm flex justify-between items-center dark:bg-gray-800">
-            <h1 class="px-4 py-2 text-3xl text-black dark:text-white font-bold font-title">
-              SPEX
-            </h1>
-            <button class="button is-white dark:is-dark flex items-center gap-1" title="Options" @click="showSettings">
-              <h2>
-                <span v-if="endpoint.sparqlEndpoint">{{ endpoint.sparqlEndpoint }}</span>
-                <span v-else>No endpoint configured yet</span>
-              </h2>
-              <CogIcon class="icon" />
-            </button>
-            <div v-if="!isSettingsEditorShown" class="flex flex-row items-center mr-2">
-              <ZazukoLogo />
-              <div style="height: 15px;border-left: 1px solid; margin-left: 6px; margin-right: 8px; width: 1px;"></div>
-              <GitHubLogo />
-            </div>
-            <div v-if="isSettingsEditorShown">
-            </div>
-          </div>
-
+          <SpexHeader :isSettingsEditorShown="isSettingsEditorShown" :sparqlEndpointUrl="endpoint.sparqlEndpoint"
+            @toggle-settings-editor=toggleSettingsEditor />
           <Splitpanes vertical v-if="datamodel" class="overflow-hidden">
             <Pane size="20" v-if="isTablesListShown">
               <TablesList :datamodel="datamodel" @toggle-table="toggleTable" @select-viewport="selectViewport"
@@ -35,8 +17,8 @@
                   <span>Classes</span>
                 </button>
               </div>
-              <OverviewTables :datamodel="datamodel" @explore="exploreTable" @export="onExportTable"
-                @toggle-table="toggleTable">
+              <DataModelComponent :datamodel="datamodel" @explore="exploreTable" @export="onExportTable"
+                @toggle-shape="toggleTable">
                 <template v-slot:default>
                   <p v-show="!(isTableExplorerShown || resourcesExplorerShown)"
                     class="z-10 absolute bottom-2 left-2 text-sm bg-gray-50 dark:bg-gray-700 flex items-center gap-2">
@@ -45,7 +27,7 @@
                     </button>
                   </p>
                 </template>
-              </OverviewTables>
+              </DataModelComponent>
             </Pane>
           </Splitpanes>
 
@@ -78,7 +60,7 @@
       </Splitpanes>
     </Pane>
     <Pane v-if="isSettingsEditorShown" size="30">
-      <SettingsPane :settings="settings" @settingsChanged="onSettingsChanged" @close="hideSettings" />
+      <SettingsPane :settings="settings" @settingsChanged="onSettingsChanged" @close="toggleSettingsEditor" />
     </Pane>
 
     <ModalShacl v-if="isShaclModalShown" :open="isShaclModalShown" @close="hideShaclModal" :endpoint="endpoint"
@@ -89,24 +71,23 @@
 </template>
 
 <script setup lang="ts">
-import { CogIcon, Bars3Icon } from '@heroicons/vue/24/solid'
+import { Bars3Icon } from '@heroicons/vue/24/solid'
 import { Splitpanes, Pane } from 'splitpanes'
 import 'splitpanes/dist/splitpanes.css'
 import { Endpoint } from '@/endpoint'
 import ModalShacl from './shacl-dialog/modal-shacl.vue'
 import ModalShaclLoad from './shacl-dialog/modal-shacl-load.vue'
-import OverviewTables from './OverviewTables.vue'
+import DataModelComponent from './data-model/data-model-component.vue'
 import ResourcesExplorer from './ResourcesExplorer.vue'
 import SettingsPane from './settings/settings-pane.vue'
 import TableExplorer from './TableExplorer.vue'
 import TablesList from './TablesList.vue'
 import LoadingSpinner from './common/loading-spinner.vue'
 import { sh, rdf } from '../namespace'
-import GitHubLogo from './common/git-hub-logo.vue'
-import ZazukoLogo from './common/zazuko-logo.vue'
 import { Settings } from '@/model/settings.model'
 import { computed, onMounted, ref, watch } from 'vue'
 import { DataModel, Table } from '@/model/data-model.model'
+import SpexHeader from './common/spex-header.vue'
 
 interface Props {
   settings: Settings
@@ -154,6 +135,13 @@ const datamodel = ref<DataModel | null>(null)
 const isLoading = ref<boolean>(false)
 const error = ref<any>(null)
 
+function toggleSettingsEditor(newState?: boolean): void {
+  if (typeof (newState) === 'undefined') {
+    isSettingsEditorShown.value = !isSettingsEditorShown.value
+    return
+  }
+  isSettingsEditorShown.value = newState
+}
 function exploreResource(resource: any): void {
   unexploreResource(resource)
   exploredResources.value.push(resource)
@@ -222,7 +210,7 @@ function hideShaclLoadModal() {
   isShaclLoadModalShown.value = false
 }
 
-async function loadData() {
+async function loadDataModel(): Promise<void> {
   resetView()
   error.value = null
   isLoading.value = true
@@ -231,7 +219,7 @@ async function loadData() {
     datamodel.value = await endpoint.fetchDataModel()
   } catch (e) {
     error.value = e
-    showSettings()
+    toggleSettingsEditor(true)
     // eslint-disable-next-line no-console
     console.error(e)
   } finally {
@@ -241,15 +229,7 @@ async function loadData() {
 
 async function loadEndpoint(settings: Settings): Promise<void> {
   endpoint.applySettings(settings)
-  await loadData()
-}
-
-function showSettings(): void {
-  isSettingsEditorShown.value = true
-}
-
-function hideSettings() {
-  isSettingsEditorShown.value = false
+  await loadDataModel()
 }
 
 function exploreTable(table: Table) {
