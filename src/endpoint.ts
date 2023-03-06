@@ -16,6 +16,7 @@ export interface FetchDataOptions {
   offset?: number,
   limit?: number
 }
+
 /**
  * SPARQL Endpoint class. This is a singleton. Only one  instance exist for this class.
  */
@@ -41,7 +42,7 @@ export class Endpoint {
   // eslint-disable-next-line no-use-before-define
   private static _endpointInstance: Endpoint | null = null
 
-  private _client: any
+  private _client: ParsingClient
 
   private constructor(private _settings: Settings) {
     this.applySettings(_settings)
@@ -55,9 +56,9 @@ export class Endpoint {
     this._settings = settings
     this._client = new ParsingClient(
       {
-        endpointUrl: this._settings.sparqlEndpoint,
-        user: this._settings.username,
-        password: this._settings.password
+        endpointUrl: this._settings.sparqlEndpoint ?? '',
+        user: this._settings.username ?? undefined,
+        password: this._settings.password ?? undefined
       }
     )
 
@@ -194,6 +195,10 @@ export class Endpoint {
 
     const tables = [...tablesMap.values()].map((table) => ({ ...table, properties: [...table.properties.values()] }))
 
+    const classCountMap = await this.countClasses()
+    tables.forEach(table => {
+      table.count = classCountMap.get(table.id)
+    })
     return {
       tables,
       viewports: [],
@@ -267,7 +272,7 @@ export class Endpoint {
   /**
    * Fetch triples related to a given resource.
    */
-  async fetchResource(uri) {
+  async fetchResource(uri: string) {
     const query = `
       DESCRIBE <${uri}> {}
     `
@@ -317,4 +322,27 @@ export class Endpoint {
       return false
     }
   }
+
+  async countClasses(): Promise<Map<string, number>> {
+    const classCountMap = new Map<string, number>()
+    const query = classCountQuery(this._settings.namedGraph)
+    const result = await this._client.query.select(query)
+    result.forEach(row => {
+      classCountMap.set(row.class.value, Number(row.count.value))
+    })
+    return classCountMap
+  }
+}
+
+function classCountQuery(namedGraph: string | null): string {
+  const fromClause = namedGraph ? `FROM <${namedGraph}>` : ''
+
+  return `
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?class (count(?x) as ?count) ${fromClause} WHERE {
+  ?x a ?class . 
+} group by ?class
+`
 }
