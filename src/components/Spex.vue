@@ -6,8 +6,8 @@
           <SpexHeader :isSettingsEditorShown="isSettingsEditorShown" :sparqlEndpointUrl="endpoint.sparqlEndpoint"
             @toggle-settings-editor=toggleSettingsEditor />
           <Splitpanes vertical v-if="datamodel" class="overflow-hidden">
-            <Pane size="20" v-if="isTablesListShown">
-              <TablesList :datamodel="datamodel" @toggle-table="toggleTable" @select-viewport="selectViewport"
+            <Pane size="30" v-if="isTablesListShown">
+              <TableList :datamodel="datamodel" @toggle-table="toggleTable" @select-viewport="selectViewport"
                 @close="hideTablesList" />
             </Pane>
             <Pane class="relative h-full">
@@ -81,7 +81,7 @@ import DataModelComponent from './data-model/data-model-component.vue'
 import ResourcesExplorer from './ResourcesExplorer.vue'
 import SettingsPane from './settings/settings-pane.vue'
 import TableExplorer from './TableExplorer.vue'
-import TablesList from './TablesList.vue'
+import TableList from './table-list/table-list.vue'
 import LoadingSpinner from './common/loading-spinner.vue'
 import { sh, rdf } from '../namespace'
 import { Settings } from '@/model/settings.model'

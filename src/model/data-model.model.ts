@@ -12,7 +12,8 @@ export interface Table {
     id: string,
     name: string,
     properties: Property[],
-    isShown: boolean
+    isShown: boolean,
+    count?: number
 }
 export interface DataModel {
     viewports: any[],
