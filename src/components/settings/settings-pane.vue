@@ -151,7 +151,7 @@ function onUsernamePasswordInputBlur(payload: FocusEvent) {
 }
 
 async function updateEndpoint() {
-  const endpoint = new Endpoint(newAppSettings.value)
+  const endpoint = Endpoint.getInstance(newAppSettings.value)
   isEndpointOk.value = await endpoint.canFetchOne()
   hasSparqlEndpointInputFocus.value = false
   if (isEndpointOk.value) {
@@ -161,13 +161,13 @@ async function updateEndpoint() {
 
 async function fetchGraphs() {
   loadingGraphs.value = true
-  endpoint = new Endpoint(newAppSettings.value)
+  endpoint = Endpoint.getInstance(newAppSettings.value)
   graphsOffset.value = 0
-  graphs.value = await fetchGraphPage()
+  graphs.value = await fetchGraphPage() ?? []
 }
 
 async function fetchMoreGraphs() {
-  const newGraphs = await fetchGraphPage()
+  const newGraphs = await fetchGraphPage() ?? []
   graphs.value = graphs.value.concat(newGraphs)
 }
 
@@ -179,7 +179,7 @@ async function fetchGraphPage() {
     const page = { offset: graphsOffset.value, limit: graphsPageSize }
     const graphs = await endpoint?.fetchGraphs(page)
     graphsOffset.value = graphsOffset.value + graphsPageSize
-    hasMoreGraphs.value = graphs.length >= graphsPageSize
+    hasMoreGraphs.value = (graphs?.length ?? 0) >= graphsPageSize
     return graphs
   } catch (e) {
     fetchError.value = (e as any).toString()
