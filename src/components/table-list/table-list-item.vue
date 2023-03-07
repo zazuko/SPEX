@@ -53,16 +53,16 @@ export default {
 
 <style scoped>
 .badge {
-    border-radius: 50%;
+    border-radius: 11px;
     background-color: rgb(98, 141, 147);
     font-size: 10px;
-    min-width: 25px;
-    width: 25px;
-    max-width: 25px;
-    min-height: 25px;
-    max-height: 25px;
+    min-width: 35px;
+    width: 35px;
+    max-width: 35px;
+    min-height: 22px;
+    max-height: 22px;
     text-align: center;
-    line-height: 25px;
+    line-height: 22px;
     color: white;
     margin-left: 5px;
     margin-right: 5px;
