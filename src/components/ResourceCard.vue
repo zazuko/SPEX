@@ -18,14 +18,14 @@
         @mouseleave="$emit('unhover-property', resource, property)">
         <th class="border-b dark:border-gray-500 px-3 py-2 text-gray-800 dark:text-gray-50">
           <Tooltip :label="property.id">
-            {{ property.name }}
+            <span @mousedown="stop">{{ property.name }}</span>
           </Tooltip>
         </th>
         <td class="border-b dark:border-gray-500 px-3 py-2">
           <div v-for="value in property.values" :key="value.id">
             <slot name="property-value" :value="value">
               <Tooltip :label="value.id">
-                {{ value.name }}
+                <span @mousedown="stop">{{ value.name }}</span>
               </Tooltip>
             </slot>
           </div>
@@ -55,6 +55,10 @@ const emit = defineEmits<{
   (event: 'hover-property', table: Table, property: Property): void,
   (event: 'unhover-property', table: Table, property: Property): void
 }>()
+
+function stop(event: MouseEvent): void {
+  event.stopPropagation()
+}
 
 const isActive = computed(() => {
   return props.activeLinks.some((link) => link.target === props.resource.id)
