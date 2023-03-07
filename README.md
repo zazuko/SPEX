@@ -87,8 +87,6 @@ SPEX can be installed as a so-called [progressive web application](https://en.wi
 (PWA). If you follow the [guide at MDN](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Developer_guide/Installing),
 SPEX will be available on your desktop computer like any other application.
 
-Note that right now the PWA [does not update](https://stackoverflow.com/questions/49739438/when-and-how-does-a-pwa-update-itself) itself.
-
 ## Extending SPEX
 
 SPEX is developed by Zazuko and released as Open Source Software under
