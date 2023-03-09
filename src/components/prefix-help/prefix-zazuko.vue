@@ -14,8 +14,8 @@
                     <label class="label" for="prefix">Prefix</label>&nbsp;&nbsp;&nbsp;(<a target="_blank"
                         href="https://prefix.zazuko.com/">prefix.zazuko.com</a>)
                 </div>
-                <input type="text" v-model="searchTerm" placeholder="Start typing to search... eg. sh:name"
-                    class="input w-24" required />
+                <input type="text" v-model="searchTerm" placeholder="Start typing to search... eg. sh:name" class="input"
+                    required />
             </div>
             <PrefixZazukoList :items="searchResult as PrefixZazukoItem[]" @item-selected="onItemSelected" />
         </div>
