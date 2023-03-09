@@ -4,7 +4,7 @@
       <Splitpanes horizontal class="h-full">
         <Pane class="flex flex-col">
           <SpexHeader :isSettingsEditorShown="isSettingsEditorShown" :sparqlEndpointUrl="endpoint.sparqlEndpoint"
-            @toggle-settings-editor=toggleSettingsEditor />
+            @toggle-settings-editor=toggleSettingsEditor @toggle-prefix-help="onOpenPrefixHelp" />
           <Splitpanes vertical v-if="datamodel" class="overflow-hidden">
             <Pane size="30" v-if="isTablesListShown">
               <TableList :datamodel="datamodel" @toggle-table="toggleTable" @select-viewport="selectViewport"
@@ -28,6 +28,9 @@
                   </p>
                 </template>
               </DataModelComponent>
+            </Pane>
+            <Pane size="30" v-if="isPrefixHelpShown">
+              <PrefixHelp @close="onPrefixHelpClose" :search-string="prefixSearchTerm"></PrefixHelp>
             </Pane>
           </Splitpanes>
 
@@ -88,6 +91,7 @@ import { Settings } from '@/model/settings.model'
 import { computed, onMounted, ref, watch } from 'vue'
 import { DataModel, Table } from '@/model/data-model.model'
 import SpexHeader from './common/spex-header.vue'
+import PrefixHelp from './prefix-help/prefix-zazuko.vue'
 
 interface Props {
   settings: Settings
@@ -99,8 +103,10 @@ const emit = defineEmits<{
   (event: 'settingsChanged', value: Settings): void;
 }>()
 
-const endpoint = Endpoint.getInstance(props.settings)
+const prefixSearchTerm = ref<string>('')
+const isPrefixHelpShown = ref<boolean>(false)
 
+const endpoint = Endpoint.getInstance(props.settings)
 const resourcesExplorerShown = computed(() => {
   return exploredResources.value.length > 0
 })
@@ -135,6 +141,13 @@ const datamodel = ref<DataModel | null>(null)
 const isLoading = ref<boolean>(false)
 const error = ref<any>(null)
 
+function onOpenPrefixHelp() {
+  isPrefixHelpShown.value = !isPrefixHelpShown.value
+}
+
+function onPrefixHelpClose(): void {
+  isPrefixHelpShown.value = false
+}
 function toggleSettingsEditor(newState?: boolean): void {
   if (typeof (newState) === 'undefined') {
     isSettingsEditorShown.value = !isSettingsEditorShown.value
