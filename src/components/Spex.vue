@@ -66,8 +66,8 @@
       <SettingsPane :settings="settings" @settingsChanged="onSettingsChanged" @close="toggleSettingsEditor" />
     </Pane>
 
-    <ModalShacl v-if="isShaclModalShown" :open="isShaclModalShown" @close="hideShaclModal" :endpoint="endpoint"
-      :datamodel="datamodel" @open-load-shacl="showLoadShacl" />
+    <ModalShacl v-if="isShaclModalShown && datamodel !== null" :open="isShaclModalShown" @close="hideShaclModal"
+      :endpoint="endpoint" :datamodel="datamodel" @open-load-shacl="showLoadShacl" />
     <ModalShaclLoad v-if="isShaclLoadModalShown" :open="isShaclLoadModalShown" @close="hideShaclLoadModal"
       :endpoint="endpoint" :load="loadShacl" />
   </Splitpanes>
