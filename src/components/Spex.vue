@@ -3,13 +3,18 @@
     <Pane>
       <Splitpanes horizontal class="h-full">
         <Pane class="flex flex-col">
+          <!-- header -->
           <SpexHeader :isSettingsEditorShown="isSettingsEditorShown" :sparqlEndpointUrl="endpoint.sparqlEndpoint"
             @toggle-settings-editor=toggleSettingsEditor @toggle-prefix-help="onOpenPrefixHelp" />
+          <!-- end header -->
           <Splitpanes vertical v-if="datamodel" class="overflow-hidden">
+            <!-- pane with class filter and ViewPorts -->
             <Pane size="30" v-if="isTablesListShown">
               <TableList :datamodel="datamodel" @toggle-table="toggleTable" @select-viewport="selectViewport"
                 @close="hideTablesList" />
             </Pane>
+            <!-- end pane with class filter and ViewPorts -->
+            <!-- center pane with GraphView -->
             <Pane class="relative h-full">
               <div class="z-10 absolute m-3">
                 <button v-show="!isTablesListShown" class="button" @click="showTablesList">
@@ -28,18 +33,24 @@
                   </p>
                 </template>
               </DataModelComponent>
+              <!-- end center pane with GraphView -->
             </Pane>
+            <!-- prefix zazuko.com pane -->
             <Pane size="30" v-if="isPrefixHelpShown">
               <PrefixHelp @close="onPrefixHelpClose" :search-string="prefixSearchTerm"></PrefixHelp>
             </Pane>
+            <!-- end prefix zazuko.com pane -->
           </Splitpanes>
 
+          <!-- spinner while loading data -->
           <div class="bg-gray-50 dark:bg-gray-700 flex-grow flex items-center">
             <div class="m-auto" v-if="isLoading">
               <loading-spinner />
             </div>
           </div>
+          <!-- end spinner while loading data -->
 
+          <!-- error info -->
           <div class="section" v-if="error">
             <div class="message is-danger">
               <div class="message-body">
@@ -47,8 +58,10 @@
               </div>
             </div>
           </div>
+          <!-- end error info -->
         </Pane>
 
+        <!-- instance data viewer -->
         <Pane v-if="isTableExplorerShown || resourcesExplorerShown">
           <Splitpanes vertical>
             <Pane v-if="isTableExplorerShown">
@@ -61,11 +74,13 @@
           </Splitpanes>
         </Pane>
       </Splitpanes>
+      <!-- end instance data viewer -->
     </Pane>
+    <!-- settings pane -->
     <Pane v-if="isSettingsEditorShown" size="30">
       <SettingsPane :settings="settings" @settingsChanged="onSettingsChanged" @close="toggleSettingsEditor" />
     </Pane>
-
+    <!-- end settings pane -->
     <ModalShacl v-if="isShaclModalShown && datamodel !== null" :open="isShaclModalShown" @close="hideShaclModal"
       :endpoint="endpoint" :datamodel="datamodel" @open-load-shacl="showLoadShacl" />
     <ModalShaclLoad v-if="isShaclLoadModalShown" :open="isShaclLoadModalShown" @close="hideShaclLoadModal"
