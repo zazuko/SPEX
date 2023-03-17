@@ -41,7 +41,7 @@
     "@babel/core": "^7.14.0",
     "@babel/eslint-parser": "^7.12.16",
     "@types/clownface": "^1.5.2",
-    "@types/rdf-ext": "^1.3.11",
+    "@types/rdf-ext": "^2.0.0",
     "@types/sparql-http-client": "^2.2.8",
     "@typescript-eslint/eslint-plugin": "^5.4.0",
     "@typescript-eslint/parser": "^5.4.0",
