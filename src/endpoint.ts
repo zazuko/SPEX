@@ -1,11 +1,11 @@
 import { shrink } from '@zazuko/rdf-vocabularies/shrink'
-import RDF from 'rdf-ext'
+import rdfEnvironment from 'rdf-ext'
 import ParsingClient from 'sparql-http-client/ParsingClient'
 import { dataModelFromSHACL, dataModelToSHACL } from '@/shacl'
 import * as ns from './namespace'
 import { prefixes as _prefixes } from './namespace'
 import { Settings, TPrefix } from './model/settings.model'
-import { Table } from './model/data-model.model'
+import { DataModel, Table } from './model/data-model.model'
 
 const SCHEMA_URI = '.well-known/void'
 
@@ -75,7 +75,7 @@ export class Endpoint {
     })
   }
 
-  shrink(uri: string): string {
+  private shrink(uri: string): string {
     return shrink(uri) || uri
   }
 
@@ -110,9 +110,11 @@ export class Endpoint {
 
     const dataModel = await this.fetchPredefinedDataModel()
 
-    return dataModel.tables
-      ? dataModel
-      : this.fetchIntrospectDataModel()
+    if (dataModel !== null) {
+      return dataModel
+    }
+    const introspectedDataModel = this.fetchIntrospectDataModel()
+    return introspectedDataModel
   }
 
   get datasetURI(): string {
@@ -130,7 +132,7 @@ export class Endpoint {
   /**
    * Fetch data model from pre-defined SHACL definition
    */
-  async fetchPredefinedDataModel() {
+  async fetchPredefinedDataModel(): Promise<DataModel | null> {
     const fromClause = this._settings.namedGraph ? `FROM <${this._settings.namedGraph}>` : ''
     const query = `
       #pragma describe.strategy cbd
@@ -138,9 +140,13 @@ export class Endpoint {
       ${fromClause}
     `
     const quads = await this._client.query.construct(query)
-    const dataset = (RDF as any).clownface({
-      dataset: RDF.dataset(quads),
-      term: RDF.namedNode(this.datasetURI),
+
+    if (quads.length === 0) {
+      return null
+    }
+    const dataset = rdfEnvironment.clownface({
+      dataset: rdfEnvironment.dataset(quads),
+      term: rdfEnvironment.namedNode(this.datasetURI),
     })
 
     return this.dataModelFromSHACL(dataset)
@@ -229,7 +235,7 @@ export class Endpoint {
    * Fetch a sample of the data of a given table
    */
   async fetchTableData(table, opts?: FetchDataOptions) {
-    const type = RDF.namedNode(table.id)
+    const type = rdfEnvironment.namedNode(table.id)
     const limit = opts?.limit ?? 10
     const offset = opts?.offset ?? 0
     const graphClause = this._settings.namedGraph ? `GRAPH <${this._settings.namedGraph}>` : ''
@@ -248,9 +254,9 @@ export class Endpoint {
       }
     `
     const results = await this._client.query.construct(query)
-    const dataset = RDF.dataset(results)
+    const dataset = rdfEnvironment.dataset(results)
     const subjects = [...(dataset.match(null, ns.rdf.type, type) as any)]
-    const rows = (RDF as any).termMap(subjects.map(({ subject }) => [subject, { id: subject.value, term: subject }]))
+    const rows = rdfEnvironment.termMap(subjects.map(({ subject }) => [subject, { id: subject.value, term: subject }]))
 
     results.forEach(({ subject, predicate: { value: predicate }, object }) => {
       const row = rows.get(subject)
@@ -258,7 +264,7 @@ export class Endpoint {
       if (!row) return
 
       if (!row[predicate]) {
-        row[predicate] = (RDF as any).termSet()
+        row[predicate] = rdfEnvironment.termSet()
       }
 
       row[predicate].add(object)
@@ -284,7 +290,7 @@ export class Endpoint {
           id: predicate.value,
           term: predicate,
           name: this.shrink(predicate.value),
-          values: (RDF as any).termSet(),
+          values: rdfEnvironment.termSet(),
         }
         acc.set(predicate.value, property)
       }

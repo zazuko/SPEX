@@ -30,7 +30,7 @@
 <script>
 import { XMarkIcon } from '@heroicons/vue/24/solid'
 import * as N3 from 'n3'
-import RDF from 'rdf-ext'
+import rdfEnvironment from 'rdf-ext'
 import { rdf, spex } from '@/namespace'
 import SpexDialog from './dialog.vue'
 
@@ -56,8 +56,8 @@ export default {
       const parser = new N3.Parser()
       try {
         const quads = parser.parse(this.data)
-        const dataset = RDF.dataset(quads)
-        const pointer = RDF.clownface({ dataset, term: spex.DefaultShapes })
+        const dataset = rdfEnvironment.dataset(quads)
+        const pointer = rdfEnvironment.clownface({ dataset, term: spex.DefaultShapes })
           .in(rdf.type)
           .in(spex.shape)
 
