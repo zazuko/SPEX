@@ -171,7 +171,7 @@ export class Endpoint {
         id: cls.value,
         name: this.shrink(cls.value),
         properties: new Map<string, any>(),
-        isShown: true
+        isShown: cls.value !== 'http://www.w3.org/2000/01/rdf-schema#Class'
       }
 
       const typeURI = (linktype && linktype.value) || (datatype && datatype.value) || null
