@@ -1,7 +1,8 @@
 <template>
   <!--- the data model graph view ---->
-  <GraphLayout :nodes="tablesVisible" :links="links" :active-links="activeLinks" @link-enter="onLinkHover"
-    @link-out="onUnhover" v-if="tablesVisible.length > 0" class="bg-light dark:bg-dark flex-grow">
+  <GraphLayout :nodes="tablesVisible" :links="links" :active-links="activeLinks" :layoutCfg="layoutConfig"
+    @link-enter="onLinkHover" @link-out="onUnhover" v-if="tablesVisible.length > 0"
+    class="bg-light dark:bg-dark flex-grow">
     <template v-slot:node="{ node }">
       <!--- a data model shape ---->
       <ShapeComponent :table="node" :active-links="activeLinks" @explore="$emit('explore', $event)"
@@ -44,7 +45,22 @@ const activeLinks = ref<Link[]>([])
 const tablesVisible = computed(() => {
   return props.datamodel.tables.filter(({ isShown }) => isShown)
 })
-
+/**
+  rankdir: The direction in which the graph is laid out. Can be "TB" (top to bottom), "BT" (bottom to top), "LR" (left to right), or "RL" (right to left).
+  align: Determines how the nodes are aligned within their rank. Can be "UL" (up and left), "UR" (up and right), "DL" (down and left), "DR" (down and right), or undefined.
+  nodesep: The minimum distance between nodes on the same rank.
+  ranksep: The minimum distance between ranks.
+  marginx: The margin to be added to the left and right of the graph.
+  marginy: The margin to be added to the top and bottom of the graph.
+*/
+const layoutConfig = {
+  rankdir: 'LR',
+  align: 'UR',
+  nodesep: 40,
+  ranksep: 700,
+  marginx: 10,
+  marginy: 10
+}
 const links = computed(() => {
   const tableIds = new Set(tablesVisible.value.map(({ id }) => id))
   return tablesVisible.value
