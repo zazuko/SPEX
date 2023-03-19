@@ -1,7 +1,7 @@
 <template>
   <!--- the data model graph view ---->
   <GraphLayout :nodes="tablesVisible" :links="links" :active-links="activeLinks" @link-enter="onLinkHover"
-    @link-out="onUnhover" v-if="tablesVisible.length > 0" class="bg-gray-50 dark:bg-gray-700 flex-grow">
+    @link-out="onUnhover" v-if="tablesVisible.length > 0" class="bg-light dark:bg-dark flex-grow">
     <template v-slot:node="{ node }">
       <!--- a data model shape ---->
       <ShapeComponent :table="node" :active-links="activeLinks" @explore="$emit('explore', $event)"
@@ -15,7 +15,7 @@
       </p>
     </template>
   </GraphLayout>
-  <div v-else class="flex-grow bg-gray-50 flex flex-col items-center justify-center">
+  <div v-else class="flex-grow bg-light dark:bg-dark flex flex-col items-center justify-center">
     <p class="pb-4">No classes to show</p>
   </div>
 </template>

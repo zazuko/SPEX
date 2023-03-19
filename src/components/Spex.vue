@@ -2,7 +2,7 @@
   <Splitpanes class="default-theme flex-grow overflow-hidden">
     <Pane>
       <Splitpanes horizontal class="h-full">
-        <Pane class="flex flex-col">
+        <Pane class="flex flex-col bg-light dark:bg-dark">
           <!-- header -->
           <SpexHeader :isSettingsEditorShown="isSettingsEditorShown" :sparqlEndpointUrl="endpoint.sparqlEndpoint"
             @toggle-settings-editor=toggleSettingsEditor @toggle-prefix-help="onOpenPrefixHelp" />
@@ -43,7 +43,7 @@
           </Splitpanes>
 
           <!-- spinner while loading data -->
-          <div class="bg-gray-50 dark:bg-gray-700 flex-grow flex items-center">
+          <div class="bg-light dark:bg-dark flex-grow flex items-center">
             <div class="m-auto" v-if="isLoading">
               <loading-spinner />
             </div>
