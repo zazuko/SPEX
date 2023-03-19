@@ -57,7 +57,7 @@ const layoutConfig = {
   rankdir: 'LR',
   align: 'UR',
   nodesep: 40,
-  ranksep: 700,
+  ranksep: 500,
   marginx: 10,
   marginy: 10
 }
