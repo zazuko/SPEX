@@ -1,5 +1,5 @@
 <template>
-    <div class="flex justify-center flex-row gap-3">
+    <div class="flex justify-center flex-row gap-1">
         <div>
             <div class="relative z-50 text-right flex justify-center flex-row">
                 <Menu as="div" class="relative inline-block">
