@@ -274,7 +274,7 @@ async function onExportTable(table: Table): Promise<void> {
   const properties = shapePtr.out(sh.property)
   if (properties.values.length > 0) {
     shapeString += `\n\t<${sh.property.value}> `
-    properties.forEach((propertyPtr, index) => {
+    properties.toArray().forEach((propertyPtr, index: number) => {
       shapeString += '\n\t\t['
       const propertyType = propertyPtr.out(rdf.type).value
 
@@ -289,7 +289,8 @@ async function onExportTable(table: Table): Promise<void> {
       if (shOr.values.length > 0) {
         let shOrString = '\t\t\t<http://www.w3.org/ns/shacl#shOr> (\n'
         const shOrList = shOr.list()
-        Array.from(shOrList).forEach((x: any) => {
+        const shOrArray = shOrList === null ? [] : [...shOrList]
+        shOrArray.forEach((x: any) => {
           const shOrMemberLines: string[] = []
           x.dataset.match(x.term, null, null, null).filter(quad => !(quad.predicate.equals(rdf.last) || quad.predicate.equals(rdf.last) || quad.predicate.equals(rdf.nil))).forEach(q => shOrMemberLines.push(`\t\t\t\t\t<${q.predicate.value}> <${q.object.value}>`))
           shOrString += `\t\t\t\t[\n${shOrMemberLines.join(' \n')}`
