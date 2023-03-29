@@ -1,86 +1,45 @@
 # SPEX - SPARQL Endpoint Explorer
 
-SPEX introspects data residing in SPARQL endpoints. It is using the
-self-describing nature of RDF based data to give you a better
-understanding of its schema.
+SPEX is a tool designed to introspect data within SPARQL endpoints, leveraging the self-describing nature of RDF-based data to help users better understand its schema.
 
-Once the schema is available, SPEX can be used to browse instances of
-this data and follow links to other data.
+With the schema information available, you can use SPEX to browse instances of the data and follow links to other data points.
 
-SPEX can be very useful to explore and introspect a formerly unknown
-dataset, but it is not a generic graph-browser. Its purpose is to give a
-better understanding of the schema and show basic relations between
-data. For further graph exploration, we recommend tools like [Graph Explorer](https://github.com/zazuko/graph-explorer).
+While SPEX is great for exploring and introspecting previously unknown datasets, it's not a generic graph-browser. Its primary goal is to provide insights into the schema and demonstrate basic data relationships. For more advanced graph exploration, consider using tools like [Graph Explorer](https://github.com/zazuko/graph-explorer).
 
 ## Usage
 
-You can try a [live instance of SPEX](https://spex.zazuko.com).
+Try a [live instance of SPEX](https://spex.zazuko.com) to get started.
 
-SPEX is using SPARQL to see what data is available. As a minimal entry
-point, a SPARQL endpoint has to be provided. Once the SPARQL endpoint is
-configured, SPEX can introspect data. It can do that either on the
-default graph, or a specific named graph. Use the dropdown of the
-named-graphs to limit it, if available.
+SPEX uses SPARQL to determine the available data. To begin, provide a SPARQL endpoint. Once configured, SPEX can introspect data from the default graph or a specific named graph. Use the named-graphs dropdown to narrow the scope if needed.
 
-SPEX executes generic SPARQL queries to understand the structure of the
-data. It assumes that URIs have at least one RDF class assigned and
-group entities that are part of the same class. For those classes, it
-will query the distinct properties, including optional ones. It also
-introspects the datatypes of properties and how they link to other
-concepts. For example a [schema:Person](https://schema.org/Person) that links to a
-[schema:PostalAddress](https://schema.org/PostalAddress) via the property [schema:address](https://schema.org/address).
-
-This information is then visualized. If one hovers over a link or a
-property that points to another class, all involved classes & properties
-are highlighted. If one hovers over the class, all outgoing connections
-are highlighted. Use the browse-button to explore specific instances of
-a particular class.
+SPEX executes generic SPARQL queries to understand the data structure, grouping entities with the same class and querying distinct properties. It also examines property data types and their connections to other concepts.
 
 ![SPEX screenshot](docs/image/SPEX.png "SPEX in action")
 
-Depending on the size of the dataset, introspection can be very costly.
-For that reason, SPEX first checks if there are SHACL shapes available
-on the particular endpoint/graph. If it finds a SHACL shape, it will use
-this instead and not execute a SPARQL query.
+Depending on the dataset size, introspection can be resource-intensive. To mitigate this, SPEX checks for available SHACL shapes on the endpoint/graph and uses them if found, instead of running a SPARQL query.
 
-You can download the auto-generated shape as a starting point in case
-you want to provide shapes on the endpoint.
+You can download the auto-generated shape as a starting point if you want to provide shapes on the endpoint.
 
 ## Limitations
 
-Introspection and auto-generation of SHACL shapes might give strange
-results, in particular:
+Introspection and auto-generation of SHACL shapes might yield unexpected results in cases where:
 
-* when more than one class is assigned to instances of data
-* when there are many different datasets with the same class but different properties.
-For example, a dataset containing multiple RDF Cubes with different dimensions.
+* more than one class is assigned to instances of data
+* multiple datasets have the same class but different properties
 
-In this case, it is best to provide pre-defined SHACL shapes instead.
-Inferring the correct structure automatically will require more work
-than the generic queries used by SPEX.
+In such situations, providing pre-defined SHACL shapes is recommended. Inferring the correct structure automatically requires more effort than SPEX's generic queries.
 
-The URL of the shape is work in progress, see [this issue](https://github.com/zazuko/SPEX/issues/25) for more information.
+The URL of the shape is a work in progress; see [this issue](https://github.com/zazuko/SPEX/issues/25) for more information.
 
-SPEX tries to find a good layout to render the different tables.
-This is not easy and there is surely room for improvement.
-If the layout does not fit on the page, use the browser zoom controls.
+SPEX attempts to find an optimal layout for rendering tables, but there's always room for improvement. Use your browser's zoom controls if the layout doesn't fit the page.
 
 ## Accessing an unencrypted (http) SPARQL endpoint
 
-SPEX is a web application that runs in a browser window. This will cause
-problems if a SPARQL endpoint is not available on https and SPEX is
-served on https only. See
-[Mixed Content](https://developers.google.com/web/fundamentals/security/prevent-mixed-content/fixing-mixed-content)
-restrictions for more information about why.
+SPEX is a web application that runs in a browser window. This may cause issues if a SPARQL endpoint isn't available on https and SPEX is served on https only. Refer to [Mixed Content](https://developers.google.com/web/fundamentals/security/prevent-mixed-content/fixing-mixed-content) restrictions for more information.
 
-A common error in that scenario is `TypeError: Network request failed`
-when trying to access an http SPARQL endpoint. The only exception to
-this rule is your local machine, you will always be able to access an
-http only SPARQL endpoint on localhost.
+A common error in this scenario is `TypeError: Network request failed` when trying to access an http SPARQL endpoint. The only exception is your local machine, where you'll always be able to access an http-only SPARQL endpoint on localhost.
 
-The only way to fix this is to either implement a SPARQL proxy or to
-serve SPEX on an http resource.
-
+To fix this, either implement a SPARQL proxy or serve SPEX on an http resource.
 ## SPEX as a local Application
 
 SPEX can be installed as a so-called [progressive web application](https://en.wikipedia.org/wiki/Progressive_web_application)
