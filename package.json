@@ -7,7 +7,8 @@
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "build-lib": "vue-cli-service build --target lib --formats umd,umd-min --inline-vue --name spex ./src/index.js",
-    "prepack": "npm run build-lib"
+    "prepack": "npm run build-lib",
+    "release": "changeset publish"
   },
   "main": "dist/spex.umd.js",
   "files": [
@@ -40,6 +41,7 @@
   "devDependencies": {
     "@babel/core": "^7.14.0",
     "@babel/eslint-parser": "^7.12.16",
+    "@changesets/cli": "^2.26.1",
     "@types/clownface": "^1.5.2",
     "@types/rdf-ext": "^2.0.0",
     "@types/sparql-http-client": "^2.2.8",
@@ -73,5 +75,8 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/zazuko/spex.git"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
