@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  docker:
+  pages:
     runs-on: ubuntu-latest
 
     defaults:
