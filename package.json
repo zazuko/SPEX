@@ -1,6 +1,6 @@
 {
   "name": "@zazuko/spex",
-  "version": "0.1.19",
+  "version": "0.1.20",
   "author": "Zazuko (https://zazuko.com)",
   "scripts": {
     "serve": "vue-cli-service serve",
