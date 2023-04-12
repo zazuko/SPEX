@@ -8,7 +8,7 @@
         </button>
       </p>
     </div>
-    <form class="card-content" @submit.prevent="onSubmit">
+    <form class="card-content">
       <div class="field">
         <label class="label" for="endpoint">Sparql Endpoint URL</label>
         <p class="control has-icons-right">
@@ -74,7 +74,7 @@
         </p>
       </div>
       <div class="field">
-        <button class="button is-primary" type="submit">Load</button>
+        <button class="button is-primary" type="submit" @click="onSubmit">Load</button>
       </div>
     </form>
   </div>
@@ -130,7 +130,9 @@ onMounted(async () => {
   }
 })
 
-function onSubmit(): void {
+function onSubmit(e: Event): void {
+  e.preventDefault()
+  e.stopPropagation()
   emit('settingsChanged', newAppSettings.value)
 }
 
