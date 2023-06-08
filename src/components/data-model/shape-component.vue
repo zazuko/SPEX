@@ -15,7 +15,7 @@
     <!-- end header -->
 
     <table class="w-full">
-      <tr class="border-b last:border-b-0 hover:bg-orange-400 text-gray-800 dark:text-gray-50"
+      <tr class="border-b last:border-b-0 hover:bg-orange-400 hover:bg-opacity-20 text-gray-800 dark:text-gray-50"
         v-for="(property, index) in table.properties" :key="index" :data-id="property.id"
         :class="{ active: isPropertyActive(property) }" @mouseenter="$emit('hover-property', table, property)"
         @mouseleave="$emit('unhover-property', table, property)">
