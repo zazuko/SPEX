@@ -1,0 +1,2 @@
+"use strict";(self["webpackChunk_zazuko_spex"]=self["webpackChunk_zazuko_spex"]||[]).push([[335],{11335:function(t,e,a){a.r(e),a.d(e,{default:function(){return p}});var o=a(66252);const r={class:"p-4"},n=(0,o._)("a",{href:"https://sketch.zazuko.com",target:"_blank"},"https://sketch.zazuko.com",-1);function s(t,e){return(0,o.wg)(),(0,o.iD)("div",r,[(0,o.Uk)(" You are probably looking for "),n])}var u=a(83744);const c={},k=(0,u.Z)(c,[["render",s]]);var p=k}}]);
+//# sourceMappingURL=335.bd20ef03.js.map
