@@ -1,6 +1,7 @@
 <template>
   <div class="border dark:border-gray-500 rounded shadow-md bg-white dark:bg-gray-800 opacity-90 text-sm"
     :class="{ active: isActive }">
+    <!-- header -->
     <header class="bg-gray-100 dark:bg-gray-900 flex items-center gap-4 justify-between px-3 py-2"
       @mouseenter="$emit('hover-title', resource)" @mouseleave="$emit('unhover-title', resource)">
       <h3 class="font-bold">
@@ -12,6 +13,8 @@
         <slot name="actions" />
       </span>
     </header>
+    <!-- end header -->
+
     <table class="w-full">
       <tr v-for="(property, index) in resource.properties" :key="index" :data-id="property.id"
         :class="{ active: isPropertyActive(property) }" @mouseenter="$emit('hover-property', resource, property)"

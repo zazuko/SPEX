@@ -269,12 +269,12 @@ async function onExportTable(table: Table): Promise<void> {
   const shapePtr = endpoint.dataModelToSHACL(datamodel.value).namedNode(table.id).in(sh.targetClass)
   const subject = shapePtr.value
   const targetClass = shapePtr.out(sh.targetClass).value
-  let shapeString = `_:${subject} a <http://www.w3.org/ns/shacl#NodeShape> `
-  shapeString += `\n\t<${sh.targetClass.value}> <${targetClass}> `
+  let shapeString = `_:${subject} a <http://www.w3.org/ns/shacl#NodeShape> ;`
+  shapeString += `\n\t<${sh.targetClass.value}> <${targetClass}> ;`
   const properties = shapePtr.out(sh.property)
   if (properties.values.length > 0) {
     shapeString += `\n\t<${sh.property.value}> `
-    properties.forEach((propertyPtr, index) => {
+    properties.toArray().forEach((propertyPtr, index: number) => {
       shapeString += '\n\t\t['
       const propertyType = propertyPtr.out(rdf.type).value
 
@@ -282,16 +282,17 @@ async function onExportTable(table: Table): Promise<void> {
       const shClass = propertyPtr.out(sh.class).value
       const datatype = propertyPtr.out(sh.datatype).value
       const shOr = propertyPtr.out(sh.or)
-      let propertyString = `\t\t\t<${rdf.type}> <${propertyType}> \n\t\t\t<http://www.w3.org/ns/shacl#path> <${path}> \n`
-      propertyString += shClass ? `\t\t\t<http://www.w3.org/ns/shacl#class> <${shClass}> \n` : ''
-      propertyString += datatype ? `\t\t\t<http://www.w3.org/ns/shacl#datatype> <${datatype}> \n` : ''
+      let propertyString = `\t\t\t<${rdf.type}> <${propertyType}> ;\n\t\t\t<http://www.w3.org/ns/shacl#path> <${path}> ;\n`
+      propertyString += shClass ? `\t\t\t<http://www.w3.org/ns/shacl#class> <${shClass}> ;\n` : ''
+      propertyString += datatype ? `\t\t\t<http://www.w3.org/ns/shacl#datatype> <${datatype}> ;\n` : ''
 
       if (shOr.values.length > 0) {
         let shOrString = '\t\t\t<http://www.w3.org/ns/shacl#shOr> (\n'
         const shOrList = shOr.list()
-        Array.from(shOrList).forEach((x: any) => {
+        const shOrArray = shOrList === null ? [] : [...shOrList]
+        shOrArray.forEach((x: any) => {
           const shOrMemberLines: string[] = []
-          x.dataset.match(x.term, null, null, null).filter(quad => !(quad.predicate.equals(rdf.last) || quad.predicate.equals(rdf.last) || quad.predicate.equals(rdf.nil))).forEach(q => shOrMemberLines.push(`\t\t\t\t\t<${q.predicate.value}> <${q.object.value}>`))
+          x.dataset.match(x.term, null, null, null).filter(quad => !(quad.predicate.equals(rdf.last) || quad.predicate.equals(rdf.last) || quad.predicate.equals(rdf.nil))).forEach(q => shOrMemberLines.push(`\t\t\t\t\t<${q.predicate.value}> <${q.object.value}> ;`))
           shOrString += `\t\t\t\t[\n${shOrMemberLines.join(' \n')}`
           shOrString += ' \n\t\t\t\t]\n'
         })
