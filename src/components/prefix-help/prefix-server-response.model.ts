@@ -1,4 +1,3 @@
-
 interface Value {
     value: string
 }

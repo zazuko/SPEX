@@ -1,0 +1,37 @@
+[
+  {
+    "kind": 1,
+    "language": "markdown",
+    "value": "# How does SPEX work ?\n"
+  },
+  {
+    "kind": 1,
+    "language": "markdown",
+    "value": "# Fetch the information\n\nThe goal is to get all classes (?cls) used by instances. Then get all properties (?property) and the values (?object). The get the datatype of the ?object or the type (rdf:type) of the object. "
+  },
+  {
+    "kind": 1,
+    "language": "markdown",
+    "value": "# New query with filter\n\nBecause rdf:type is leading to strange information we remove it."
+  },
+  {
+    "kind": 2,
+    "language": "sparql",
+    "value": "# [endpoint=https://ld.admin.ch/query]\n#\nPREFIX tpd: <https://lod.opentransportdata.swiss/vocab/>\nPREFIX schema: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX xsd:<http://www.w3.org/2001/XMLSchema#>\nPREFIX vcard: <http://www.w3.org/2006/vcard/ns#>\n\nSELECT DISTINCT ?cls ?property ?linktype ?datatype FROM <https://lindas.admin.ch/sbb/nova> WHERE {\n    ?subject a ?cls .\n    ?subject ?property ?object .\n\n    OPTIONAL {\n        ?object a ?linktype .\n    }\n\n    BIND(DATATYPE(?object) AS ?datatype)\n}"
+  },
+  {
+    "kind": 1,
+    "language": "markdown",
+    "value": "This is a sample result for the query above. \n\n| cls                 | property             | linktype             | datatype   | \n|---------------------|----------------------|----------------------|------------|\n| tpd:Zone            | rdfs:label           |                      | xsd:string |\n| schema:Organization | rdfs:label           |                      | xsd:string |\n| schema:Organization | vcard:name           |                      | xsd:string |\n| schema:Organization | schema:alternateName |                      | xsd:string |\n| tpd:Alliance\t      | rdfs:label\t\t     |                      | xsd:string |\n| tpd:Tarif\t          | schema:provider      |\tschema:Organization\t|            |\n| tpd:Zone            |\tschema:provider      |\tschema:Organization\t|            | \n"
+  },
+  {
+    "kind": 1,
+    "language": "markdown",
+    "value": "# Caveats\n\nHow the `linktype` is evaluated causes some problems. \n\n```sparql\n  ?subject ?property ?object .\n\n    OPTIONAL {\n        ?object a ?linktype .\n    }\n```\n\nThat means get the class of the ?object instance. \n\n## rdf:type\n\nFor rdf:type this leads to wrong results. If the ?object class is not a direct child of rdfs:Class. \n\nThen you see the parent class of the ?object instance class. This is somehow wrong. \n\n## empty results\n\nFor predicates other than rdf:type the result can be empty if ?object is just an IRI and the rdf:type is not part of the dataset. \n\n"
+  },
+  {
+    "kind": 2,
+    "language": "sparql",
+    "value": "# [endpoint=https://ld.admin.ch/query]\n#\nPREFIX tpd: <https://lod.opentransportdata.swiss/vocab/>\nPREFIX schema: <http://schema.org/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX xsd:<http://www.w3.org/2001/XMLSchema#>\nPREFIX vcard: <http://www.w3.org/2006/vcard/ns#>\n\nSELECT DISTINCT ?cls ?property ?linktype ?datatype FROM <https://lindas.admin.ch/sbb/nova> WHERE {\n    ?subject a ?cls .\n    ?subject ?property ?object .\n\n    FILTER(?property != rdf:type)\n    OPTIONAL {\n        ?object a ?linktype .\n    }\n\n    BIND(DATATYPE(?object) AS ?datatype)\n}"
+  }
+]
