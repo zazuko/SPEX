@@ -2,11 +2,6 @@ const webpack = require('webpack')
 const path = require('path')
 
 module.exports = {
-  transpileDependencies: [
-    '@rdfjs-elements/rdf-editor',
-    '@rdfjs-elements/rdf-snippet',
-  ],
-
   configureWebpack: config => {
     // Webpack 5 doesn't provide polyfills so we need to do it manually
     config.resolve.fallback = {

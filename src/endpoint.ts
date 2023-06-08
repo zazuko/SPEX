@@ -87,6 +87,8 @@ export class Endpoint {
     const limit = opts?.limit ?? null
 
     const query = `
+      PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
       SELECT DISTINCT ?g
       WHERE {
         GRAPH ?g { ?s ?p ?o }
@@ -221,6 +223,7 @@ export class Endpoint {
         ?subject a ?cls .
         ?subject ?property ?object .
 
+        FILTER(?property != rdf:type)
         OPTIONAL {
           ?object a ?linktype .
         }
