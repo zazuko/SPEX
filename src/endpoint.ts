@@ -217,6 +217,8 @@ export class Endpoint {
   async _fetchStructure() {
     const fromClause = this._settings.namedGraph ? `FROM <${this._settings.namedGraph}>` : ''
     const query = `
+      PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
       SELECT DISTINCT ?cls ?property ?linktype ?datatype
       ${fromClause}
       WHERE {
