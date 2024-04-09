@@ -1,4 +1,4 @@
-import { Term } from 'rdf-js'
+import { Term } from '@rdfjs/types'
 
 export interface Resource {
     id: string,

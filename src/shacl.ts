@@ -1,5 +1,5 @@
 import { GraphPointer, MultiPointer } from 'clownface'
-import rdfEnvironment from 'rdf-ext'
+import rdfEnvironment from '@zazuko/env/web.js'
 import { DataModel, Table, PropertyTerm } from './model/data-model.model'
 import { rdf, schema, sh, spex } from './namespace'
 import { Term } from '@rdfjs/types'

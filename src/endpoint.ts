@@ -1,5 +1,5 @@
-import { shrink } from '@zazuko/rdf-vocabularies/shrink'
-import rdfEnvironment from 'rdf-ext'
+import { shrink } from '@zazuko/prefixes'
+import rdfEnvironment from '@zazuko/env/web.js'
 import ParsingClient from 'sparql-http-client/ParsingClient'
 import { dataModelFromSHACL, dataModelToSHACL } from '@/shacl'
 import * as ns from './namespace'
@@ -54,13 +54,15 @@ export class Endpoint {
   */
   public applySettings(settings: Settings) {
     this._settings = settings
-    this._client = new ParsingClient(
-      {
-        endpointUrl: this._settings.sparqlEndpoint ?? '',
-        user: this._settings.username ?? undefined,
-        password: this._settings.password ?? undefined
-      }
-    )
+    if (this._settings.sparqlEndpoint) {
+      this._client = new ParsingClient(
+        {
+          endpointUrl: this._settings.sparqlEndpoint,
+          user: this._settings.username ?? undefined,
+          password: this._settings.password ?? undefined
+        }
+      )
+    }
 
     // Reinitialize prefixes
     Object.keys(_prefixes).forEach((prefix) => {
@@ -115,8 +117,8 @@ export class Endpoint {
     if (dataModel !== null) {
       return dataModel
     }
-    const introspectedDataModel = this.fetchIntrospectDataModel()
-    return introspectedDataModel
+
+    return this.fetchIntrospectDataModel()
   }
 
   get datasetURI(): string {
@@ -141,17 +143,17 @@ export class Endpoint {
       DESCRIBE <${this.datasetURI}>
       ${fromClause}
     `
-    const quads = await this._client.query.construct(query)
+    const dataset = await this._client.query.construct(query)
 
-    if (quads.length === 0) {
+    if (dataset.size === 0) {
       return null
     }
-    const dataset = rdfEnvironment.clownface({
-      dataset: rdfEnvironment.dataset(quads),
+    const ptr = rdfEnvironment.clownface({
+      dataset,
       term: rdfEnvironment.namedNode(this.datasetURI),
     })
 
-    return this.dataModelFromSHACL(dataset)
+    return this.dataModelFromSHACL(ptr)
   }
 
   dataModelFromSHACL(dataset) {
@@ -258,12 +260,11 @@ export class Endpoint {
         }
       }
     `
-    const results = await this._client.query.construct(query)
-    const dataset = rdfEnvironment.dataset(results)
+    const dataset = await this._client.query.construct(query)
     const subjects = [...(dataset.match(null, ns.rdf.type, type) as any)]
     const rows = rdfEnvironment.termMap(subjects.map(({ subject }) => [subject, { id: subject.value, term: subject }]))
 
-    results.forEach(({ subject, predicate: { value: predicate }, object }) => {
+    ;[...dataset].forEach(({ subject, predicate: { value: predicate }, object }) => {
       const row = rows.get(subject)
 
       if (!row) return
@@ -289,7 +290,7 @@ export class Endpoint {
     `
     const quads = await this._client.query.construct(query)
 
-    const properties = quads.reduce((acc, { predicate, object }) => {
+    const properties = [...quads].reduce((acc, { predicate, object }) => {
       if (!acc.has(predicate.value)) {
         const property = {
           id: predicate.value,
@@ -353,7 +354,7 @@ PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT ?class (count(?x) as ?count) ${fromClause} WHERE {
-  ?x a ?class . 
+  ?x a ?class .
 } group by ?class
 `
 }
