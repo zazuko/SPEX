@@ -6,7 +6,7 @@
 
 <script setup lang="ts">
 import { Endpoint } from '@/endpoint'
-import { Term } from 'rdf-js'
+import { Term } from '@rdfjs/types'
 import { ref } from 'vue'
 import Tooltip from './common/tooltip.vue'
 

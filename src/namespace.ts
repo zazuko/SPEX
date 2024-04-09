@@ -1,5 +1,5 @@
-import prefixes from '@zazuko/rdf-vocabularies/prefixes'
-import rdfEnvironment from 'rdf-ext'
+import prefixes from '@zazuko/prefixes'
+import rdfEnvironment from '@zazuko/env/web.js'
 
 prefixes.spex = 'https://described.at/spex/'
 

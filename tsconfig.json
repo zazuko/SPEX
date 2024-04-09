@@ -1,11 +1,11 @@
 {
   "compilerOptions": {
     "noImplicitAny": false,
-    "target": "esnext",
-    "module": "esnext",
+    "target": "ES2022",
+    "module": "ES2022",
     "strict": true,
     "jsx": "preserve",
-    "moduleResolution": "node",
+    "moduleResolution": "Bundler",
     "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
