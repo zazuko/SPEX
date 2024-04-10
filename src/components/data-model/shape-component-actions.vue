@@ -53,7 +53,7 @@
 </template>
 
 <script setup lang="ts">
-import { Table } from '@/model/data-model.model'
+import { Table } from '../../model/data-model.model'
 import { EllipsisVerticalIcon, EyeSlashIcon, TableCellsIcon, ClipboardDocumentIcon } from '@heroicons/vue/24/solid'
 
 import { ref } from 'vue'

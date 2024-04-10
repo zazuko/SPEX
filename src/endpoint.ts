@@ -1,7 +1,7 @@
 import { shrink } from '@zazuko/prefixes'
 import rdfEnvironment from '@zazuko/env/web.js'
 import ParsingClient from 'sparql-http-client/ParsingClient'
-import { dataModelFromSHACL, dataModelToSHACL } from '@/shacl'
+import { dataModelFromSHACL, dataModelToSHACL } from './shacl'
 import * as ns from './namespace'
 import { prefixes as _prefixes } from './namespace'
 import { Settings, TPrefix } from './model/settings.model'
@@ -77,7 +77,7 @@ export class Endpoint {
     })
   }
 
-  private shrink(uri: string): string {
+  shrink(uri: string): string {
     return shrink(uri) || uri
   }
 

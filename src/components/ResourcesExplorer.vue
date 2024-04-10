@@ -48,9 +48,9 @@
   </div>
 </template>
 <script setup lang="ts">
-import { Endpoint } from '@/endpoint'
+import { Endpoint } from '../endpoint'
 import { computed, onMounted, ref, watch } from 'vue'
-import { Link } from '@/model/data-model.model'
+import { Link } from '../model/data-model.model'
 import { ArrowTopRightOnSquareIcon, EyeSlashIcon, XMarkIcon } from '@heroicons/vue/24/solid'
 import { GraphLayout } from '@zazuko/vue-graph-layout'
 import ResourceCard from './ResourceCard.vue'

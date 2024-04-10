@@ -44,8 +44,8 @@
 
 <script setup lang="ts">
 import '@rdfjs-elements/rdf-editor'
-import { DataModel } from '@/model/data-model.model'
-import { Endpoint } from '@/endpoint'
+import { DataModel } from '../../model/data-model.model'
+import { Endpoint } from '../../endpoint'
 import { ClipboardDocumentIcon, ArrowUpTrayIcon, XMarkIcon } from '@heroicons/vue/24/solid'
 import SpexDialog from './dialog.vue'
 import Tooltip from '../common/tooltip.vue'

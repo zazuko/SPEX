@@ -82,8 +82,8 @@
 
 <script setup lang="ts">
 import { MinusSmallIcon, PlusSmallIcon, XMarkIcon, CheckIcon } from '@heroicons/vue/24/solid'
-import { Endpoint } from '@/endpoint'
-import { Settings } from '@/model/settings.model'
+import { Endpoint } from '../../endpoint'
+import { Settings } from '../../model/settings.model'
 import SelectGraph from './select-graph.vue'
 import SpexSwitch from '../common/switch.vue'
 import { ref, onMounted } from 'vue'

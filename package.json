@@ -2,54 +2,48 @@
   "name": "@zazuko/spex",
   "version": "0.1.20",
   "author": "Zazuko (https://zazuko.com)",
+  "type": "module",
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint",
-    "build-lib": "vue-cli-service build --target lib --formats umd,umd-min --inline-vue --name spex ./src/index.ts",
+    "serve": "vite",
+    "build": "vite build",
+    "lint": "eslint --ext .js,.vue --ignore-path .gitignore --fix src",
     "prepack": "npm run build-lib",
     "release": "changeset publish"
   },
-  "main": "dist/spex.umd.js",
+  "main": "dist/spex.js",
+  "exports": {
+    ".": {
+      "import": "./dist/spex.js",
+      "require": "./dist/spex.umd.cjs"
+    }
+  },
   "files": [
-    "/src",
-    "/dist/spex.css",
-    "/dist/spex.umd.min.js",
-    "/dist/spex.umd.min.js.map"
+    "/dist"
   ],
   "dependencies": {
     "@headlessui/vue": "^1.7.14",
     "@heroicons/vue": "^2.0.18",
     "@rdfjs-elements/rdf-editor": "^0.5.7",
+    "@vitejs/plugin-vue": "^5.0.4",
     "@zazuko/env": "^2.1.1",
     "@zazuko/prefixes": "^2.2.0",
     "@zazuko/vue-graph-layout": "^0.1.4",
-    "buffer": "^6.0.3",
     "bulma": "^0.9.4",
-    "core-js": "^3.30.2",
     "lodash.clonedeep": "^4.5.0",
     "lodash.debounce": "^4.0.8",
-    "process": "^0.11.10",
     "register-service-worker": "^1.7.2",
     "sparql-http-client": "^3.0.0",
     "splitpanes": "^3.1.5",
-    "stream-browserify": "^3.0.0",
+    "vite": "^5.2.8",
     "vue": "^3.3.4",
     "vue-router": "^4.2.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.22.1",
-    "@babel/eslint-parser": "^7.21.8",
     "@changesets/cli": "^2.26.1",
+    "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
     "@types/sparql-http-client": "^3",
     "@typescript-eslint/eslint-plugin": "^5.59.9",
     "@typescript-eslint/parser": "^5.59.9",
-    "@vue/cli-plugin-babel": "^5.0.8",
-    "@vue/cli-plugin-eslint": "^5.0.8",
-    "@vue/cli-plugin-pwa": "~5.0.8",
-    "@vue/cli-plugin-router": "^5.0.8",
-    "@vue/cli-plugin-typescript": "~5.0.8",
-    "@vue/cli-service": "^5.0.8",
     "@vue/compiler-sfc": "^3.3.4",
     "@vue/eslint-config-standard": "^8.0.1",
     "@vue/eslint-config-typescript": "^11.0.3",
@@ -59,9 +53,11 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^6.1.1",
     "eslint-plugin-vue": "^9.14.1",
-    "postcss": "^8.4.24",
+    "postcss": "^8.4.38",
+    "rollup-plugin-node-polyfills": "^0.2.1",
     "tailwindcss": "^3.3.2",
-    "typescript": "~5.0.0"
+    "typescript": "~5.0.0",
+    "vite-plugin-pwa": "^0.19.8"
   },
   "browserslist": [
     "> 1%",

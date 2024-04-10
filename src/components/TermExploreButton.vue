@@ -10,7 +10,7 @@
 import { computed } from 'vue'
 import Tooltip from './common/tooltip.vue'
 import { EyeIcon } from '@heroicons/vue/24/solid'
-import { Resource } from '@/model/resource.model'
+import { Resource } from '../model/resource.model'
 
 interface Props {
   term: any // should be Term

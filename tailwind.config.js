@@ -1,6 +1,6 @@
 module.exports = {
   content: [
-    'public/index.html',
+    'src/index.html',
     './src/**/*.{css,js,vue}',
     './node_modules/@zazuko/vue-graph-layout/src/components/GraphLayout.vue',
   ],

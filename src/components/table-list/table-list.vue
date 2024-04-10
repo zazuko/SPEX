@@ -50,7 +50,7 @@
 </template>
 
 <script setup lang="ts">
-import { DataModel, Table } from '@/model/data-model.model'
+import { DataModel, Table } from '../../model/data-model.model'
 import { XMarkIcon } from '@heroicons/vue/24/solid'
 import { ChevronDownIcon, ChevronUpIcon, MagnifyingGlassIcon } from '@heroicons/vue/24/outline'
 import { ref, watch, onMounted } from 'vue'

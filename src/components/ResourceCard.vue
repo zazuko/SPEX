@@ -39,7 +39,7 @@
 </template>
 
 <script setup lang="ts">
-import { Link, Property, Table } from '@/model/data-model.model'
+import { Link, Property, Table } from '../model/data-model.model'
 import { computed } from 'vue'
 import Tooltip from './common/tooltip.vue'
 
