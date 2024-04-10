@@ -24,7 +24,6 @@
     "@headlessui/vue": "^1.7.14",
     "@heroicons/vue": "^2.0.18",
     "@rdfjs-elements/rdf-editor": "^0.5.7",
-    "@vitejs/plugin-vue": "^5.0.4",
     "@zazuko/env": "^2.1.1",
     "@zazuko/prefixes": "^2.2.0",
     "@zazuko/vue-graph-layout": "^0.1.4",
