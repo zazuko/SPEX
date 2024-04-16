@@ -3,8 +3,8 @@
 </template>
 
 <script setup lang="ts">
-import SpexMain from '@/components/Spex.vue'
-import { Settings, SettingsPersistance, UrlSettings } from '@/model/settings.model'
+import SpexMain from '../components/Spex.vue'
+import { Settings, SettingsPersistance, UrlSettings } from '../model/settings.model'
 import { ref } from 'vue'
 import { isNavigationFailure, NavigationFailureType, useRouter, useRoute } from 'vue-router'
 

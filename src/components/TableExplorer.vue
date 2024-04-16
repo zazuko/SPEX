@@ -68,13 +68,13 @@
 </template>
 
 <script setup lang="ts">
-import { Endpoint } from '@/endpoint'
+import { Endpoint } from '../endpoint'
 import { ChevronLeftIcon, ChevronRightIcon, XMarkIcon } from '@heroicons/vue/24/solid'
 import LoadingSpinner from './common/loading-spinner.vue'
 import { ref, watch, onMounted } from 'vue'
 import Term from './Term.vue'
 import TermExploreButton from './TermExploreButton.vue'
-import { Table } from '@/model/data-model.model'
+import { Table } from '../model/data-model.model'
 
 interface Props {
   table: Table | null,

@@ -2,7 +2,8 @@ module.exports = {
   root: true,
 
   env: {
-    node: true
+    node: true,
+    es2022: true
   },
 
   extends: [
@@ -27,5 +28,5 @@ module.exports = {
     'func-call-spacing': 'off',
     'no-extra-semi': 'off',
     indent: 'off',
-  }
+  },
 }

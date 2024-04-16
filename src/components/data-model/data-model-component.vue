@@ -24,7 +24,7 @@
 <script setup lang="ts">
 import ShapeComponent from './shape-component.vue'
 import { GraphLayout } from '@zazuko/vue-graph-layout'
-import { DataModel, Link, Property, Table } from '@/model/data-model.model'
+import { DataModel, Link, Property, Table } from '../../model/data-model.model'
 import { computed, ref } from 'vue'
 
 interface Props {

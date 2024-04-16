@@ -11,7 +11,7 @@
 </template>
 
 <script setup lang="ts">
-import { Table } from '@/model/data-model.model'
+import { Table } from '../../model/data-model.model'
 import { computed } from 'vue'
 import SpexSwitch from '../common/switch.vue'
 import Tooltip from '../common/tooltip.vue'
