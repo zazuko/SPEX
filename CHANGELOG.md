@@ -1,5 +1,11 @@
 # @zazuko/spex
 
+## 0.2.1
+
+### Patch Changes
+
+- 946b0d1: Replace `process.env` in final builds, to prevent the app to crash.
+
 ## 0.2.0
 
 ### Minor Changes
