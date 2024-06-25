@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" class="h-screen">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <meta name="description" content="SPARQL Endpoints Explorer" />
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="stylesheet" href="/style.css" />
+    <title>SPEX</title>
+  </head>
+
+  <body class="h-full text-gray-700 dark:text-gray-50">
+    <noscript>
+      <strong
+        >We're sorry but SPEX doesn't work properly without JavaScript enabled.
+        Please enable it to continue.</strong
+      >
+    </noscript>
+    <div id="app" class="h-full"></div>
+    <script src="/spex.umd.cjs"></script>
+    <script type="text/javascript">
+      //<![CDATA[
+      window.onload = function () {
+        // Where to mount the SPEX app
+        const mountPoint = document.getElementById("app");
+
+        // Default options
+        const options = {
+          sparqlEndpoint: null,
+          url: null,
+          user: null,
+          password: null,
+          graph: null,
+          prefixes: [],
+          forceIntrospection: false,
+        };
+
+        // Parse query parameters and update options
+        const hash = window.location.hash.split("?");
+        if (hash.length > 1) {
+          const params = new URLSearchParams(hash[1]);
+
+          // Update options based on query parameters
+          options.sparqlEndpoint =
+            params.get("sparqlEndpoint") || options.sparqlEndpoint;
+          options.graph = params.get("namedGraph") || options.graph;
+          options.forceIntrospection =
+            params.get("forceIntrospection") === "true";
+          options.user = params.get("user") || options.user;
+          options.password = params.get("password") || options.password;
+          options.url = params.get("url") || options.url;
+
+          // Handle multiple prefixes
+          const prefixKeys = params.getAll("prefixes");
+          options.prefixes = prefixKeys.map((p) => {
+            const [prefix, namespace] = p.split(":");
+            return { prefix, namespace };
+          });
+        }
+
+        window.spex.render(mountPoint, options);
+      };
+      //]]>
+    </script>
+  </body>
+</html>

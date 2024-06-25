@@ -85,4 +85,5 @@ export default defineConfig({
       fileName: 'spex'
     }
   },
+  publicDir: '../public',
 })
