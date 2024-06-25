@@ -1,0 +1,1 @@
+import{_ as e,j as o,n as t,h as s,o as a}from"./index-RSd0p-ZE.js";const c={},r={class:"p-4"},n=s("a",{href:"https://sketch.zazuko.com",target:"_blank"},"https://sketch.zazuko.com",-1);function _(d,f){return a(),o("div",r,[t(" You are probably looking for "),n])}const i=e(c,[["render",_]]);export{i as default};
