@@ -5,9 +5,10 @@
   "type": "module",
   "scripts": {
     "serve": "vite",
-    "build": "vite build",
+    "build:app": "vite build",
+    "build:lib": "vite build -c vite.umd.config.js",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore --fix src",
-    "prepack": "npm run build",
+    "prepack": "npm run build:lib",
     "release": "changeset publish"
   },
   "main": "dist/spex.js",
@@ -48,6 +49,7 @@
     "@vue/eslint-config-standard": "^8.0.1",
     "@vue/eslint-config-typescript": "^11.0.3",
     "autoprefixer": "^10.4.14",
+    "esbuild": "^0.20",
     "eslint": "^8.42.0",
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-node": "^11.1.0",

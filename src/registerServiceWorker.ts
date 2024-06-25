@@ -2,8 +2,10 @@
 
 import { register } from 'register-service-worker'
 
+const baseUrl = process.env.BASE_URL || ''
+
 if (process.env.NODE_ENV === 'production') {
-  register(`${process.env.BASE_URL}service-worker.js`, {
+  register(`${baseUrl}/sw.js`, {
     ready() {
       console.log(
         'App is being served from cache by a service worker.\n' +

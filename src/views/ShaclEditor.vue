@@ -52,8 +52,8 @@ import { Splitpanes, Pane } from 'splitpanes'
 import 'splitpanes/dist/splitpanes.css'
 import '@rdfjs-elements/rdf-editor'
 import rdfEnvironment from '@zazuko/env/web'
-import { tablesFromSHACL } from '../shacl.js'
-import { rdf, sh } from '../namespace.js'
+import { tablesFromSHACL } from '../shacl'
+import { rdf, sh } from '../namespace'
 import ResourceCard from '../components/ResourceCard.vue'
 
 const formats = [...parsers.keys()]

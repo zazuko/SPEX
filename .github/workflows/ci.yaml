@@ -26,7 +26,7 @@ jobs:
         run: npm ci
 
       - name: Build the app
-        run: npm run build
+        run: npm run build:app
 
       - name: Configure CNAME
         run: echo spex.zazuko.com > dist/CNAME
