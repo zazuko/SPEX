@@ -20,7 +20,10 @@ jobs:
         run: npm ci
 
       - name: Build the app
-        run: npm run build
+        run: npm run build:app
+
+      - name: Build in lib mode
+        run: npm run build:lib
 
   lint:
     runs-on: ubuntu-latest
