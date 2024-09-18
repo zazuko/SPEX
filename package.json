@@ -34,7 +34,7 @@
     "register-service-worker": "^1.7.2",
     "sparql-http-client": "^3.0.0",
     "splitpanes": "^3.1.5",
-    "vite": "^5.2.8",
+    "vite": "^5.4.6",
     "vue": "^3.3.4",
     "vue-router": "^4.2.2"
   },
