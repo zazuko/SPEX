@@ -1,1 +1,0 @@
-import{p as n,q as r}from"./index-RSd0p-ZE.js";var o=c;const a=r;class i extends a.Readable{constructor(t,s){super(),this._str=t,this._encoding=s||"utf8"}_read(){this.ended||(process.nextTick(()=>{this.push(Buffer.from(this._str,this._encoding)),this.push(null)}),this.ended=!0)}}function c(e,t){return new i(e,t)}const d=n(o),h=d,m=r.Readable;export{m as Readable,h as toStream};
