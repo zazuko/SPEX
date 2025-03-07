@@ -1,5 +1,11 @@
 # @zazuko/spex
 
+## 0.2.2
+
+### Patch Changes
+
+- add8c3c: Set `vite` as a dev dependency
+
 ## 0.2.1
 
 ### Patch Changes
