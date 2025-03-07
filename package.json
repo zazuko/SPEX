@@ -34,7 +34,6 @@
     "register-service-worker": "^1.7.2",
     "sparql-http-client": "^3.0.0",
     "splitpanes": "^3.1.5",
-    "vite": "^5.2.8",
     "vue": "^3.3.4",
     "vue-router": "^4.2.2"
   },
@@ -58,6 +57,7 @@
     "rollup-plugin-node-polyfills": "^0.2.1",
     "tailwindcss": "^3.3.2",
     "typescript": "~5.0.0",
+    "vite": "^5.2.8",
     "vite-plugin-pwa": "^0.19.8"
   },
   "browserslist": [
