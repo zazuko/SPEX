@@ -6,6 +6,7 @@ import * as ns from './namespace'
 import { prefixes as _prefixes } from './namespace'
 import { Settings, TPrefix } from './model/settings.model'
 import { DataModel, Table } from './model/data-model.model'
+import { QueryOptions } from 'sparql-http-client'
 
 const SCHEMA_URI = '.well-known/void'
 
@@ -143,7 +144,13 @@ export class Endpoint {
       DESCRIBE <${this.datasetURI}>
       ${fromClause}
     `
-    const dataset = await this._client.query.construct(query)
+    const queryOptions: QueryOptions = {
+      headers: {
+        Accept: 'application/n-triples, text/turtle',
+      },
+
+    }
+    const dataset = await this._client.query.construct(query, queryOptions)
 
     if (dataset.size === 0) {
       return null
@@ -264,19 +271,19 @@ export class Endpoint {
     const subjects = [...(dataset.match(null, ns.rdf.type, type) as any)]
     const rows = rdfEnvironment.termMap(subjects.map(({ subject }) => [subject, { id: subject.value, term: subject }]))
 
-    ;[...dataset].forEach(({ subject, predicate: { value: predicate }, object }) => {
-      const row = rows.get(subject)
+      ;[...dataset].forEach(({ subject, predicate: { value: predicate }, object }) => {
+        const row = rows.get(subject)
 
-      if (!row) return
+        if (!row) return
 
-      if (!row[predicate]) {
-        row[predicate] = rdfEnvironment.termSet()
-      }
+        if (!row[predicate]) {
+          row[predicate] = rdfEnvironment.termSet()
+        }
 
-      row[predicate].add(object)
+        row[predicate].add(object)
 
-      rows.set(subject, row)
-    })
+        rows.set(subject, row)
+      })
 
     return [...rows.values()]
   }
