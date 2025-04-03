@@ -267,7 +267,14 @@ export class Endpoint {
         }
       }
     `
-    const dataset = await this._client.query.construct(query)
+    const queryOptions: QueryOptions = {
+      headers: {
+        Accept: 'text/turtle, application/n-triples',
+      },
+
+    }
+
+    const dataset = await this._client.query.construct(query, queryOptions)
     const subjects = [...(dataset.match(null, ns.rdf.type, type) as any)]
     const rows = rdfEnvironment.termMap(subjects.map(({ subject }) => [subject, { id: subject.value, term: subject }]))
 
@@ -295,7 +302,14 @@ export class Endpoint {
     const query = `
       DESCRIBE <${uri}> {}
     `
-    const quads = await this._client.query.construct(query)
+
+    const queryOptions: QueryOptions = {
+      headers: {
+        Accept: 'text/turtle, application/n-triples',
+      },
+
+    }
+    const quads = await this._client.query.construct(query, queryOptions)
 
     const properties = [...quads].reduce((acc, { predicate, object }) => {
       if (!acc.has(predicate.value)) {
