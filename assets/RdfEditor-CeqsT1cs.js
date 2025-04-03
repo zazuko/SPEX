@@ -1,1 +1,0 @@
-import{_ as o,f as t,o as s,m as a,d as r}from"./index-CIRByK6l.js";const c={},n={class:"p-4"};function d(f,e){return s(),t("div",n,e[0]||(e[0]=[a(" You are probably looking for "),r("a",{href:"https://sketch.zazuko.com",target:"_blank"},"https://sketch.zazuko.com",-1)]))}const k=o(c,[["render",d]]);export{k as default};
