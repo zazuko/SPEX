@@ -146,7 +146,7 @@ export class Endpoint {
     `
     const queryOptions: QueryOptions = {
       headers: {
-        Accept: 'application/n-triples, text/turtle',
+        Accept: 'text/turtle, application/n-triples',
       },
 
     }
